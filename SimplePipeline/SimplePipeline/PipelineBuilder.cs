@@ -10,18 +10,18 @@ namespace SimplePipeline
             return new PipelineBuilder<TPipelineInput>();
         }
 
-        public static PipelineBuilder<TPipelineInput, TFilterOutput> Start<TPipelineInput, TFilterOutput>(IFilter<TPipelineInput, TFilterOutput> filter)
-        {
-            return Start<TPipelineInput>().Chain(filter);
-        }
+        //public static PipelineBuilder<TPipelineInput, TFilterOutput> Start<TPipelineInput, TFilterOutput>(IFilter<TPipelineInput, TFilterOutput> filter)
+        //{
+        //    return Start<TPipelineInput>().Chain(filter);
+        //}
 
-        public static PipelineBuilder<TPipelineInput, TFilterOutput> Start<TPipelineInput, TFilterOutput>(Func<TPipelineInput, TFilterOutput> filter)
-        {
-            return Start<TPipelineInput>().Chain(filter);
-        }
+        //public static PipelineBuilder<TPipelineInput, TFilterOutput> Start<TPipelineInput, TFilterOutput>(Func<TPipelineInput, TFilterOutput> filter)
+        //{
+        //    return Start<TPipelineInput>().Chain(filter);
+        //}
     }
 
-    public class PipelineBuilder<TPipelineInput> : PipelineBuilder<TPipelineInput, TPipelineInput>
+    public class PipelineBuilder<TPipelineInput> : PipelineBuilder<TPipelineInput, TPipelineInput> // This class enforces that the first filter input is the same type as the pipeline input
     {
     }
 
