@@ -23,7 +23,7 @@ namespace SimplePipeline
 
         public IEnumerator<Object> GetEnumerator()
         {
-            return filters.GetEnumerator();
+            return filters.ToList().GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
