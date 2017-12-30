@@ -3,26 +3,9 @@ using System.Collections.Generic;
 
 namespace SimplePipeline
 {
-    public static class PipelineBuilder
-    {
-        public static PipelineBuilder<TPipelineInput, TPipelineInput> Start<TPipelineInput>()
-        {
-            return new PipelineBuilder<TPipelineInput>();
-        }
-
-        //public static PipelineBuilder<TPipelineInput, TFilterOutput> Start<TPipelineInput, TFilterOutput>(IFilter<TPipelineInput, TFilterOutput> filter)
-        //{
-        //    return Start<TPipelineInput>().Chain(filter);
-        //}
-
-        //public static PipelineBuilder<TPipelineInput, TFilterOutput> Start<TPipelineInput, TFilterOutput>(Func<TPipelineInput, TFilterOutput> filter)
-        //{
-        //    return Start<TPipelineInput>().Chain(filter);
-        //}
-    }
-
     public class PipelineBuilder<TPipelineInput> : PipelineBuilder<TPipelineInput, TPipelineInput> // This class enforces that the first filter input is the same type as the pipeline input
     {
+
     }
 
     public class PipelineBuilder<TPipelineInput, TFilterInput>
@@ -46,7 +29,7 @@ namespace SimplePipeline
 
         public PipelineBuilder<TPipelineInput, TFilterOutput> Chain<TFilterOutput>(Func<TFilterInput, TFilterOutput> filter)
         {
-            return Chain(new Filter<TFilterInput, TFilterOutput>(filter));
+            return Chain(Filter.Create(filter));
         }
 
         public IPipeline<TPipelineInput, TFilterInput> Build()
