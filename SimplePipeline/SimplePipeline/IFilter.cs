@@ -6,6 +6,4 @@ namespace SimplePipeline
     {
         Object Execute(Object input);
     }
-
-   
 }

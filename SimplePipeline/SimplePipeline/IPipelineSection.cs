@@ -11,6 +11,4 @@ namespace SimplePipeline
 
         IPipeline Build();
     }
-
-   
 }

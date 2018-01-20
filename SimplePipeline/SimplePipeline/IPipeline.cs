@@ -13,6 +13,4 @@ namespace SimplePipeline
 
         void Reset();
     }
-
-  
 }

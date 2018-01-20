@@ -3,7 +3,5 @@
     public interface IPipelineBuilder
     {
         IPipelineSection Start();
-
-       
     }
 }
