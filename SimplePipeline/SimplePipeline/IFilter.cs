@@ -1,7 +1,11 @@
-﻿namespace SimplePipeline
+﻿using System;
+
+namespace SimplePipeline
 {
-    public interface IFilter<in TFilterInput, out TFilterOutput>
+    public interface IFilter
     {
-        TFilterOutput Execute(TFilterInput input);
+        Object Execute(Object input);
     }
+
+   
 }

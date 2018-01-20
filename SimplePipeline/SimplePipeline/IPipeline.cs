@@ -3,8 +3,16 @@ using System.Collections.Generic;
 
 namespace SimplePipeline
 {
-    public interface IPipeline<in TPipelineInput, out TPipelineOutput> : IFilter<TPipelineInput, TPipelineOutput>, IEnumerable<Object>
+    public interface IPipeline : IEnumerable<IFilter>
     {
-        Int32 Count { get; }
+        Object Output { get; }
+
+        Exception Exception { get; }
+
+        Boolean Execute(Object input);
+
+        void Reset();
     }
+
+  
 }
