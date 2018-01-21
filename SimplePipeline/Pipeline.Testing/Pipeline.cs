@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SimplePipeline.Generic
+using SimplePipeline;
+
+namespace Pipeline.Testing
 {
-    public class Pipeline<TInput, TOutput> : IPipeline<TInput, TOutput>
+    public class Pipeline<TInput, TOutput> : IPipeline<TInput,TOutput>, IPipelineSection<TInput,TOutput>
     {
         private readonly IEnumerable<IFilter> filters;
 
@@ -34,17 +36,7 @@ namespace SimplePipeline.Generic
 
         public Boolean Execute(TInput input)
         {
-            Reset();
-            try
-            {
-                Output = (TOutput)this.Aggregate<IFilter, Object>(input, (value, filter) => filter.Execute(value));
-                return true;
-            }
-            catch (Exception e)
-            {
-                Exception = e;
-                return false;
-            }
+            throw new NotImplementedException();
         }
 
         public TOutput Output { get; private set; }
@@ -60,6 +52,33 @@ namespace SimplePipeline.Generic
         {
             Output = default(TOutput);
             Exception = default(Exception);
+        }
+
+        public IPipelineSection Chain(IFilter filter)
+        {         
+            return new Pipeline<TInput, Object>(Concatenate(this, filter));
+        }
+
+        IPipeline IPipelineSection<TInput, TOutput>.Build()
+        {
+            return this;
+        }
+
+        public IPipelineSection<TInput, TFilterOutput> Chain<TFilterOutput>(IFilter<TOutput, TFilterOutput> filter)
+        {
+            return new Pipeline<TInput, TFilterOutput>(Concatenate(this, filter));
+        }
+
+        IPipeline IPipelineSection.Build()
+        {
+            return this;
+        }
+
+        private static IEnumerable<IFilter> Concatenate(IEnumerable<IFilter> filters, IFilter filter)
+        {
+            Queue<IFilter> newFilters = new Queue<IFilter>(filters);
+            newFilters.Enqueue(filter);
+            return newFilters;
         }
     }
 }

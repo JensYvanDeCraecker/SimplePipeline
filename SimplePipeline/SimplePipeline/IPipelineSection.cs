@@ -5,10 +5,15 @@ namespace SimplePipeline
 {
     public interface IPipelineSection : IEnumerable<IFilter>
     {
-        IPipelineSection Chain(IFilter filter);
-
-        IPipelineSection Chain(Func<Object, Object> filter);
+        IPipelineSection Chain(IFilter filter);    
 
         IPipeline Build();
+    }
+
+    public interface IPipelineSection<in TPipelineInput, out TFilterInput> : IPipelineSection
+    {
+        IPipelineSection<TPipelineInput, TFilterOutput> Chain<TFilterOutput>(IFilter<TFilterInput, TFilterOutput> filter);
+
+        new IPipeline Build();
     }
 }
