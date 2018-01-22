@@ -1,12 +1,12 @@
-﻿namespace SimplePipeline
+﻿namespace SimplePipeline.Builder
 {
     public interface IPipelineBuilder
     {
         IPipelineSection Start();
     }
 
-    public interface IPipelineBuilder<TPipeInput> : IPipelineBuilder
+    public interface IPipelineBuilder<in TPipelineInputBase> : IPipelineBuilder
     {
-        new IPipelineSection<TPipeInput, TPipeInput> Start();
+        IPipelineSection<TPipelineInput, TPipelineInput> Start<TPipelineInput>() where TPipelineInput : TPipelineInputBase;
     }
 }

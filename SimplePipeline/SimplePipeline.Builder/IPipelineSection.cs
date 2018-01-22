@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SimplePipeline
+namespace SimplePipeline.Builder
 {
     public interface IPipelineSection : IEnumerable<IFilter>
     {
@@ -13,6 +13,6 @@ namespace SimplePipeline
     {
         IPipelineSection<TPipelineInput, TFilterOutput> Chain<TFilterOutput>(IFilter<TFilterInput, TFilterOutput> filter);
 
-        new IPipeline Build();
+        new IPipeline<TPipelineInput, TFilterInput> Build();
     }
 }
