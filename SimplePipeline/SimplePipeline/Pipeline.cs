@@ -5,48 +5,18 @@ using System.Linq;
 
 namespace SimplePipeline
 {
-    public class Pipeline : IPipeline
+    public static class Pipeline
     {
-        private readonly IEnumerable<IFilter> filters;
-
-        public Pipeline(IEnumerable<IFilter> filters)
+        public static IPipeline Create(IEnumerable<IFilter> filters)
         {
-            this.filters = filters ?? throw new ArgumentNullException(nameof(filters));
+            return Create<Object, Object>(filters);
         }
 
-        public IEnumerator<IFilter> GetEnumerator()
+        public static IPipeline<TInput, TOutput> Create<TInput, TOutput>(IEnumerable<IFilter> filters)
         {
-            return filters.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        public Object Output { get; private set; }
-
-        public Exception Exception { get; private set; }
-
-        public Boolean Execute(Object input)
-        {
-            Reset();
-            try
-            {
-                Output = this.Aggregate(input, (value, filter) => filter.Execute(value));
-                return true;
-            }
-            catch (Exception e)
-            {
-                Exception = e;
-                return false;
-            }
-        }
-
-        public void Reset()
-        {
-            Output = default(Object);
-            Exception = default(Exception);
+            if (filters == null)
+                throw new ArgumentNullException(nameof(filters));
+            return new Pipeline<TInput, TOutput>(filters);
         }
     }
 
@@ -82,7 +52,7 @@ namespace SimplePipeline
             Reset();
             try
             {
-                Output = (TOutput)this.Aggregate<IFilter, Object>(input, (value, filter) => ExecuteFilter(filter, value));
+                Output = (TOutput)this.Aggregate<IFilter, Object>(input, ExecuteFilter);
                 return true;
             }
             catch (Exception e)
@@ -107,7 +77,7 @@ namespace SimplePipeline
             Exception = default(Exception);
         }
 
-        private static Object ExecuteFilter(IFilter filter, Object input)
+        private static Object ExecuteFilter(Object input, IFilter filter)
         {
             Type genericFilterType = typeof(IFilter<,>).MakeGenericType(input.GetType(), typeof(Object));
             return genericFilterType.IsInstanceOfType(filter) ? genericFilterType.GetMethod("Execute").Invoke(filter, new[] { input }) : filter.Execute(input);

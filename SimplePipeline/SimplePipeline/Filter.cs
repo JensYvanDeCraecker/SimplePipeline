@@ -2,18 +2,18 @@
 
 namespace SimplePipeline
 {
-    public class Filter : IFilter
+    public static class Filter
     {
-        private readonly Func<Object, Object> filter;
-
-        public Filter(Func<Object, Object> filter)
+        public static IFilter Create(Func<Object, Object> filter)
         {
-            this.filter = filter ?? throw new ArgumentNullException(nameof(filter));
+            return Create<Object, Object>(filter);
         }
 
-        public Object Execute(Object input)
+        public static IFilter<TInput, TOutput> Create<TInput, TOutput>(Func<TInput, TOutput> filter)
         {
-            return filter.Invoke(input);
+            if (filter == null)
+                throw new ArgumentNullException(nameof(filter));
+            return new Filter<TInput, TOutput>(filter);
         }
     }
 

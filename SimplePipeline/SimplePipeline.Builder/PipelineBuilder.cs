@@ -2,11 +2,16 @@
 
 namespace SimplePipeline.Builder
 {
-    public class PipelineBuilder : IPipelineBuilder
+    public static class PipelineBuilder
     {
-        public IPipelineSection Start()
+        public static IPipelineBuilder Create()
         {
-            return new PipelineSection();
+            return Create<Object>();
+        }
+
+        public static IPipelineBuilder<TPipelineInputBase> Create<TPipelineInputBase>()
+        {
+            return new PipelineBuilder<TPipelineInputBase>();
         }
     }
 
@@ -14,7 +19,7 @@ namespace SimplePipeline.Builder
     {
         public IPipelineSection<TPipelineInput, TPipelineInput> Start<TPipelineInput>() where TPipelineInput : TPipelineInputBase
         {
-            return new PipelineSection<TPipelineInput>();
+            return PipelineSection.Create<TPipelineInput>();
         }
 
         public IPipelineSection Start()

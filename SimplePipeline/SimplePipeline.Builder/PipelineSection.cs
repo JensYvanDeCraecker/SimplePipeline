@@ -5,44 +5,16 @@ using System.Linq;
 
 namespace SimplePipeline.Builder
 {
-    public class PipelineSection : IPipelineSection
+    public static class PipelineSection
     {
-        private readonly IEnumerable<IFilter> previousFilters;
-
-        public PipelineSection() : this(Enumerable.Empty<IFilter>()) { }
-
-        private PipelineSection(IEnumerable<IFilter> previousFilters)
+        public static IPipelineSection Create()
         {
-            this.previousFilters = previousFilters ?? throw new ArgumentNullException(nameof(previousFilters));
+            return Create<Object>();
         }
 
-        public IEnumerator<IFilter> GetEnumerator()
+        public static IPipelineSection<TPipelineInput, TPipelineInput> Create<TPipelineInput>()
         {
-            return previousFilters.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        public IPipelineSection Chain(IFilter filter)
-        {
-            if (filter == null)
-                throw new ArgumentNullException(nameof(filter));
-            return new PipelineSection(Concatenate(filter));
-        }
-
-        public IPipeline Build()
-        {
-            return new Pipeline(this);
-        }
-
-        private IEnumerable<IFilter> Concatenate(IFilter filter)
-        {
-            Queue<IFilter> filters = new Queue<IFilter>(this);
-            filters.Enqueue(filter);
-            return filters;
+            return new PipelineSection<TPipelineInput>();
         }
     }
 
@@ -81,7 +53,7 @@ namespace SimplePipeline.Builder
 
         public IPipeline<TPipelineInput, TFilterInput> Build()
         {
-            return new Pipeline<TPipelineInput, TFilterInput>(this);
+            return Pipeline.Create<TPipelineInput, TFilterInput>(this);
         }
 
         public IPipelineSection<TPipelineInput, TFilterOutput> Chain<TFilterOutput>(IFilter<TFilterInput, TFilterOutput> filter)
