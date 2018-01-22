@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-
 using SimplePipeline;
 
 namespace Pipeline.Testing
 {
-    public class Pipeline<TInput, TOutput> : IPipeline<TInput,TOutput>, IPipelineSection<TInput,TOutput>
+    public class Pipeline<TInput, TOutput> : IPipeline<TInput, TOutput>, IPipelineSection<TInput, TOutput>
     {
         private readonly IEnumerable<IFilter> filters;
 
@@ -55,7 +53,7 @@ namespace Pipeline.Testing
         }
 
         public IPipelineSection Chain(IFilter filter)
-        {         
+        {
             return new Pipeline<TInput, Object>(Concatenate(this, filter));
         }
 

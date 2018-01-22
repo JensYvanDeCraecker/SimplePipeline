@@ -17,7 +17,7 @@ namespace SimplePipeline
         }
     }
 
-    public class Filter<TInput, TOutput> :  IFilter<TInput, TOutput>
+    public class Filter<TInput, TOutput> : IFilter<TInput, TOutput>
     {
         private readonly Func<TInput, TOutput> filter;
 
