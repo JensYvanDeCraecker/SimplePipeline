@@ -6,6 +6,34 @@ using System.Runtime.CompilerServices;
 
 namespace SimplePipeline.Builder
 {
+    public static class PipelineBuilder
+    {
+        public static IPipeline<TInput, TOutput> Create<TInput, TOutput>(Func<IPipelineBuilder<TInput, TInput>, IPipelineBuilder<TInput, TOutput>> func)
+        {
+            if (func == null)
+                throw new ArgumentNullException(nameof(func));
+            return func.Invoke(new PipelineBuilder<TInput>()).Build();
+        }
+
+        public static IPipelineBuilder<TPipelineInput, TFilterOutput> Chain<TPipelineInput, TFilterInput, TFilterOutput>(this IPipelineBuilder<TPipelineInput, TFilterInput> pipelineBuilder, Func<TFilterInput, TFilterOutput> func)
+        {
+            if (pipelineBuilder == null)
+                throw new ArgumentNullException(nameof(pipelineBuilder));
+            if (func == null)
+                throw new ArgumentNullException(nameof(func));
+        return    pipelineBuilder.Chain(func.ToFilter());
+        }
+
+        public static IPipelineBuilder Chain(this IPipelineBuilder pipelineBuilder, Func<Object, Object> func)
+        {
+            if (pipelineBuilder == null)
+                throw new ArgumentNullException(nameof(pipelineBuilder));
+            if (func == null)
+                throw new ArgumentNullException(nameof(func));
+            return pipelineBuilder.Chain(func.ToFilter());
+        }
+    }
+
     public class PipelineBuilder<TPipelineInput> : PipelineBuilder<TPipelineInput, TPipelineInput>
     {
 
