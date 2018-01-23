@@ -4,16 +4,15 @@ namespace SimplePipeline
 {
     public static class Filter
     {
-        public static IFilter Create(Func<Object, Object> filter)
+
+        public static IFilter<TInput, TOutput> ToFilter<TInput, TOutput>(this Func<TInput, TOutput> filter)
         {
-            return Create<Object, Object>(filter);
+            return new Filter<TInput, TOutput>(filter);
         }
 
-        public static IFilter<TInput, TOutput> Create<TInput, TOutput>(Func<TInput, TOutput> filter)
+        public static IFilter ToFilter(this Func<Object, Object> filter)
         {
-            if (filter == null)
-                throw new ArgumentNullException(nameof(filter));
-            return new Filter<TInput, TOutput>(filter);
+            return new Filter<Object, Object>(filter);
         }
     }
 
