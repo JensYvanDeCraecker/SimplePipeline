@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SimplePipeline.Builder\SimplePipeline.Builder.csproj" />
+    <ProjectReference Include="..\SimplePipeline\SimplePipeline.csproj" />
+  </ItemGroup>
+
+</Project>
