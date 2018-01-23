@@ -12,7 +12,7 @@ namespace SimplePipeline
 
         public static IFilter ToFilter(this Func<Object, Object> filter)
         {
-            return new Filter<Object, Object>(filter);
+            return ToFilter<Object, Object>(filter);
         }
     }
 
