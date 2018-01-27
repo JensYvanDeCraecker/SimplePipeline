@@ -1,5 +1,4 @@
 ﻿using System;
-using SimplePipeline.Examples;
 
 namespace ConsoleTest
 {
@@ -7,7 +6,6 @@ namespace ConsoleTest
     {
         private static void Main(String[] args)
         {
-            PipelineBuilderExample.Load();
             Console.Read();
         }
     }
