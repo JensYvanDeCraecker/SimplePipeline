@@ -53,10 +53,6 @@
       <Project>{6fe50943-a545-4ebc-aa7e-28459106f5f0}</Project>
       <Name>SimplePipeline.Builder</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SimplePipeline.Examples\SimplePipeline.Examples.csproj">
-      <Project>{072655fc-b60f-4fc8-8428-69e24442883d}</Project>
-      <Name>SimplePipeline.Examples</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SimplePipeline\SimplePipeline.csproj">
       <Project>{885f31ac-bb57-40c4-b33e-0ce124c4ed27}</Project>
       <Name>SimplePipeline</Name>

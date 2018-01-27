@@ -3,22 +3,34 @@
 namespace SimplePipeline
 {
     /// <summary>
-    /// Provides extension methods for <see cref="IFilter"/> and <see cref="IFilter{TInput,TOutput}"/> interfaces.
+    /// Provides extension methods for the <see cref="IFilter"/> and <see cref="IFilter{TInput,TOutput}"/> interface.
     /// </summary>
     public static class Filter
     {
-        public static IFilter<TInput, TOutput> ToFilter<TInput, TOutput>(this Func<TInput, TOutput> filter)
+        /// <summary>
+        /// Converts a function to a filter.
+        /// </summary>
+        /// <typeparam name="TInput">The type of the input.</typeparam>
+        /// <typeparam name="TOutput">The type of the output.</typeparam>
+        /// <param name="func">The function to convert to a filter.</param>
+        /// <returns>A newly constructed filter that is based upon the provided function.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static IFilter<TInput, TOutput> ToFilter<TInput, TOutput>(this Func<TInput, TOutput> func)
         {
-            if (filter == null)
-                throw new ArgumentNullException(nameof(filter));
-            return new FuncFilter<TInput, TOutput>(filter);
+            if (func == null)
+                throw new ArgumentNullException(nameof(func));
+            return new FuncFilter<TInput, TOutput>(func);
         }
 
-        public static IFilter ToFilter(this Func<Object, Object> filter)
+        /// <summary>
+        /// Converts a function to a filter.
+        /// </summary>
+        /// <param name="func">The function to convert to a filter.</param>
+        /// <returns>A newly constructed filter that is based upon the provided function.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static IFilter ToFilter(this Func<Object, Object> func)
         {
-            if (filter == null)
-                throw new ArgumentNullException(nameof(filter));
-            return ToFilter<Object, Object>(filter);
+            return ToFilter<Object, Object>(func);
         }
 
         private class FuncFilter<TInput, TOutput> : IFilter<TInput, TOutput>

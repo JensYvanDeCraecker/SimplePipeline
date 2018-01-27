@@ -14,7 +14,7 @@ namespace SimplePipeline
         Object Output { get; }
 
         /// <summary>
-        ///     Gets the exception of a processed input, if unsuccessful
+        ///     Gets the exception of a processed input, if unsuccessful. If not, the default value is returned.
         /// </summary>
         Exception Exception { get; }
 
@@ -28,7 +28,7 @@ namespace SimplePipeline
         ///     successful.
         /// </summary>
         /// <param name="input">The input to process in a collection of filters.</param>
-        /// <returns>True if the processing was successful, otherwise false.</returns>
+        /// <returns>True if the processing was successful. If not, false is returned.</returns>
         Boolean Execute(Object input);
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace SimplePipeline
     public interface IPipeline<in TInput, out TOutput> : IPipeline
     {
         /// <summary>
-        ///     Gets the output of a processed input, if successful.
+        ///     Gets the exception of a processed input, if unsuccessful. If not, the default value is returned.
         /// </summary>
         new TOutput Output { get; }
 
@@ -54,7 +54,7 @@ namespace SimplePipeline
         ///     successful.
         /// </summary>
         /// <param name="input">The input to process in a collection of filters.</param>
-        /// <returns>True if the processing was successful, otherwise false.</returns>
+        /// <returns>True if the processing was successful. If not, false is returned.</returns>
         Boolean Execute(TInput input);
     }
 }
