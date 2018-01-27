@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace SimplePipeline.Builder
 {
@@ -15,13 +14,20 @@ namespace SimplePipeline.Builder
             return func.Invoke(new PipelineBuilder<TInput>()).Build();
         }
 
+        public static IPipeline Create(Func<IPipelineBuilder, IPipelineBuilder> func)
+        {
+            if (func == null)
+                throw new ArgumentNullException(nameof(func));
+            return func.Invoke(new PipelineBuilder<Object>()).Build();
+        }
+
         public static IPipelineBuilder<TPipelineInput, TFilterOutput> Chain<TPipelineInput, TFilterInput, TFilterOutput>(this IPipelineBuilder<TPipelineInput, TFilterInput> pipelineBuilder, Func<TFilterInput, TFilterOutput> func)
         {
             if (pipelineBuilder == null)
                 throw new ArgumentNullException(nameof(pipelineBuilder));
             if (func == null)
                 throw new ArgumentNullException(nameof(func));
-        return    pipelineBuilder.Chain(func.ToFilter());
+            return pipelineBuilder.Chain(func.ToFilter());
         }
 
         public static IPipelineBuilder Chain(this IPipelineBuilder pipelineBuilder, Func<Object, Object> func)
@@ -34,19 +40,13 @@ namespace SimplePipeline.Builder
         }
     }
 
-    public class PipelineBuilder<TPipelineInput> : PipelineBuilder<TPipelineInput, TPipelineInput>
-    {
-
-    }
+    public class PipelineBuilder<TPipelineInput> : PipelineBuilder<TPipelineInput, TPipelineInput> { }
 
     public class PipelineBuilder<TPipelineInput, TFilterInput> : IPipelineBuilder<TPipelineInput, TFilterInput>
     {
         private readonly IEnumerable<IFilter> filters;
 
-        protected PipelineBuilder() : this(Enumerable.Empty<IFilter>())
-        {
-
-        }
+        protected PipelineBuilder() : this(Enumerable.Empty<IFilter>()) { }
 
         public PipelineBuilder(IEnumerable<IFilter> filters)
         {
@@ -65,6 +65,8 @@ namespace SimplePipeline.Builder
 
         public IPipelineBuilder Chain(IFilter filter)
         {
+            if (filter == null)
+                throw new ArgumentNullException(nameof(filter));
             return Create<Object>(filter);
         }
 
@@ -75,6 +77,8 @@ namespace SimplePipeline.Builder
 
         public IPipelineBuilder<TPipelineInput, TFilterOutput> Chain<TFilterOutput>(IFilter<TFilterInput, TFilterOutput> filter)
         {
+            if (filter == null)
+                throw new ArgumentNullException(nameof(filter));
             return Create<TFilterOutput>(filter);
         }
 
@@ -85,8 +89,6 @@ namespace SimplePipeline.Builder
 
         private PipelineBuilder<TPipelineInput, TFilterOutput> Create<TFilterOutput>(IFilter filter)
         {
-            if (filter == null)
-                throw new ArgumentNullException(nameof(filter));
             Queue<IFilter> newfilters = new Queue<IFilter>(this);
             newfilters.Enqueue(filter);
             return new PipelineBuilder<TPipelineInput, TFilterOutput>(newfilters);
