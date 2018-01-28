@@ -18,7 +18,7 @@ namespace SimplePipeline.Builder
         {
             if (func == null)
                 throw new ArgumentNullException(nameof(func));
-            return func.Invoke(new PipelineBuilder<Object>()).Build();
+            return func.Invoke(new PipelineBuilder<object>()).Build();
         }
 
         public static IPipelineBuilder<TPipelineInput, TFilterOutput> Chain<TPipelineInput, TFilterInput, TFilterOutput>(this IPipelineBuilder<TPipelineInput, TFilterInput> pipelineBuilder, Func<TFilterInput, TFilterOutput> func)
@@ -30,7 +30,7 @@ namespace SimplePipeline.Builder
             return pipelineBuilder.Chain(func.ToFilter());
         }
 
-        public static IPipelineBuilder Chain(this IPipelineBuilder pipelineBuilder, Func<Object, Object> func)
+        public static IPipelineBuilder Chain(this IPipelineBuilder pipelineBuilder, Func<object, object> func)
         {
             if (pipelineBuilder == null)
                 throw new ArgumentNullException(nameof(pipelineBuilder));
@@ -67,7 +67,7 @@ namespace SimplePipeline.Builder
         {
             if (filter == null)
                 throw new ArgumentNullException(nameof(filter));
-            return Create<Object>(filter);
+            return Create<object>(filter);
         }
 
         public IPipeline<TPipelineInput, TFilterInput> Build()

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SimplePipeline.Builder
+﻿namespace SimplePipeline.Builder
 {
     public static class Pipeline
     {
@@ -11,7 +9,7 @@ namespace SimplePipeline.Builder
 
         public static IPipelineBuilder ToBuilder(this IPipeline pipeline)
         {
-            return new PipelineBuilder<Object, Object>(pipeline);
+            return new PipelineBuilder<object, object>(pipeline);
         }
     }
 }

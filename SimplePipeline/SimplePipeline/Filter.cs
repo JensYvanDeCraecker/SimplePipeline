@@ -3,12 +3,12 @@
 namespace SimplePipeline
 {
     /// <summary>
-    /// Provides extension methods for the <see cref="IFilter"/> and <see cref="IFilter{TInput,TOutput}"/> interface.
+    ///     Provides extension methods for the <see cref="IFilter" /> and <see cref="IFilter{TInput,TOutput}" /> interface.
     /// </summary>
     public static class Filter
     {
         /// <summary>
-        /// Converts a function to a filter.
+        ///     Converts a function to a filter.
         /// </summary>
         /// <typeparam name="TInput">The type of the input.</typeparam>
         /// <typeparam name="TOutput">The type of the output.</typeparam>
@@ -23,14 +23,14 @@ namespace SimplePipeline
         }
 
         /// <summary>
-        /// Converts a function to a filter.
+        ///     Converts a function to a filter.
         /// </summary>
         /// <param name="func">The function to convert to a filter.</param>
         /// <returns>A newly constructed filter that is based upon the provided function.</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static IFilter ToFilter(this Func<Object, Object> func)
+        public static IFilter ToFilter(this Func<object, object> func)
         {
-            return ToFilter<Object, Object>(func);
+            return ToFilter<object, object>(func);
         }
 
         private class FuncFilter<TInput, TOutput> : IFilter<TInput, TOutput>
@@ -47,9 +47,9 @@ namespace SimplePipeline
                 return filter.Invoke(input);
             }
 
-            public Object Execute(Object input)
+            public object Execute(object input)
             {
-                return Execute((TInput)input);
+                return Execute((TInput) input);
             }
         }
     }

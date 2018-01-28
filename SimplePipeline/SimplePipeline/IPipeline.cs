@@ -11,7 +11,7 @@ namespace SimplePipeline
         /// <summary>
         ///     Gets the output of a processed input, if successful.
         /// </summary>
-        Object Output { get; }
+        object Output { get; }
 
         /// <summary>
         ///     Gets the exception of a processed input, if unsuccessful. If not, the default value is returned.
@@ -21,7 +21,7 @@ namespace SimplePipeline
         /// <summary>
         ///     Gets the state of the pipeline.
         /// </summary>
-        Boolean IsBeginState { get; }
+        bool IsBeginState { get; }
 
         /// <summary>
         ///     Processes the input in a collection of filters and returns a boolean that determines if the processing was
@@ -29,7 +29,7 @@ namespace SimplePipeline
         /// </summary>
         /// <param name="input">The input to process in a collection of filters.</param>
         /// <returns>True if the processing was successful. If not, false is returned.</returns>
-        Boolean Execute(Object input);
+        bool Execute(object input);
 
         /// <summary>
         ///     Resets the pipeline to a state that is similar to a newly instantiated pipeline.
@@ -55,6 +55,6 @@ namespace SimplePipeline
         /// </summary>
         /// <param name="input">The input to process in a collection of filters.</param>
         /// <returns>True if the processing was successful. If not, false is returned.</returns>
-        Boolean Execute(TInput input);
+        bool Execute(TInput input);
     }
 }
