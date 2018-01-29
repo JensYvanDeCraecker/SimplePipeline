@@ -22,6 +22,20 @@ namespace SimplePipeline.Builder
                 throw new ArgumentNullException(nameof(func));
             return pipelineBuilder.Chain(func.ToFilter());
         }
+
+        public static IPipelineBuilder<TPipelineInput, TFilterOutput> Chain<TPipelineInput, TFilterOutput>(IFilter<TPipelineInput, TFilterOutput> filter)
+        {
+            if (filter == null)
+                throw new ArgumentNullException(nameof(filter));
+            return new PipelineBuilder<TPipelineInput>().Chain(filter);
+        }
+
+        public static IPipelineBuilder<TPipelineInput, TFilterOutput> Chain<TPipelineInput, TFilterOutput>(Func<TPipelineInput, TFilterOutput> func)
+        {
+            if (func == null)
+                throw new ArgumentNullException(nameof(func));
+            return Chain(func.ToFilter());
+        }
     }
 
     public class PipelineBuilder<TPipelineInput> : PipelineBuilder<TPipelineInput, TPipelineInput> { }
