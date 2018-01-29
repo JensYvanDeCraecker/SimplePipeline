@@ -51,7 +51,6 @@ namespace SimplePipeline.Builder
             return new PipelineBuilder<TPipelineInput, TFilterOutput>(newfilters);
         }
 
-
         public IEnumerator<Object> GetEnumerator()
         {
             return filters.GetEnumerator();
@@ -64,8 +63,8 @@ namespace SimplePipeline.Builder
 
         private class Pipeline : IPipeline<TPipelineInput, TPipelineOutput>
         {
-            private readonly IEnumerable<Object> filters;
             private readonly Type baseFilterType = typeof(IFilter<,>);
+            private readonly IEnumerable<Object> filters;
 
             public Pipeline(IEnumerable<Object> filters)
             {
