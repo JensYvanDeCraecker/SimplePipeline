@@ -14,7 +14,7 @@
     }
 
     /// <summary>
-    /// Provides a method that can process a given input and returns an output.
+    ///     Provides a method that can process a given input and returns an output.
     /// </summary>
     /// <typeparam name="TInput">The type of the input.</typeparam>
     /// <typeparam name="TOutput">The type of the output.</typeparam>

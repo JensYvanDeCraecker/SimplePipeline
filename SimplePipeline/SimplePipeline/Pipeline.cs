@@ -9,9 +9,7 @@ namespace SimplePipeline
     public class Pipeline<TInput, TOutput> : IPipeline<TInput, TOutput>
     {
         private readonly MethodInfo executeGenericFilter = typeof(Pipeline<TInput, TOutput>).GetMethod("ExecuteGenericfilter", BindingFlags.Static | BindingFlags.NonPublic);
-
         private readonly IEnumerable<IFilter> filters;
-
         private readonly Type genericFilterType = typeof(IFilter<,>);
 
         public Pipeline(IEnumerable<IFilter> filters)
