@@ -16,11 +16,16 @@ namespace SimplePipeline.Builder
 
         public static IPipelineBuilder<TPipelineInput, TFilterOutput> Chain<TPipelineInput, TFilterInput, TFilterOutput>(this IPipelineBuilder<TPipelineInput, TFilterInput> pipelineBuilder, Func<TFilterInput, TFilterOutput> func)
         {
+            return Chain(pipelineBuilder, func.ToFilter());
+        }
+
+        public static IPipelineBuilder<TPipelineInput, TFilterOutput> Chain<TPipelineInput, TFilterInput, TFilterOutput>(this IPipelineBuilder<TPipelineInput, TFilterInput> pipelineBuilder, IFilter<TFilterInput, TFilterOutput> filter)
+        {
             if (pipelineBuilder == null)
                 throw new ArgumentNullException(nameof(pipelineBuilder));
-            if (func == null)
-                throw new ArgumentNullException(nameof(func));
-            return pipelineBuilder.Chain(func.ToFilter());
+            if (filter == null)
+                throw new ArgumentNullException(nameof(filter));
+            return pipelineBuilder.Chain(filter);
         }
     }
 
