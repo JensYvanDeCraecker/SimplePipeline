@@ -5,11 +5,11 @@ using System.Linq;
 
 namespace SimplePipeline
 {
-    public class Pipeline<T> : IPipeline<T, T>, ICollection<IFilter<T,T>>
+    public class Pipeline<T> : IPipeline<T, T>, ICollection<IFilter<T, T>>
     {
         private readonly IList<IFilter<T, T>> filters = new List<IFilter<T, T>>();
 
-        public Pipeline(IEnumerable<IFilter<T,T>> filters)
+        public Pipeline(IEnumerable<IFilter<T, T>> filters)
         {
             if (filters == null)
                 throw new ArgumentNullException(nameof(filters));
@@ -17,10 +17,7 @@ namespace SimplePipeline
                 this.filters.Add(filter);
         }
 
-        public Pipeline()
-        {
-                
-        }
+        public Pipeline() { }
 
         public void Add(IFilter<T, T> filter)
         {

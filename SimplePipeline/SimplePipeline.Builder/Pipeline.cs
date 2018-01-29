@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SimplePipeline.Builder
+﻿namespace SimplePipeline.Builder
 {
     public static class Pipeline
     {
