@@ -22,17 +22,6 @@ namespace SimplePipeline
             return new FuncFilter<TInput, TOutput>(func);
         }
 
-        /// <summary>
-        ///     Converts a function to a filter.
-        /// </summary>
-        /// <param name="func">The function to convert to a filter.</param>
-        /// <returns>A newly constructed filter that is based upon the provided function.</returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        public static IFilter ToFilter(this Func<object, object> func)
-        {
-            return ToFilter<object, object>(func);
-        }
-
         private class FuncFilter<TInput, TOutput> : IFilter<TInput, TOutput>
         {
             private readonly Func<TInput, TOutput> filter;
@@ -45,11 +34,6 @@ namespace SimplePipeline
             public TOutput Execute(TInput input)
             {
                 return filter.Invoke(input);
-            }
-
-            public object Execute(object input)
-            {
-                return Execute((TInput) input);
             }
         }
     }
