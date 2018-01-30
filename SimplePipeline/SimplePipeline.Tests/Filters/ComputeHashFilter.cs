@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 
 namespace SimplePipeline.Tests.Filters
 {
-    public class CalculateHash : IFilter<Byte[], Byte[]>
+    public class ComputeHashFilter : IFilter<Byte[], Byte[]>
     {
         private readonly IDictionary<Byte[], Byte[]> hashHistory = new Dictionary<Byte[], Byte[]>();
         private readonly SHA256CryptoServiceProvider hashProvider = new SHA256CryptoServiceProvider();

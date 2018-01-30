@@ -8,9 +8,9 @@ namespace SimplePipeline
 {
     public class Pipeline<TInput, TOutput> : IPipeline<TInput, TOutput>
     {
-        private readonly IList<Object> filters = new List<Object>();
-        private readonly Type baseFilterType = typeof(IFilter<,>);
         private readonly MethodInfo baseExecuteFilterMethod = typeof(Pipeline<TInput, TOutput>).GetMethod("ExecuteFilter", BindingFlags.NonPublic | BindingFlags.Static);
+        private readonly Type baseFilterType = typeof(IFilter<,>);
+        private readonly IList<Object> filters = new List<Object>();
 
         public Pipeline(IEnumerable<Object> filters)
         {
@@ -21,16 +21,6 @@ namespace SimplePipeline
         }
 
         public Pipeline() { }
-
-        public void Add(Object filter)
-        {
-            filters.Add(filter);
-        }
-
-        public IEnumerator<Object> GetEnumerator()
-        {
-            return filters.GetEnumerator();
-        }
 
         IEnumerator<Object> IEnumerable<Object>.GetEnumerator()
         {
@@ -64,7 +54,7 @@ namespace SimplePipeline
                 {
                     Type valueType = value.GetType();
                     if (baseFilterType.MakeGenericType(valueType, typeof(Object)).IsInstanceOfType(filter))
-                        return baseExecuteFilterMethod.MakeGenericMethod(valueType).Invoke(this, new[] { value });
+                        return baseExecuteFilterMethod.MakeGenericMethod(valueType).Invoke(this, new[] {value});
                     throw new ArgumentException($"Invalid filter {filter}.");
                 });
                 Output = result is TOutput output ? output : throw new ArgumentException($"Result is not {typeof(TOutput)}.");
@@ -83,6 +73,16 @@ namespace SimplePipeline
                 return;
             Exception = default(Exception);
             Output = default(TOutput);
+        }
+
+        public void Add(Object filter)
+        {
+            filters.Add(filter);
+        }
+
+        public IEnumerator<Object> GetEnumerator()
+        {
+            return filters.GetEnumerator();
         }
 
         // ReSharper disable once UnusedMember.Local
