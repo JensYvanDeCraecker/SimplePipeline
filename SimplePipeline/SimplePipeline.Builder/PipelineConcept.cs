@@ -1,24 +1,20 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
-using SimplePipeline.Tests.Filters;
 
-namespace SimplePipeline.Tests.Pipelines
+namespace SimplePipeline.Builder
 {
-    public class HashingPipeline : IPipeline<String, Byte[]>
+    public abstract class PipelineConcept<TPipelineInput, TPipelineOutput> : IPipeline<TPipelineInput, TPipelineOutput>
     {
-        private readonly IPipeline<String, Byte[]> innerPipeline;
+        private readonly IPipeline<TPipelineInput, TPipelineOutput> innerPipeline;
 
-        public HashingPipeline()
+        protected PipelineConcept()
         {
-            innerPipeline = new Pipeline<String, Byte[]>()
-            {
-                new TrimFilter(),
-                new EncodingFilter(Encoding.Unicode),
-                new ComputeHashFilter()
-            };
+            // ReSharper disable once VirtualMemberCallInConstructor
+            innerPipeline = Configure(new PipelineBuilder<TPipelineInput>()).Build();
         }
+
+        protected abstract IPipelineBuilder<TPipelineInput, TPipelineOutput> Configure(IPipelineBuilder<TPipelineInput, TPipelineInput> pipelineBuilder);
 
         public IEnumerator<Object> GetEnumerator()
         {
@@ -30,7 +26,7 @@ namespace SimplePipeline.Tests.Pipelines
             return GetEnumerator();
         }
 
-        public Byte[] Output
+        public TPipelineOutput Output
         {
             get
             {
@@ -54,7 +50,7 @@ namespace SimplePipeline.Tests.Pipelines
             }
         }
 
-        public Boolean Execute(String input)
+        public Boolean Execute(TPipelineInput input)
         {
             return innerPipeline.Execute(input);
         }
