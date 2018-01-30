@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using SimplePipeline.Tests.Filters;
 
 namespace SimplePipeline.Tests.Pipelines
@@ -14,7 +15,7 @@ namespace SimplePipeline.Tests.Pipelines
             innerPipeline = new Pipeline<String, Byte[]>()
             {
                 new TrimFilter(),
-                new GetBytesFilter(),
+                new EncodingFilter(Encoding.Unicode),
                 new ComputeHashFilter()
             };
         }
