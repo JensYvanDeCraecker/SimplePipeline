@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using SimplePipeline.Builder;
 
-namespace SimplePipeline.Builder
+namespace SimplePipeline.Tests.Pipelines
 {
     public abstract class PipelineConcept<TPipelineInput, TPipelineOutput> : IPipeline<TPipelineInput, TPipelineOutput>
     {
