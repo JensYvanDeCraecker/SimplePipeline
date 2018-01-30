@@ -27,7 +27,7 @@ namespace SimplePipeline.Tests.Pipelines
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable)innerPipeline).GetEnumerator();
+            return ((IEnumerable) innerPipeline).GetEnumerator();
         }
 
         public Byte[] Output
