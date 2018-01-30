@@ -2,7 +2,7 @@
 
 namespace SimplePipeline.Tests.Filters
 {
-    public class Base64String : IFilter<String, Byte[]>, IFilter<Byte[], String>
+    public class Base64StringFilter : IFilter<String, Byte[]>, IFilter<Byte[], String>
     {
         public String Execute(Byte[] input)
         {

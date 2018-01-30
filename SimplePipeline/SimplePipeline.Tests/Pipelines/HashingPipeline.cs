@@ -2,66 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using SimplePipeline.Builder;
 using SimplePipeline.Tests.Filters;
 
 namespace SimplePipeline.Tests.Pipelines
 {
-    public class HashingPipeline : IPipeline<String, Byte[]>
+    public class HashingPipeline : PipelineConcept<String, String>
     {
-        private readonly IPipeline<String, Byte[]> innerPipeline;
-
-        public HashingPipeline()
+        protected override IPipelineBuilder<String, String> Configure(IPipelineBuilder<String, String> pipelineBuilder)
         {
-            innerPipeline = new Pipeline<String, Byte[]>()
-            {
-                new TrimFilter(),
-                new EncodingFilter(Encoding.Unicode),
-                new ComputeHashFilter()
-            };
-        }
-
-        public IEnumerator<Object> GetEnumerator()
-        {
-            return innerPipeline.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        public Byte[] Output
-        {
-            get
-            {
-                return innerPipeline.Output;
-            }
-        }
-
-        public Exception Exception
-        {
-            get
-            {
-                return innerPipeline.Exception;
-            }
-        }
-
-        public Boolean IsBeginState
-        {
-            get
-            {
-                return innerPipeline.IsBeginState;
-            }
-        }
-
-        public Boolean Execute(String input)
-        {
-            return innerPipeline.Execute(input);
-        }
-
-        public void Reset()
-        {
-            innerPipeline.Reset();
+            return pipelineBuilder.Chain(new TrimFilter()).Chain(Encoding.Unicode.GetBytes, new ComputeHashFilter(), Convert.ToBase64String);
         }
     }
 }
