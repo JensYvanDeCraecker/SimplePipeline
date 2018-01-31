@@ -48,6 +48,7 @@ namespace SimplePipeline
         {
             if (input == null)
                 throw new ArgumentNullException(nameof(input));
+            Reset();
             try
             {
                 Object result = filters.Aggregate<Object, Object>(input, (value, filter) =>
