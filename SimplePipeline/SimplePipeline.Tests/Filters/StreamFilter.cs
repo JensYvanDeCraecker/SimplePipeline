@@ -5,6 +5,15 @@ namespace SimplePipeline.Tests.Filters
 {
     public class StreamFilter : IFilter<Stream, Byte[]>, IFilter<Byte[], Stream>
     {
+        public Stream Execute(Byte[] input)
+        {
+            if (input == null)
+                throw new ArgumentNullException(nameof(input));
+            Stream memoryStream = new MemoryStream(input.Length);
+            memoryStream.Write(input, 0, input.Length);
+            return memoryStream;
+        }
+
         public Byte[] Execute(Stream input)
         {
             using (input)
@@ -22,15 +31,6 @@ namespace SimplePipeline.Tests.Filters
                 }
                 return readBytes;
             }
-        }
-
-        public Stream Execute(Byte[] input)
-        {
-            if (input == null)
-                throw new ArgumentNullException(nameof(input));
-            Stream memoryStream = new MemoryStream(input.Length);
-            memoryStream.Write(input, 0, input.Length);
-            return memoryStream;
         }
     }
 }

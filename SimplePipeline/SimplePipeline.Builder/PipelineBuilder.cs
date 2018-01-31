@@ -148,10 +148,10 @@ namespace SimplePipeline.Builder
                     throw new ArgumentNullException(nameof(input));
                 try
                 {
-                    Output = (TPipelineOutput) this.Aggregate<Object, Object>(input, (value, filter) =>
+                    Output = (TPipelineOutput)this.Aggregate<Object, Object>(input, (value, filter) =>
                     {
                         Type filterType = baseFilterType.MakeGenericType(value.GetType(), typeof(Object));
-                        return filterType.GetMethod("Execute").Invoke(filter, new[] {value});
+                        return filterType.GetMethod("Execute").Invoke(filter, new[] { value });
                     });
                     return true;
                 }

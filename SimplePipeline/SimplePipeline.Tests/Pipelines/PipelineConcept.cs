@@ -15,8 +15,6 @@ namespace SimplePipeline.Tests.Pipelines
             innerPipeline = Configure(new PipelineBuilder<TPipelineInput>()).Build();
         }
 
-        protected abstract IPipelineBuilder<TPipelineInput, TPipelineOutput> Configure(IPipelineBuilder<TPipelineInput, TPipelineInput> pipelineBuilder);
-
         public IEnumerator<Object> GetEnumerator()
         {
             return innerPipeline.GetEnumerator();
@@ -60,5 +58,7 @@ namespace SimplePipeline.Tests.Pipelines
         {
             innerPipeline.Reset();
         }
+
+        protected abstract IPipelineBuilder<TPipelineInput, TPipelineOutput> Configure(IPipelineBuilder<TPipelineInput, TPipelineInput> pipelineBuilder);
     }
 }

@@ -16,7 +16,7 @@ namespace SimplePipeline.Tests.Filters
         {
             if (input == null)
                 throw new ArgumentNullException(nameof(input));
-            File.AppendAllLines(filePath, new[] {$"Logged on {DateTime.Now}, data: {input}"});
+            File.AppendAllLines(filePath, new[] { $"Logged on {DateTime.Now}, data: {input}" });
             return input;
         }
     }
