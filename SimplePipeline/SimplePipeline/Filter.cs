@@ -3,7 +3,7 @@
 namespace SimplePipeline
 {
     /// <summary>
-    ///     Provides extension methods for the <see cref="IFilter" /> and <see cref="IFilter{TInput,TOutput}" /> interface.
+    ///     Provides extension methods for the <see cref="IFilter{TInput,TOutput}" /> interface.
     /// </summary>
     public static class Filter
     {
