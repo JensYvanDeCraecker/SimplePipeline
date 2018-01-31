@@ -54,7 +54,7 @@ namespace SimplePipeline
                 {
                     Type valueType = value.GetType();
                     if (baseFilterType.MakeGenericType(valueType, typeof(Object)).IsInstanceOfType(filter))
-                        return baseExecuteFilterMethod.MakeGenericMethod(valueType).Invoke(this, new[] { value });
+                        return baseExecuteFilterMethod.MakeGenericMethod(valueType).Invoke(this, new[] { filter, value });
                     throw new ArgumentException($"Invalid filter {filter}.");
                 });
                 Output = result is TOutput output ? output : throw new ArgumentException($"Result is not {typeof(TOutput)}.");
