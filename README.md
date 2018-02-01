@@ -10,11 +10,16 @@ A pipeline is a sequence of code that is independent of each other. These bits o
 
 ![Pipeline example](http://tomasp.net/articles/parallel-extra-image-pipeline/pipeline.png)
 
+### Advantages
+
+#### Reuse code
+
+Because code acts independently in a pipeline design, code from another pipeline can be used again and again in other pipelines. This means you will be saving time on writing the same thing.
+
 ### Demo
 
 Pipeline creation is based on method chaining called a Fluent API, this makes it easy to read.
 
 ```csharp
-IPipeline<String, Byte[]> demoPipelineLambda = PipelineBuilder.Create<String, Byte[]>(builder => builder.Chain(new TrimFilter()).Chain(((Func<String, Byte[]>)(input => Encoding.Unicode.GetBytes(input))).ToFilter()).Chain(new HashingFilter()));
-IPipeline<String, Byte[]> demoPipeline = new PipelineBuilder<String>().Chain(new TrimFilter()).Chain(((Func<String, Byte[]>)(input => Encoding.Unicode.GetBytes(input))).ToFilter()).Chain(new HashingFilter()).Build();
+IPipeline<String, Byte[]> demoPipeline = PipelineBuilder.Create<String, Byte[]>(builder => builder.Chain(new TrimFilter()).Chain(((Func<String, Byte[]>)(input => Encoding.Unicode.GetBytes(input))).ToFilter()).Chain(new HashingFilter()));
 ```
