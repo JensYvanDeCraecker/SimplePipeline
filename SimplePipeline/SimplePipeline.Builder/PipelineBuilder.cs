@@ -107,7 +107,7 @@ namespace SimplePipeline.Builder
 
                 public IEnumerator<Object> GetEnumerator()
                 {
-                    return new FilterEnumerator(filterDatas.GetEnumerator());
+                    return new Enumerator(filterDatas.GetEnumerator());
                 }
 
                 IEnumerator IEnumerable.GetEnumerator()
@@ -150,11 +150,11 @@ namespace SimplePipeline.Builder
                     Output = default(TPipelineOutput);
                 }
 
-                private class FilterEnumerator : IEnumerator<Object>
+                private class Enumerator : IEnumerator<Object>
                 {
                     private readonly IEnumerator<FilterData> filterDataEnumerator;
 
-                    public FilterEnumerator(IEnumerator<FilterData> filterDataEnumerator)
+                    public Enumerator(IEnumerator<FilterData> filterDataEnumerator)
                     {
                         this.filterDataEnumerator = filterDataEnumerator ?? throw new ArgumentNullException(nameof(filterDataEnumerator));
                     }
