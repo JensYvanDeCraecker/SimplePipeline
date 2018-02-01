@@ -2,7 +2,7 @@
 
 namespace SimplePipeline.Builder
 {
-    public class FilterData
+    public sealed class FilterData
     {
         private FilterData(Object filter, Type inputType, Type outputType)
         {
