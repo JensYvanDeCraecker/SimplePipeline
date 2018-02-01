@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace SimplePipeline.Builder
 {
@@ -8,7 +7,7 @@ namespace SimplePipeline.Builder
     /// </summary>
     /// <typeparam name="TPipelineInput">The type of the pipeline input.</typeparam>
     /// <typeparam name="TPipelineOutput">The input type of the next chained filter.</typeparam>
-    public interface IPipelineBuilder<in TPipelineInput, out TPipelineOutput> : IEnumerable<Object>
+    public interface IPipelineBuilder<in TPipelineInput, out TPipelineOutput> : IEnumerable<FilterData>
     {
         /// <summary>
         ///     Chains a new filter to the collection of filters and returns a new collection of chained filters.

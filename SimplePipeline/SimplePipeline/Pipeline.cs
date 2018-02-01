@@ -76,7 +76,7 @@ namespace SimplePipeline
             Output = default(TOutput);
         }
 
-        public void Add(Object filter)
+        public void Add<TFilterInput, TFilterOutput>(IFilter<TFilterInput, TFilterOutput> filter)
         {
             filters.Add(filter);
         }

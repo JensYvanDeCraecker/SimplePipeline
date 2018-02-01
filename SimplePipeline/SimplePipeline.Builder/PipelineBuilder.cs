@@ -74,26 +74,26 @@ namespace SimplePipeline.Builder
 
         public IPipeline<TPipelineInput, TPipelineOutput> Build()
         {
-            return new Pipeline(filterDatas);
+            return new Pipeline(this);
         }
 
         public IPipelineBuilder<TPipelineInput, TFilterOutput> Chain<TFilterOutput>(IFilter<TPipelineOutput, TFilterOutput> filter)
         {
             if (filter == null)
                 throw new ArgumentNullException(nameof(filter));
-            Queue<FilterData> newfilters = new Queue<FilterData>(filterDatas);
-            newfilters.Enqueue(FilterData.Create(filter));
-            return new PipelineBuilder<TPipelineInput, TFilterOutput>(newfilters);
+            Queue<FilterData> newfilterDatas = new Queue<FilterData>(this);
+            newfilterDatas.Enqueue(FilterData.Create(filter));
+            return new PipelineBuilder<TPipelineInput, TFilterOutput>(newfilterDatas);
         }
 
-        public IEnumerator<Object> GetEnumerator()
+        public IEnumerator<FilterData> GetEnumerator()
         {
-            return new FilterEnumerator(filterDatas.GetEnumerator());
+            return filterDatas.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable<Object>)this).GetEnumerator();
+            return GetEnumerator();
         }
 
         private class Pipeline : IPipeline<TPipelineInput, TPipelineOutput>
@@ -101,11 +101,10 @@ namespace SimplePipeline.Builder
             private readonly Type baseFilterType = typeof(IFilter<,>);
             private readonly IEnumerable<FilterData> filterDatas;
 
-            public Pipeline(IEnumerable<FilterData> filters)
+            public Pipeline(IEnumerable<FilterData> filterDatas)
             {
-                filterDatas = filters;
+                this.filterDatas = filterDatas;
             }
-
 
             public IEnumerator<Object> GetEnumerator()
             {
@@ -152,6 +151,47 @@ namespace SimplePipeline.Builder
                     return;
                 Exception = default(Exception);
                 Output = default(TPipelineOutput);
+            }
+
+            private class FilterEnumerator : IEnumerator<Object>
+            {
+                private readonly IEnumerator<FilterData> filterDataEnumerator;
+
+                public FilterEnumerator(IEnumerator<FilterData> filterDataEnumerator)
+                {
+                    this.filterDataEnumerator = filterDataEnumerator ?? throw new ArgumentNullException(nameof(filterDataEnumerator));
+                }
+
+                public Boolean MoveNext()
+                {
+                    return filterDataEnumerator.MoveNext();
+                }
+
+                public void Reset()
+                {
+                    filterDataEnumerator.Reset();
+                }
+
+                public Object Current
+                {
+                    get
+                    {
+                        return filterDataEnumerator.Current.Filter;
+                    }
+                }
+
+                Object IEnumerator.Current
+                {
+                    get
+                    {
+                        return Current;
+                    }
+                }
+
+                public void Dispose()
+                {
+                    filterDataEnumerator.Dispose();
+                }
             }
         }
     }

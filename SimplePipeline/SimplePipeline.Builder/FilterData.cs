@@ -2,22 +2,26 @@
 
 namespace SimplePipeline.Builder
 {
-    internal struct FilterData
+    public class FilterData
     {
-        public Object Filter { get; set; }
-
-        public Type InputType { get; set; }
-
-        public Type OutputType { get; set; }
-
-        public static FilterData Create<TInput, TOutput>(IFilter<TInput, TOutput> filter)
+        private FilterData(Object filter, Type inputType, Type outputType)
         {
-            return new FilterData()
-            {
-                Filter = filter,
-                InputType = typeof(TInput),
-                OutputType = typeof(TOutput)
-            };
+            Filter = filter;
+            InputType = inputType;
+            OutputType = outputType;
+        }
+
+        public Object Filter { get; }
+
+        public Type InputType { get; }
+
+        public Type OutputType { get; }
+
+        public static FilterData Create<TFilterInput, TFilterOutput>(IFilter<TFilterInput, TFilterOutput> filter)
+        {
+            if (filter == null)
+                throw new ArgumentNullException(nameof(filter));
+            return new FilterData(filter, typeof(TFilterInput), typeof(TFilterOutput));
         }
     }
 }
