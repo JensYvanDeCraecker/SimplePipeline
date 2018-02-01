@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using SimplePipeline.Example.Filters;
 using SimplePipeline.Example.Models;
 
@@ -10,14 +11,15 @@ namespace SimplePipeline.Example.Pipelines
     {
         private readonly IPipeline<String, IEnumerable<Person>> innerPipeline;
 
-        public PersonPipeline(Int32 year)
+        public PersonPipeline()
         {
-            //innerPipeline = PipelineBuilder.Create<String, IEnumerable<Person>>(builder => builder.Chain(new ReadFileFilter()).Chain(new ParsePersonsFilter()).Chain(new GetPersonsFromYearFilter(year)));
             innerPipeline = new Pipeline<String, IEnumerable<Person>>()
             {
                 new ReadFileFilter(),
                 new ParsePersonsFilter(),
-                new GetPersonsFromYearFilter(year)
+                new GroupFilter<Person, String>(person=> person.FirstName),
+                new OrderDescendingFilter<IGrouping<String,Person>,int>(group => group.Count()),
+                new FirstFilter<IGrouping<String,Person>>()
             };
         }
 

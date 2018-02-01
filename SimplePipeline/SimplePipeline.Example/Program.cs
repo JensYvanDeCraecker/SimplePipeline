@@ -11,11 +11,9 @@ namespace SimplePipeline.Example
     {
         private static void Main(String[] args)
         {
-            Int32 year = 2000;
-            IPipeline<String, IEnumerable<Person>> pipeline = new PersonPipeline(year);
+            IPipeline<String, IEnumerable<Person>> pipeline = new PersonPipeline();
             if (pipeline.Execute(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\persons.json"))
             {
-                Console.WriteLine($"Persons born in {year}");
                 foreach (Person person in pipeline.Output)
                     Console.WriteLine($"Name: {person.FirstName} {person.LastName}");
             }

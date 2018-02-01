@@ -45,7 +45,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Filters\GetPersonsFromYearFilter.cs" />
+    <Compile Include="Filters\FirstFilter.cs" />
+    <Compile Include="Filters\GroupFilter.cs" />
+    <Compile Include="Filters\OrderDescendingFilter.cs" />
     <Compile Include="Filters\ParsePersonsFilter.cs" />
     <Compile Include="Filters\ReadFileFilter.cs" />
     <Compile Include="Models\Gender.cs" />
