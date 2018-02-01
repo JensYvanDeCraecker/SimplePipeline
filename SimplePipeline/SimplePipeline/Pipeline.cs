@@ -46,8 +46,6 @@ namespace SimplePipeline
 
         public Boolean Execute(TInput input)
         {
-            if (input == null)
-                throw new ArgumentNullException(nameof(input));
             Reset();
             try
             {

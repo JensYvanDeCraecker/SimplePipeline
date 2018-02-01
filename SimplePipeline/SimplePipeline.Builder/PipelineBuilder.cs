@@ -129,8 +129,6 @@ namespace SimplePipeline.Builder
 
                 public Boolean Execute(TPipelineInput input)
                 {
-                    if (input == null)
-                        throw new ArgumentNullException(nameof(input));
                     Reset();
                     try
                     {
