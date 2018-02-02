@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2E2C9921-C299-4A4A-B947-D56EED808A67}</ProjectGuid>
+    <ProjectGuid>{A9AB30C6-80B9-4A93-8823-E529F021DDE7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SimplePipeline.Tests</RootNamespace>
-    <AssemblyName>SimplePipeline.Tests</AssemblyName>
+    <RootNamespace>SimplePipeline.Builder.Tests</RootNamespace>
+    <AssemblyName>SimplePipeline.Builder.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -43,19 +43,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FilterDataTest.cs" />
-    <Compile Include="FilterTest.cs" />
-    <Compile Include="PipelineTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\SimplePipeline.Builder\SimplePipeline.Builder.csproj">
+      <Project>{6fe50943-a545-4ebc-aa7e-28459106f5f0}</Project>
+      <Name>SimplePipeline.Builder</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SimplePipeline\SimplePipeline.csproj">
       <Project>{885f31ac-bb57-40c4-b33e-0ce124c4ed27}</Project>
       <Name>SimplePipeline</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
