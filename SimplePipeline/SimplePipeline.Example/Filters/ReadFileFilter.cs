@@ -1,15 +1,15 @@
 ﻿using System;
-using SimplePipeline;
+using System.IO;
 
-namespace ConsoleTest
+namespace SimplePipeline.Example.Filters
 {
-    public class TrimFilter : IFilter<String, String>
+    public class ReadFileFilter : IFilter<String, String>
     {
         public String Execute(String input)
         {
             if (input == null)
                 throw new ArgumentNullException(nameof(input));
-            return input.Trim();
+            return File.ReadAllText(input);
         }
     }
 }

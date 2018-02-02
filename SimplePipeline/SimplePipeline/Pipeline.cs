@@ -2,68 +2,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace SimplePipeline
 {
-    public class Pipeline<T> : IPipeline<T, T>, ICollection<IFilter<T, T>>
+    public class Pipeline<TInput, TOutput> : IPipeline<TInput, TOutput>
     {
-        private readonly IList<IFilter<T, T>> filters = new List<IFilter<T, T>>();
+        private readonly MethodInfo baseExecuteFilterMethod = typeof(Pipeline<TInput, TOutput>).GetMethod("ExecuteFilter", BindingFlags.NonPublic | BindingFlags.Static);
+        private readonly Type baseFilterType = typeof(IFilter<,>);
+        private readonly IList<Object> filters = new List<Object>();
 
-        public Pipeline(IEnumerable<IFilter<T, T>> filters)
+        public Pipeline(IEnumerable<Object> filters)
         {
             if (filters == null)
                 throw new ArgumentNullException(nameof(filters));
-            foreach (IFilter<T, T> filter in filters)
+            foreach (Object filter in filters)
                 this.filters.Add(filter);
         }
 
         public Pipeline() { }
-
-        public void Add(IFilter<T, T> filter)
-        {
-            filters.Add(filter);
-        }
-
-        public void Clear()
-        {
-            filters.Clear();
-        }
-
-        public Boolean Contains(IFilter<T, T> item)
-        {
-            return filters.Contains(item);
-        }
-
-        public void CopyTo(IFilter<T, T>[] array, Int32 arrayIndex)
-        {
-            filters.CopyTo(array, arrayIndex);
-        }
-
-        public Boolean Remove(IFilter<T, T> item)
-        {
-            return filters.Remove(item);
-        }
-
-        public Int32 Count
-        {
-            get
-            {
-                return filters.Count;
-            }
-        }
-
-        Boolean ICollection<IFilter<T, T>>.IsReadOnly
-        {
-            get
-            {
-                return filters.IsReadOnly;
-            }
-        }
-
-        public IEnumerator<IFilter<T, T>> GetEnumerator()
-        {
-            return filters.GetEnumerator();
-        }
 
         IEnumerator<Object> IEnumerable<Object>.GetEnumerator()
         {
@@ -75,7 +32,7 @@ namespace SimplePipeline
             return GetEnumerator();
         }
 
-        public T Output { get; private set; }
+        public TOutput Output { get; private set; }
 
         public Exception Exception { get; private set; }
 
@@ -83,17 +40,23 @@ namespace SimplePipeline
         {
             get
             {
-                return Equals(Output, default(T)) && Equals(Exception, default(Exception));
+                return Equals(Output, default(TOutput)) && Equals(Exception, default(Exception));
             }
         }
 
-        public Boolean Execute(T input)
+        public Boolean Execute(TInput input)
         {
-            if (input == null)
-                throw new ArgumentNullException(nameof(input));
+            Reset();
             try
             {
-                Output = filters.Aggregate(input, (value, filter) => filter.Execute(value));
+                Object result = filters.Aggregate<Object, Object>(input, (value, filter) =>
+                {
+                    Type valueType = value.GetType();
+                    if (baseFilterType.MakeGenericType(valueType, typeof(Object)).IsInstanceOfType(filter))
+                        return baseExecuteFilterMethod.MakeGenericMethod(valueType).Invoke(this, new[] { filter, value });
+                    throw new ArgumentException($"Invalid filter {filter}.");
+                });
+                Output = result is TOutput output ? output : throw new ArgumentException($"Result is not {typeof(TOutput)}.");
                 return true;
             }
             catch (Exception e)
@@ -108,7 +71,23 @@ namespace SimplePipeline
             if (IsBeginState)
                 return;
             Exception = default(Exception);
-            Output = default(T);
+            Output = default(TOutput);
+        }
+
+        public void Add<TFilterInput, TFilterOutput>(IFilter<TFilterInput, TFilterOutput> filter)
+        {
+            filters.Add(filter);
+        }
+
+        public IEnumerator<Object> GetEnumerator()
+        {
+            return filters.GetEnumerator();
+        }
+
+        // ReSharper disable once UnusedMember.Local
+        private static Object ExecuteFilter<TFilterInput>(IFilter<TFilterInput, Object> filter, TFilterInput input)
+        {
+            return filter.Execute(input);
         }
     }
 }

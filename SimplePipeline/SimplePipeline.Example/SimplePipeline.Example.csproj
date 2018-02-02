@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0A86825F-5272-49AF-B64A-FC2C577CA4FD}</ProjectGuid>
+    <ProjectGuid>{51F8775C-0727-461E-9D7A-A746E5853F91}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>ConsoleTest</RootNamespace>
-    <AssemblyName>ConsoleTest</AssemblyName>
+    <RootNamespace>SimplePipeline.Example</RootNamespace>
+    <AssemblyName>SimplePipeline.Example</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -42,13 +45,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HashingFilter.cs" />
+    <Compile Include="Filters\FirstFilter.cs" />
+    <Compile Include="Filters\GroupFilter.cs" />
+    <Compile Include="Filters\OrderDescendingFilter.cs" />
+    <Compile Include="Filters\ParsePersonsFilter.cs" />
+    <Compile Include="Filters\ReadFileFilter.cs" />
+    <Compile Include="Models\Gender.cs" />
+    <Compile Include="Models\Person.cs" />
+    <Compile Include="Pipelines\PersonPipeline.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TrimFilter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SimplePipeline.Builder\SimplePipeline.Builder.csproj">
@@ -59,6 +69,11 @@
       <Project>{885f31ac-bb57-40c4-b33e-0ce124c4ed27}</Project>
       <Name>SimplePipeline</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="persons.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
