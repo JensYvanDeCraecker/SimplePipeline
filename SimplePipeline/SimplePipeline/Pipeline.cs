@@ -8,13 +8,13 @@ namespace SimplePipeline
     public class Pipeline<TInput, TOutput> : IPipeline<TInput, TOutput>
     {
         private readonly Type filterDefinition = typeof(IFilter<,>);
-        private readonly IList<Object> filters = new List<Object>();
+        private readonly IList<FilterData> filters = new List<FilterData>();
 
-        public Pipeline(IEnumerable<Object> filters)
+        public Pipeline(IEnumerable<FilterData> filters)
         {
             if (filters == null)
                 throw new ArgumentNullException(nameof(filters));
-            foreach (Object filter in filters)
+            foreach (FilterData filter in filters)
                 this.filters.Add(filter);
         }
 
@@ -42,22 +42,7 @@ namespace SimplePipeline
             Reset();
             try
             {
-                //Object result = filters.Aggregate<Object, Object>(input, (value, filter) =>
-                //{
-                //    Type valueType = value.GetType();
-                //    if (baseFilterType.MakeGenericType(valueType, typeof(Object)).IsInstanceOfType(filter))
-                //        return baseExecuteFilterMethod.MakeGenericMethod(valueType).Invoke(this, new[] { filter, value });
-                //    throw new ArgumentException($"Invalid filter {filter}.");
-                //});
-                Object result = this.Aggregate<Object, Object>(input, (value, filter) =>
-                {
-                    Type selectedFilter = filter.GetType().GetInterfaces().FirstOrDefault(type => type.IsGenericType && type.GetGenericTypeDefinition() == filterDefinition && type.GetGenericArguments()[0].IsInstanceOfType(value));
-                    if (selectedFilter != null)
-                        // ReSharper disable once PossibleNullReferenceException
-                        return selectedFilter.GetMethod("Execute").Invoke(filter, new[] { value });
-                    throw new ArgumentException($"Could not find filter to execute {value}.");
-                });
-                Output = result is TOutput output ? output : throw new ArgumentException($"Result is not {typeof(TOutput)}.");
+                Output = (TOutput)this.Aggregate<FilterData, Object>(input, (value, filterData) => filterDefinition.MakeGenericType(filterData.InputType, filterData.OutputType).GetMethod("Execute").Invoke(filterData.Filter, new[] { value }));
                 return true;
             }
             catch (Exception e)
@@ -75,14 +60,14 @@ namespace SimplePipeline
             Output = default(TOutput);
         }
 
-        public void Add<TFilterInput, TFilterOutput>(IFilter<TFilterInput, TFilterOutput> filter)
-        {
-            filters.Add(filter);
-        }
-
-        public IEnumerator<Object> GetEnumerator()
+        public IEnumerator<FilterData> GetEnumerator()
         {
             return filters.GetEnumerator();
+        }
+
+        public void Add<TFilterInput, TFilterOutput>(IFilter<TFilterInput, TFilterOutput> filter)
+        {
+            filters.Add(FilterData.Create(filter));
         }
     }
 }

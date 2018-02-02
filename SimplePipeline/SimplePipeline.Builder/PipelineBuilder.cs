@@ -73,7 +73,7 @@ namespace SimplePipeline.Builder
 
             public IPipeline<TPipelineInput, TPipelineOutput> Build()
             {
-                return new Pipeline(this);
+                return new Pipeline<TPipelineInput, TPipelineOutput>(this);
             }
 
             public IPipelineBuilder<TPipelineInput, TFilterOutput> Chain<TFilterOutput>(IFilter<TPipelineOutput, TFilterOutput> filter)
@@ -95,102 +95,102 @@ namespace SimplePipeline.Builder
                 return GetEnumerator();
             }
 
-            private class Pipeline : IPipeline<TPipelineInput, TPipelineOutput>
-            {
-                private readonly Type baseFilterType = typeof(IFilter<,>);
-                private readonly IEnumerable<FilterData> filterDatas;
+            //private class Pipeline : IPipeline<TPipelineInput, TPipelineOutput>
+            //{
+            //    private readonly Type baseFilterType = typeof(IFilter<,>);
+            //    private readonly IEnumerable<FilterData> filterDatas;
 
-                public Pipeline(IEnumerable<FilterData> filterDatas)
-                {
-                    this.filterDatas = filterDatas;
-                }
+            //    public Pipeline(IEnumerable<FilterData> filterDatas)
+            //    {
+            //        this.filterDatas = filterDatas;
+            //    }
 
-                public IEnumerator<Object> GetEnumerator()
-                {
-                    return new Enumerator(filterDatas.GetEnumerator());
-                }
+            //    public IEnumerator<FilterData> GetEnumerator()
+            //    {
+            //        return filterDatas.GetEnumerator();
+            //    }
 
-                IEnumerator IEnumerable.GetEnumerator()
-                {
-                    return GetEnumerator();
-                }
+            //    IEnumerator IEnumerable.GetEnumerator()
+            //    {
+            //        return GetEnumerator();
+            //    }
 
-                public TPipelineOutput Output { get; private set; }
+            //    public TPipelineOutput Output { get; private set; }
 
-                public Exception Exception { get; private set; }
+            //    public Exception Exception { get; private set; }
 
-                public Boolean IsBeginState
-                {
-                    get
-                    {
-                        return Equals(Output, default(TPipelineOutput)) && Equals(Exception, default(Exception));
-                    }
-                }
+            //    public Boolean IsBeginState
+            //    {
+            //        get
+            //        {
+            //            return Equals(Output, default(TPipelineOutput)) && Equals(Exception, default(Exception));
+            //        }
+            //    }
 
-                public Boolean Execute(TPipelineInput input)
-                {
-                    Reset();
-                    try
-                    {
-                        Output = (TPipelineOutput)filterDatas.Aggregate<FilterData, Object>(input, (value, filterData) => baseFilterType.MakeGenericType(filterData.InputType, filterData.OutputType).GetMethod("Execute").Invoke(filterData.Filter, new[] { value }));
-                        return true;
-                    }
-                    catch (Exception e)
-                    {
-                        Exception = e;
-                        return false;
-                    }
-                }
+            //    public Boolean Execute(TPipelineInput input)
+            //    {
+            //        Reset();
+            //        try
+            //        {
+            //            Output = (TPipelineOutput)this.Aggregate<FilterData, Object>(input, (value, filterData) => baseFilterType.MakeGenericType(filterData.InputType, filterData.OutputType).GetMethod("Execute").Invoke(filterData.Filter, new[] { value }));
+            //            return true;
+            //        }
+            //        catch (Exception e)
+            //        {
+            //            Exception = e;
+            //            return false;
+            //        }
+            //    }
 
-                public void Reset()
-                {
-                    if (IsBeginState)
-                        return;
-                    Exception = default(Exception);
-                    Output = default(TPipelineOutput);
-                }
+            //    public void Reset()
+            //    {
+            //        if (IsBeginState)
+            //            return;
+            //        Exception = default(Exception);
+            //        Output = default(TPipelineOutput);
+            //    }
 
-                private class Enumerator : IEnumerator<Object>
-                {
-                    private readonly IEnumerator<FilterData> filterDataEnumerator;
+            //    //private class Enumerator : IEnumerator<Object>
+            //    //{
+            //    //    private readonly IEnumerator<FilterData> filterDataEnumerator;
 
-                    public Enumerator(IEnumerator<FilterData> filterDataEnumerator)
-                    {
-                        this.filterDataEnumerator = filterDataEnumerator ?? throw new ArgumentNullException(nameof(filterDataEnumerator));
-                    }
+            //    //    public Enumerator(IEnumerator<FilterData> filterDataEnumerator)
+            //    //    {
+            //    //        this.filterDataEnumerator = filterDataEnumerator ?? throw new ArgumentNullException(nameof(filterDataEnumerator));
+            //    //    }
 
-                    public Boolean MoveNext()
-                    {
-                        return filterDataEnumerator.MoveNext();
-                    }
+            //    //    public Boolean MoveNext()
+            //    //    {
+            //    //        return filterDataEnumerator.MoveNext();
+            //    //    }
 
-                    public void Reset()
-                    {
-                        filterDataEnumerator.Reset();
-                    }
+            //    //    public void Reset()
+            //    //    {
+            //    //        filterDataEnumerator.Reset();
+            //    //    }
 
-                    public Object Current
-                    {
-                        get
-                        {
-                            return filterDataEnumerator.Current.Filter;
-                        }
-                    }
+            //    //    public Object Current
+            //    //    {
+            //    //        get
+            //    //        {
+            //    //            return filterDataEnumerator.Current.Filter;
+            //    //        }
+            //    //    }
 
-                    Object IEnumerator.Current
-                    {
-                        get
-                        {
-                            return Current;
-                        }
-                    }
+            //    //    Object IEnumerator.Current
+            //    //    {
+            //    //        get
+            //    //        {
+            //    //            return Current;
+            //    //        }
+            //    //    }
 
-                    public void Dispose()
-                    {
-                        filterDataEnumerator.Dispose();
-                    }
-                }
-            }
+            //    //    public void Dispose()
+            //    //    {
+            //    //        filterDataEnumerator.Dispose();
+            //    //    }
+            //    //}
+            //}
         }
     }
 }

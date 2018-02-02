@@ -8,7 +8,7 @@ namespace SimplePipeline
     /// </summary>
     /// <typeparam name="TInput">The type of the input.</typeparam>
     /// <typeparam name="TOutput">The type of the output.</typeparam>
-    public interface IPipeline<in TInput, out TOutput> : IEnumerable<Object>
+    public interface IPipeline<in TInput, out TOutput> : IEnumerable<FilterData>
     {
         /// <summary>
         ///     Gets the exception of a processed input, if unsuccessful. If not, the default value is returned.

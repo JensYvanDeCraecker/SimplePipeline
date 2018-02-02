@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SimplePipeline.Builder
+namespace SimplePipeline
 {
     public sealed class FilterData
     {
