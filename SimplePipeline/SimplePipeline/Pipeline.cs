@@ -2,14 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace SimplePipeline
 {
     public class Pipeline<TInput, TOutput> : IPipeline<TInput, TOutput>
     {
-        private readonly MethodInfo baseExecuteFilterMethod = typeof(Pipeline<TInput, TOutput>).GetMethod("ExecuteFilter", BindingFlags.NonPublic | BindingFlags.Static);
-        private readonly Type baseFilterType = typeof(IFilter<,>);
+        private readonly Type filterDefinition = typeof(IFilter<,>);
         private readonly IList<Object> filters = new List<Object>();
 
         public Pipeline(IEnumerable<Object> filters)
@@ -44,12 +42,20 @@ namespace SimplePipeline
             Reset();
             try
             {
-                Object result = filters.Aggregate<Object, Object>(input, (value, filter) =>
+                //Object result = filters.Aggregate<Object, Object>(input, (value, filter) =>
+                //{
+                //    Type valueType = value.GetType();
+                //    if (baseFilterType.MakeGenericType(valueType, typeof(Object)).IsInstanceOfType(filter))
+                //        return baseExecuteFilterMethod.MakeGenericMethod(valueType).Invoke(this, new[] { filter, value });
+                //    throw new ArgumentException($"Invalid filter {filter}.");
+                //});
+                Object result = this.Aggregate<Object, Object>(input, (value, filter) =>
                 {
-                    Type valueType = value.GetType();
-                    if (baseFilterType.MakeGenericType(valueType, typeof(Object)).IsInstanceOfType(filter))
-                        return baseExecuteFilterMethod.MakeGenericMethod(valueType).Invoke(this, new[] { filter, value });
-                    throw new ArgumentException($"Invalid filter {filter}.");
+                    Type selectedFilter = filter.GetType().GetInterfaces().FirstOrDefault(type => type.IsGenericType && type.GetGenericTypeDefinition() == filterDefinition && type.GetGenericArguments()[0].IsInstanceOfType(value));
+                    if (selectedFilter != null)
+                        // ReSharper disable once PossibleNullReferenceException
+                        return selectedFilter.GetMethod("Execute").Invoke(filter, new[] { value });
+                    throw new ArgumentException($"Could not find filter to execute {value}.");
                 });
                 Output = result is TOutput output ? output : throw new ArgumentException($"Result is not {typeof(TOutput)}.");
                 return true;
@@ -77,12 +83,6 @@ namespace SimplePipeline
         public IEnumerator<Object> GetEnumerator()
         {
             return filters.GetEnumerator();
-        }
-
-        // ReSharper disable once UnusedMember.Local
-        private static Object ExecuteFilter<TFilterInput>(IFilter<TFilterInput, Object> filter, TFilterInput input)
-        {
-            return filter.Execute(input);
         }
     }
 }
