@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimplePipeline.Builder", "S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimplePipeline.Example", "SimplePipeline.Example\SimplePipeline.Example.csproj", "{51F8775C-0727-461E-9D7A-A746E5853F91}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimplePipeline.Tests", "SimplePipeline.Tests\SimplePipeline.Tests.csproj", "{2E2C9921-C299-4A4A-B947-D56EED808A67}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{51F8775C-0727-461E-9D7A-A746E5853F91}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51F8775C-0727-461E-9D7A-A746E5853F91}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51F8775C-0727-461E-9D7A-A746E5853F91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E2C9921-C299-4A4A-B947-D56EED808A67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E2C9921-C299-4A4A-B947-D56EED808A67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E2C9921-C299-4A4A-B947-D56EED808A67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E2C9921-C299-4A4A-B947-D56EED808A67}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
