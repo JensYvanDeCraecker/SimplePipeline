@@ -22,11 +22,6 @@ namespace SimplePipeline
 
         public Pipeline() { }
 
-        IEnumerator<Object> IEnumerable<Object>.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
