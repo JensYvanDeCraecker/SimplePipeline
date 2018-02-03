@@ -8,7 +8,7 @@ namespace SimplePipeline.Builder.Tests
     [TestFixture]
     public class PipelineBuilderTest
     {
-        public static IEnumerable<TestCaseData> ChainTestData
+        public static IEnumerable<TestCaseData> TestData
         {
             get
             {
@@ -21,12 +21,43 @@ namespace SimplePipeline.Builder.Tests
         }
 
         [Test]
-        [TestCaseSource(nameof(ChainTestData))]
-        public void ChainBuildTest<T>(IPipelineBuilder<T, T> sourceBuilder, T pipelineInput)
+        [TestCaseSource(nameof(TestData))]
+        public void ChainBuildTest<T>(IPipelineBuilder<T, T> pipelineBuilder, T pipelineInput)
         {
-            IPipeline<T, Decimal> pipeline = sourceBuilder.Chain(input => input.GetHashCode()).Chain(originalInput => originalInput.ToString(), Filter.ToFilter<String, Char[]>(input => input.ToCharArray())).Chain(originalInput => originalInput.Select(character => character.ToString()), Filter.ToFilter<IEnumerable<String>, IEnumerable<IGrouping<String, String>>>(input => input.GroupBy(character => character)), originalOutput => Int32.Parse(originalOutput.First().Key)).Chain(Filter.ToFilter<Int32, Double>(input => Math.Exp(input)), originalOutput => (Decimal)originalOutput).Build();
-            Assert.GreaterOrEqual(pipeline.Count(), 4);
-            Assert.IsTrue(pipeline.Execute(pipelineInput));
+            IPipelineBuilder<T, Int32> chainPipelineBuilder = pipelineBuilder.Chain(input => input.GetHashCode());
+            Assert.GreaterOrEqual(chainPipelineBuilder.Count(), 1);
+            IPipeline<T, Int32> chainPipeline = chainPipelineBuilder.Build();
+            Assert.IsTrue(chainPipeline.SequenceEqual(chainPipelineBuilder));
+        }
+
+        [Test]
+        [TestCaseSource(nameof(TestData))]
+        public void ChainInputConvertBuildTest<T>(IPipelineBuilder<T, T> pipelineBuilder, T pipelineInput)
+        {
+            IPipelineBuilder<T, Int32> chainPipelineBuilder = pipelineBuilder.Chain(originalInput => originalInput, Filter.ToFilter<Object, Int32>(input => input.GetHashCode()));
+            Assert.GreaterOrEqual(chainPipelineBuilder.Count(), 1);
+            IPipeline<T, Int32> chainPipeline = chainPipelineBuilder.Build();
+            Assert.IsTrue(chainPipeline.SequenceEqual(chainPipelineBuilder));
+        }
+
+        [Test]
+        [TestCaseSource(nameof(TestData))]
+        public void ChainOutputConvertBuildTest<T>(IPipelineBuilder<T, T> pipelineBuilder, T pipelineInput)
+        {
+            IPipelineBuilder<T, String> chainPipelineBuilder = pipelineBuilder.Chain(Filter.ToFilter<T, Int32>(input => input.GetHashCode()), originalOutput => originalOutput.ToString());
+            Assert.GreaterOrEqual(chainPipelineBuilder.Count(), 1);
+            IPipeline<T, String> chainPipeline = chainPipelineBuilder.Build();
+            Assert.IsTrue(chainPipeline.SequenceEqual(chainPipelineBuilder));
+        }
+
+        [Test]
+        [TestCaseSource(nameof(TestData))]
+        public void ChainInputOutputConvertBuildTest<T>(IPipelineBuilder<T, T> pipelineBuilder, T pipelineInput)
+        {
+            IPipelineBuilder<T, String> chainPipelineBuilder = pipelineBuilder.Chain(originalInput => originalInput, Filter.ToFilter<Object, Int32>(input => input.GetHashCode()), originalOutput => originalOutput.ToString());
+            Assert.GreaterOrEqual(chainPipelineBuilder.Count(), 1);
+            IPipeline<T, String> chainPipeline = chainPipelineBuilder.Build();
+            Assert.IsTrue(chainPipeline.SequenceEqual(chainPipelineBuilder));
         }
     }
 }
