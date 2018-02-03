@@ -11,7 +11,12 @@ namespace SimplePipeline.Builder
         {
             if (func == null)
                 throw new ArgumentNullException(nameof(func));
-            return func.Invoke(new InnerPipelineBuilder<TInput>()).Build();
+            return func.Invoke(Start<TInput>()).Build();
+        }
+
+        public static IPipelineBuilder<TInput, TInput> Start<TInput>()
+        {
+            return new InnerPipelineBuilder<TInput>();
         }
 
         public static IPipelineBuilder<TPipelineInput, TFilterOutput> Chain<TPipelineInput, TFilterInput, TFilterOutput>(this IPipelineBuilder<TPipelineInput, TFilterInput> pipelineBuilder, Func<TFilterInput, TFilterOutput> func)
