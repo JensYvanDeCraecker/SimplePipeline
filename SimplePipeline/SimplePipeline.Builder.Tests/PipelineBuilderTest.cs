@@ -24,7 +24,8 @@ namespace SimplePipeline.Builder.Tests
         [TestCaseSource(nameof(ChainTestData))]
         public void ChainBuildTest<T>(IPipelineBuilder<T, T> sourceBuilder, T pipelineInput)
         {
-            var pipeline = sourceBuilder.Chain(input => input.GetHashCode()).Chain(originalInput => originalInput.ToString(), Filter.ToFilter<String, Char[]>(input => input.ToCharArray())).Chain((Func<Char[], IEnumerable<String>>)(originalInput => originalInput.Select(character => character.ToString())), Filter.ToFilter<IEnumerable<String>, IEnumerable<IGrouping<String, String>>>(input => input.GroupBy(character => character)), originalOutput => Int32.Parse(originalOutput.First().Key)).Build();
+            IPipeline<T, Decimal> pipeline = sourceBuilder.Chain(input => input.GetHashCode()).Chain(originalInput => originalInput.ToString(), Filter.ToFilter<String, Char[]>(input => input.ToCharArray())).Chain(originalInput => originalInput.Select(character => character.ToString()), Filter.ToFilter<IEnumerable<String>, IEnumerable<IGrouping<String, String>>>(input => input.GroupBy(character => character)), originalOutput => Int32.Parse(originalOutput.First().Key)).Chain(Filter.ToFilter<Int32, Double>(input => Math.Exp(input)), originalOutput => (Decimal)originalOutput).Build();
+            Assert.GreaterOrEqual(pipeline.Count(), 4);
             Assert.IsTrue(pipeline.Execute(pipelineInput));
         }
     }

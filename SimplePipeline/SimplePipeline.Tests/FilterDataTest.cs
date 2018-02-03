@@ -39,17 +39,17 @@ namespace SimplePipeline.Tests
         }
 
         [Test]
-        [TestCaseSource(nameof(ValidateFilterData))]
-        public void ValidateFilter(FilterData data)
-        {
-            Assert.IsInstanceOf(typeof(IFilter<,>).MakeGenericType(data.InputType, data.OutputType), data.Filter);
-        }
-
-        [Test]
         [TestCaseSource(nameof(FilterDataEqualityData))]
         public void FilterDataEquality(FilterData first, FilterData second)
         {
             Assert.AreEqual(first, second);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(ValidateFilterData))]
+        public void ValidateFilter(FilterData data)
+        {
+            Assert.IsInstanceOf(typeof(IFilter<,>).MakeGenericType(data.InputType, data.OutputType), data.Filter);
         }
     }
 }
