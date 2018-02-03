@@ -19,7 +19,7 @@ namespace SimplePipeline
 
         public Boolean Equals(FilterData other)
         {
-            if (ReferenceEquals(null, other))
+            if (other is null)
                 return false;
             if (ReferenceEquals(this, other))
                 return true;

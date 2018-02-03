@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using NUnit.Framework;
 
@@ -14,10 +13,10 @@ namespace SimplePipeline.Builder.Tests
             get
             {
                 yield return new TestCaseData(PipelineBuilder.Start<String>(), "SimplePipeline is an easy to use pipeline system.");
-                yield return new TestCaseData(PipelineBuilder.Start<List<Decimal>>(), new List<decimal>());
+                yield return new TestCaseData(PipelineBuilder.Start<List<Decimal>>(), new List<Decimal>());
                 yield return new TestCaseData(PipelineBuilder.Start<Int32>(), 4646);
                 yield return new TestCaseData(PipelineBuilder.Start<Boolean>(), true);
-                yield return new TestCaseData(PipelineBuilder.Start<char[]>(), new char[0]);
+                yield return new TestCaseData(PipelineBuilder.Start<Char[]>(), new Char[0]);
             }
         }
 
@@ -25,7 +24,8 @@ namespace SimplePipeline.Builder.Tests
         [TestCaseSource(nameof(ChainTestData))]
         public void ChainBuildTest<T>(IPipelineBuilder<T, T> sourceBuilder, T pipelineInput)
         {
-      
+            var pipeline = sourceBuilder.Chain(input => input.GetHashCode()).Chain(originalInput => originalInput.ToString(), Filter.ToFilter<String, Char[]>(input => input.ToCharArray())).Chain((Func<Char[], IEnumerable<String>>)(originalInput => originalInput.Select(character => character.ToString())), Filter.ToFilter<IEnumerable<String>, IEnumerable<IGrouping<String, String>>>(input => input.GroupBy(character => character)), originalOutput => Int32.Parse(originalOutput.First().Key)).Build();
+            Assert.IsTrue(pipeline.Execute(pipelineInput));
         }
     }
 }

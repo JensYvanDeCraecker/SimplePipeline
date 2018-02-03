@@ -22,6 +22,11 @@ namespace SimplePipeline
             return new FuncFilter<TInput, TOutput>(func);
         }
 
+        public static FilterData GetData<TInput, TOutput>(this IFilter<TInput, TOutput> filter)
+        {
+            return FilterData.Create(filter);
+        }
+
         private class FuncFilter<TInput, TOutput> : IFilter<TInput, TOutput>
         {
             private readonly Func<TInput, TOutput> filter;
