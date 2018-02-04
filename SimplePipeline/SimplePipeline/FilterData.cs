@@ -29,6 +29,11 @@ namespace SimplePipeline
         /// </summary>
         public Type OutputType { get; }
 
+        /// <summary>
+        /// Checks if the provided information is equal to this information.
+        /// </summary>
+        /// <param name="other">The information to check for equality.</param>
+        /// <returns>Returns a boolean that indicates if this information equal to the provided information.</returns>
         public Boolean Equals(FilterData other)
         {
             if (other is null)
@@ -52,11 +57,20 @@ namespace SimplePipeline
             return new FilterData(filter, typeof(TInput), typeof(TOutput));
         }
 
+        /// <summary>
+        /// Checks if the provided object is equal to this information.
+        /// </summary>
+        /// <param name="obj">The object to check for equality.</param>
+        /// <returns>Returns a boolean that indicates if this information equal to the provided object.</returns>
         public override Boolean Equals(Object obj)
         {
             return obj is FilterData data && Equals(data);
         }
 
+        /// <summary>
+        /// Serves as the default hash function.
+        /// </summary>
+        /// <returns>A hash code for the current object.</returns>
         public override Int32 GetHashCode()
         {
             unchecked
