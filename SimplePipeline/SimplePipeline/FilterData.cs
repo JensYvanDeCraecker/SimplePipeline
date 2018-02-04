@@ -2,6 +2,9 @@
 
 namespace SimplePipeline
 {
+    /// <summary>
+    /// Contains information about a filter.
+    /// </summary>
     public sealed class FilterData : IEquatable<FilterData>
     {
         private FilterData(Object filter, Type inputType, Type outputType)
@@ -11,10 +14,19 @@ namespace SimplePipeline
             OutputType = outputType;
         }
 
+        /// <summary>
+        /// Returns the filter that this data is based on.
+        /// </summary>
         public Object Filter { get; }
 
+        /// <summary>
+        /// Returns the type of the input of the filter that this data is based on.
+        /// </summary>
         public Type InputType { get; }
 
+        /// <summary>
+        /// Returns the type of the output of the filter that this data is based on.
+        /// </summary>
         public Type OutputType { get; }
 
         public Boolean Equals(FilterData other)
@@ -26,11 +38,18 @@ namespace SimplePipeline
             return Equals(Filter, other.Filter) && InputType == other.InputType && OutputType == other.OutputType;
         }
 
-        public static FilterData Create<TFilterInput, TFilterOutput>(IFilter<TFilterInput, TFilterOutput> filter)
+        /// <summary>
+        /// Creates information from the provided filter.
+        /// </summary>
+        /// <typeparam name="TInput">The type of the input.</typeparam>
+        /// <typeparam name="TOutput">The type of the output.</typeparam>
+        /// <param name="filter">The filter to create the information from.</param>
+        /// <returns>The information about the provided filter.</returns>
+        public static FilterData Create<TInput, TOutput>(IFilter<TInput, TOutput> filter)
         {
             if (filter == null)
                 throw new ArgumentNullException(nameof(filter));
-            return new FilterData(filter, typeof(TFilterInput), typeof(TFilterOutput));
+            return new FilterData(filter, typeof(TInput), typeof(TOutput));
         }
 
         public override Boolean Equals(Object obj)

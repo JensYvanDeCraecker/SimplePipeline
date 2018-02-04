@@ -13,7 +13,7 @@ namespace SimplePipeline
         /// <typeparam name="TInput">The type of the input.</typeparam>
         /// <typeparam name="TOutput">The type of the output.</typeparam>
         /// <param name="func">The function to convert to a filter.</param>
-        /// <returns>A newly constructed filter that is based upon the provided function.</returns>
+        /// <returns>A newly constructed filter that is based on the provided function.</returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static IFilter<TInput, TOutput> ToFilter<TInput, TOutput>(this Func<TInput, TOutput> func)
         {
@@ -22,11 +22,26 @@ namespace SimplePipeline
             return new FuncFilter<TInput, TOutput>(func);
         }
 
+        /// <summary>
+        ///     Gets the information from the provided filter.
+        /// </summary>
+        /// <typeparam name="TInput">The type of the input.</typeparam>
+        /// <typeparam name="TOutput">The type of the output.</typeparam>
+        /// <param name="filter">The filter to get the information from.</param>
+        /// <returns>The information that is associated with the provided filter.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public static FilterData GetData<TInput, TOutput>(this IFilter<TInput, TOutput> filter)
         {
             return FilterData.Create(filter);
         }
 
+        /// <summary>
+        ///     Converts a pipeline to a filter.
+        /// </summary>
+        /// <typeparam name="TInput">The type of the input.</typeparam>
+        /// <typeparam name="TOutput">The type of the output.</typeparam>
+        /// <param name="pipeline">The pipeline to convert to a filter.</param>
+        /// <returns>A newly constructed filter that is based on the provided pipeline.</returns>
         public static IFilter<TInput, TOutput> ToFilter<TInput, TOutput>(this IPipeline<TInput, TOutput> pipeline)
         {
             return ToFilter<TInput, TOutput>(input => pipeline.Execute(input) ? pipeline.Output : throw pipeline.Exception);

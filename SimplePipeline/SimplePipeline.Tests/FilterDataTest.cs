@@ -42,6 +42,7 @@ namespace SimplePipeline.Tests
         [TestCaseSource(nameof(FilterDataEqualityData))]
         public void FilterDataEquality(FilterData first, FilterData second)
         {
+            Assert.AreEqual(first.GetHashCode(), second.GetHashCode());
             Assert.AreEqual(first, second);
         }
 
