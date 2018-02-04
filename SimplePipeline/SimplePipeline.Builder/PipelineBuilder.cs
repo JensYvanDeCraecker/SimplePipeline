@@ -28,41 +28,6 @@ namespace SimplePipeline.Builder
             return pipelineBuilder.Chain(func.ToFilter());
         }
 
-        public static IPipelineBuilder<TPipelineInput, TFilterOutput> Chain<TPipelineInput, TExpectedFilterInput, TFilterInput, TFilterOutput>(this IPipelineBuilder<TPipelineInput, TExpectedFilterInput> pipelineBuilder, Func<TExpectedFilterInput, TFilterInput> inputConverter, IFilter<TFilterInput, TFilterOutput> filter)
-        {
-            if (pipelineBuilder == null)
-                throw new ArgumentNullException(nameof(pipelineBuilder));
-            if (filter == null)
-                throw new ArgumentNullException(nameof(filter));
-            if (inputConverter == null)
-                throw new ArgumentNullException(nameof(inputConverter));
-            return pipelineBuilder.Chain(input => filter.Execute(inputConverter.Invoke(input)));
-        }
-
-        public static IPipelineBuilder<TPipelineInput, TFilterOutput> Chain<TPipelineInput, TFilterInput, TExpectedFilterOutput, TFilterOutput>(this IPipelineBuilder<TPipelineInput, TFilterInput> pipelineBuilder, IFilter<TFilterInput, TExpectedFilterOutput> filter, Func<TExpectedFilterOutput, TFilterOutput> outputConverter)
-        {
-            if (pipelineBuilder == null)
-                throw new ArgumentNullException(nameof(pipelineBuilder));
-            if (filter == null)
-                throw new ArgumentNullException(nameof(filter));
-            if (outputConverter == null)
-                throw new ArgumentNullException(nameof(outputConverter));
-            return pipelineBuilder.Chain(input => outputConverter.Invoke(filter.Execute(input)));
-        }
-
-        public static IPipelineBuilder<TPipelineInput, TFilterOutput> Chain<TPipelineInput, TExpectedFilterInput, TFilterInput, TExpectedFilterOutput, TFilterOutput>(this IPipelineBuilder<TPipelineInput, TExpectedFilterInput> pipelineBuilder, Func<TExpectedFilterInput, TFilterInput> inputConverter, IFilter<TFilterInput, TExpectedFilterOutput> filter, Func<TExpectedFilterOutput, TFilterOutput> outputConverter)
-        {
-            if (pipelineBuilder == null)
-                throw new ArgumentNullException(nameof(pipelineBuilder));
-            if (filter == null)
-                throw new ArgumentNullException(nameof(filter));
-            if (outputConverter == null)
-                throw new ArgumentNullException(nameof(outputConverter));
-            if (inputConverter == null)
-                throw new ArgumentNullException(nameof(inputConverter));
-            return pipelineBuilder.Chain(input => outputConverter.Invoke(filter.Execute(inputConverter.Invoke(input))));
-        }
-
         private class InnerPipelineBuilder<TPipelineInput> : InnerPipelineBuilder<TPipelineInput, TPipelineInput> { }
 
         private class InnerPipelineBuilder<TPipelineInput, TPipelineOutput> : IPipelineBuilder<TPipelineInput, TPipelineOutput>
