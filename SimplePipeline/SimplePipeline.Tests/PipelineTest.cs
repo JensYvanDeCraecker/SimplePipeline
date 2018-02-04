@@ -51,13 +51,16 @@ namespace SimplePipeline.Tests
                 output = pipeline.Output;
                 pipeline.Reset();
                 Assert.IsTrue(pipeline.IsBeginState);
+                Assert.DoesNotThrow(() => pipeline.ToFilter().Execute(input));
             }
             else
             {
                 Assert.IsNotNull(pipeline.Exception);
+                Exception exception = pipeline.Exception;
                 Assert.IsFalse(pipeline.IsBeginState);
                 pipeline.Reset();
                 Assert.IsTrue(pipeline.IsBeginState);
+                Assert.Throws(exception.GetType(), () => pipeline.ToFilter().Execute(input));
             }
             return output;
         }
