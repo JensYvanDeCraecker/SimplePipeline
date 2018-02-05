@@ -34,7 +34,7 @@ namespace SimplePipeline
         Boolean Execute(TInput input);
 
         /// <summary>
-        ///     Resets the pipeline to a state that is similar to a newly instantiated pipeline.
+        ///     Resets the pipeline to a state that is similar to a pipeline that has not yet processed any inputs.
         /// </summary>
         void Reset();
     }
