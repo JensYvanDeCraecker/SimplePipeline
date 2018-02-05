@@ -7,29 +7,32 @@ namespace SimplePipeline
     /// </summary>
     public sealed class FilterData : IEquatable<FilterData>
     {
-        private FilterData(Object filter, Type inputType, Type outputType, Type filterType)
+        private FilterData(Object filter, Type inputType, Type outputType)
         {
             Filter = filter;
             InputType = inputType;
             OutputType = outputType;
-            FilterType = filterType;
+            FilterType = typeof(IFilter<,>).MakeGenericType(inputType, outputType);
         }
 
         /// <summary>
-        /// Returns the filter that this data is based on.
+        /// Returns the filter that this information is based on.
         /// </summary>
         public Object Filter { get; }
 
         /// <summary>
-        /// Returns the type of the input of the filter that this data is based on.
+        /// Returns the type of the input of the filter that this information is based on.
         /// </summary>
         public Type InputType { get; }
 
         /// <summary>
-        /// Returns the type of the output of the filter that this data is based on.
+        /// Returns the type of the output of the filter that this information is based on.
         /// </summary>
         public Type OutputType { get; }
 
+        /// <summary>
+        /// Returns the <see cref="IFilter{TInput,TOutput}"/> type that this information is based on.
+        /// </summary>
         public Type FilterType { get; }
 
         /// <summary>
@@ -57,9 +60,7 @@ namespace SimplePipeline
         {
             if (filter == null)
                 throw new ArgumentNullException(nameof(filter));
-            Type inputType = typeof(TInput);
-            Type outputType = typeof(TOutput);
-            return new FilterData(filter, inputType, outputType, typeof(IFilter<,>).MakeGenericType(inputType, outputType));
+            return new FilterData(filter,typeof(TInput),  typeof(TOutput));
         }
 
         /// <summary>
