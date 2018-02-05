@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace SimplePipeline
 {
@@ -7,12 +8,14 @@ namespace SimplePipeline
     /// </summary>
     public sealed class FilterData : IEquatable<FilterData>
     {
+        private readonly MethodInfo executeFilter;
         private FilterData(Object filter, Type inputType, Type outputType)
         {
             Filter = filter;
             InputType = inputType;
             OutputType = outputType;
             FilterType = typeof(IFilter<,>).MakeGenericType(inputType, outputType);
+            executeFilter = FilterType.GetMethod("Execute");
         }
 
         /// <summary>
@@ -86,6 +89,11 @@ namespace SimplePipeline
                 hashCode = (hashCode * 397) ^ (OutputType != null ? OutputType.GetHashCode() : 0);
                 return hashCode;
             }
+        }
+
+        public Object ExecuteFilter(Object input)
+        {
+            return executeFilter.Invoke(Filter, new[] { input });
         }
     }
 }

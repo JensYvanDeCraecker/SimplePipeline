@@ -41,7 +41,7 @@ namespace SimplePipeline
             Reset();
             try
             {
-                Output = (TOutput)this.Aggregate<FilterData, Object>(input, (value, filterData) => filterData.FilterType.GetMethod("Execute").Invoke(filterData.Filter, new[] { value }));
+                Output = (TOutput)this.Aggregate<FilterData, Object>(input, (value, filterData) => filterData.ExecuteFilter(value));
                 return true;
             }
             catch (Exception e)
