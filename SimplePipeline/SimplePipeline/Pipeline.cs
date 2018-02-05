@@ -7,7 +7,6 @@ namespace SimplePipeline
 {
     public class Pipeline<TInput, TOutput> : IPipeline<TInput, TOutput>
     {
-        private readonly Type filterDefinition = typeof(IFilter<,>);
         private readonly IList<FilterData> filters = new List<FilterData>();
 
         public Pipeline(IEnumerable<FilterData> filters)
@@ -42,7 +41,7 @@ namespace SimplePipeline
             Reset();
             try
             {
-                Output = (TOutput)this.Aggregate<FilterData, Object>(input, (value, filterData) => filterDefinition.MakeGenericType(filterData.InputType, filterData.OutputType).GetMethod("Execute").Invoke(filterData.Filter, new[] { value }));
+                Output = (TOutput)this.Aggregate<FilterData, Object>(input, (value, filterData) => filterData.FilterType.GetMethod("Execute").Invoke(filterData.Filter, new[] { value }));
                 return true;
             }
             catch (Exception e)
