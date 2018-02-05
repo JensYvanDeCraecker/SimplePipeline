@@ -10,6 +10,7 @@ namespace SimplePipeline.Tests
     public class FilterDataTest
     {
         private readonly MethodInfo createFilterData = typeof(FilterData).GetMethod("Create", BindingFlags.Static | BindingFlags.Public);
+
         public static IEnumerable<TestCaseData> TestData
         {
             get
@@ -23,11 +24,9 @@ namespace SimplePipeline.Tests
             }
         }
 
-        
-
         [Test]
         [TestCaseSource(nameof(TestData))]
-        public void FilterDataEquality(FilterData data)
+        public void ValidateEquality(FilterData data)
         {
             Object newFilterData = createFilterData.MakeGenericMethod(data.InputType, data.OutputType).Invoke(null, new[] { data.Filter });
             Assert.AreEqual(data.GetHashCode(), newFilterData.GetHashCode());
@@ -38,7 +37,15 @@ namespace SimplePipeline.Tests
         [TestCaseSource(nameof(TestData))]
         public void ValidateFilter(FilterData data)
         {
-            Assert.IsInstanceOf(typeof(IFilter<,>).MakeGenericType(data.InputType, data.OutputType), data.Filter);
+            Assert.AreEqual(typeof(IFilter<,>).MakeGenericType(data.InputType, data.OutputType), data.FilterType);
+            Assert.IsInstanceOf(data.FilterType, data.Filter);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(TestData))]
+        public void ValidateFilterType(FilterData data)
+        {
+            Assert.AreEqual(typeof(IFilter<,>).MakeGenericType(data.InputType, data.OutputType), data.FilterType);
         }
     }
 }

@@ -12,31 +12,11 @@ namespace SimplePipeline.Tests
         {
             get
             {
-                yield return new TestCaseData(new Pipeline<String, String>()
-                {
-                    ((Func<String, String>)(input => input.ToUpper())).ToFilter(),
-                    ((Func<String, String>)(input => new String(input.Reverse().ToArray()))).ToFilter(),
-                    ((Func<String, String>)(input => input.Substring(0, 4))).ToFilter()
-                }, "SimplePipeline is an easy to use pipeline system.").Returns(".MET");
-                yield return new TestCaseData(new Pipeline<String, Char>()
-                {
-                    ((Func<String, IEnumerable<IGrouping<Char, Char>>>)(input => input.GroupBy(character => character))).ToFilter(),
-                    ((Func<IEnumerable<IGrouping<Char, Char>>, Char>)(input => input.OrderByDescending(group => group.Count()).First().Key)).ToFilter()
-                }, "SimplePipeline is an easy to use pipeline system.").Returns('e');
-                yield return new TestCaseData(new Pipeline<String, Int32>()
-                {
-                    ((Func<String, IEnumerable<IGrouping<Char, Char>>>)(input => input.GroupBy(character => character))).ToFilter(),
-                    ((Func<IEnumerable<IGrouping<Char, Char>>, Int32>)(input => input.OrderByDescending(group => group.Count()).First().Count())).ToFilter()
-                }, "SimplePipeline is an easy to use pipeline system.").Returns(8);
-                yield return new TestCaseData(new Pipeline<IEnumerable<Int32>, Double>()
-                {
-                    ((Func<IEnumerable<Int32>, Double>)(input => input.Average())).ToFilter(),
-                    ((Func<Double, Double>)Math.Round).ToFilter()
-                }, new[] { 7, 45, 78, 98, 12, 14 }).Returns(42);
-                yield return new TestCaseData(new Pipeline<String, String>()
-                {
-                    ((Func<String, String>)(input => !String.IsNullOrEmpty(input) ? input : throw new ArgumentNullException(nameof(input)))).ToFilter()
-                }, null).Returns(null);
+                yield return new TestCaseData(new Pipeline<String, String>() { ((Func<String, String>)(input => input.ToUpper())).ToFilter(), ((Func<String, String>)(input => new String(input.Reverse().ToArray()))).ToFilter(), ((Func<String, String>)(input => input.Substring(0, 4))).ToFilter() }, "SimplePipeline is an easy to use pipeline system.").Returns(".MET");
+                yield return new TestCaseData(new Pipeline<String, Char>() { ((Func<String, IEnumerable<IGrouping<Char, Char>>>)(input => input.GroupBy(character => character))).ToFilter(), ((Func<IEnumerable<IGrouping<Char, Char>>, Char>)(input => input.OrderByDescending(group => group.Count()).First().Key)).ToFilter() }, "SimplePipeline is an easy to use pipeline system.").Returns('e');
+                yield return new TestCaseData(new Pipeline<String, Int32>() { ((Func<String, IEnumerable<IGrouping<Char, Char>>>)(input => input.GroupBy(character => character))).ToFilter(), ((Func<IEnumerable<IGrouping<Char, Char>>, Int32>)(input => input.OrderByDescending(group => group.Count()).First().Count())).ToFilter() }, "SimplePipeline is an easy to use pipeline system.").Returns(8);
+                yield return new TestCaseData(new Pipeline<IEnumerable<Int32>, Double>() { ((Func<IEnumerable<Int32>, Double>)(input => input.Average())).ToFilter(), ((Func<Double, Double>)Math.Round).ToFilter() }, new[] { 7, 45, 78, 98, 12, 14 }).Returns(42);
+                yield return new TestCaseData(new Pipeline<String, String>() { ((Func<String, String>)(input => !String.IsNullOrEmpty(input) ? input : throw new ArgumentNullException(nameof(input)))).ToFilter() }, null).Returns(null);
             }
         }
 
@@ -56,11 +36,11 @@ namespace SimplePipeline.Tests
             else
             {
                 Assert.IsNotNull(pipeline.Exception);
-                Exception exception = pipeline.Exception;
+                Type exceptionType = pipeline.Exception.GetType();
                 Assert.IsFalse(pipeline.IsBeginState);
                 pipeline.Reset();
                 Assert.IsTrue(pipeline.IsBeginState);
-                Assert.Throws(exception.GetType(), () => pipeline.ToFilter().Execute(input));
+                Assert.Throws(exceptionType, () => pipeline.ToFilter().Execute(input));
             }
             return output;
         }
