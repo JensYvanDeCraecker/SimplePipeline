@@ -10,7 +10,7 @@ namespace SimplePipeline.Tests
     [TestFixture]
     public class FilterTest
     {
-        public static IEnumerable<TestCaseData> ExecuteFilterData
+        public static IEnumerable<TestCaseData> TestData
         {
             get
             {
@@ -26,7 +26,7 @@ namespace SimplePipeline.Tests
         }
 
         [Test]
-        [TestCaseSource(nameof(ExecuteFilterData))]
+        [TestCaseSource(nameof(TestData))]
         public TOutput ExecuteFilter<TInput, TOutput>(IFilter<TInput, TOutput> filter, TInput input)
         {
             try

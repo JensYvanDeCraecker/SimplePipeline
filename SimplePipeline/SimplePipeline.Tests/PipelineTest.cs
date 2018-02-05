@@ -8,7 +8,7 @@ namespace SimplePipeline.Tests
     [TestFixture]
     public class PipelineTest
     {
-        public static IEnumerable<TestCaseData> ExecutePipelineData
+        public static IEnumerable<TestCaseData> TestData
         {
             get
             {
@@ -41,7 +41,7 @@ namespace SimplePipeline.Tests
         }
 
         [Test]
-        [TestCaseSource(nameof(ExecutePipelineData))]
+        [TestCaseSource(nameof(TestData))]
         public TOutput ExecutePipeline<TInput, TOutput>(IPipeline<TInput, TOutput> pipeline, TInput input)
         {
             Assert.IsTrue(pipeline.IsBeginState);

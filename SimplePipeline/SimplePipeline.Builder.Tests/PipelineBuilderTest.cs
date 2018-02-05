@@ -8,7 +8,7 @@ namespace SimplePipeline.Builder.Tests
     [TestFixture]
     public class PipelineBuilderTest
     {
-        public static IEnumerable<TestCaseData> ChainBuildData
+        public static IEnumerable<TestCaseData> TestData
         {
             get
             {
@@ -21,7 +21,7 @@ namespace SimplePipeline.Builder.Tests
         }
 
         [Test]
-        [TestCaseSource(nameof(ChainBuildData))]
+        [TestCaseSource(nameof(TestData))]
         public void ChainBuild<T>(IPipelineBuilder<T, T> pipelineBuilder, T pipelineInput)
         {
             Boolean Predicate(FilterData filterData)

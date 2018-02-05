@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using NUnit.Framework;
 
 namespace SimplePipeline.Tests
@@ -8,7 +9,8 @@ namespace SimplePipeline.Tests
     [TestFixture]
     public class FilterDataTest
     {
-        public static IEnumerable<TestCaseData> ValidateFilterData
+        private readonly MethodInfo createFilterData = typeof(FilterData).GetMethod("Create", BindingFlags.Static | BindingFlags.Public);
+        public static IEnumerable<TestCaseData> TestData
         {
             get
             {
@@ -21,33 +23,19 @@ namespace SimplePipeline.Tests
             }
         }
 
-        public static IEnumerable<TestCaseData> FilterDataEqualityData
+        
+
+        [Test]
+        [TestCaseSource(nameof(TestData))]
+        public void FilterDataEquality(FilterData data)
         {
-            get
-            {
-                IFilter<String, String> firstFilter = ((Func<String, String>)(input => new String(input.Reverse().ToArray()))).ToFilter();
-                yield return new TestCaseData(FilterData.Create(firstFilter), FilterData.Create(firstFilter));
-                IFilter<String, Int32> secondFilter = ((Func<String, Int32>)(input => input.Length)).ToFilter();
-                yield return new TestCaseData(FilterData.Create(secondFilter), FilterData.Create(secondFilter));
-                IFilter<Double, Double> thirdFilter = ((Func<Double, Double>)Math.Round).ToFilter();
-                yield return new TestCaseData(FilterData.Create(thirdFilter), FilterData.Create(thirdFilter));
-                IFilter<String, IEnumerable<IGrouping<Char, Char>>> fourthFilter = ((Func<String, IEnumerable<IGrouping<Char, Char>>>)(input => input.GroupBy(character => character))).ToFilter();
-                yield return new TestCaseData(FilterData.Create(fourthFilter), FilterData.Create(fourthFilter));
-                IFilter<IEnumerable<IGrouping<Char, Char>>, Int32> fifthFilter = ((Func<IEnumerable<IGrouping<Char, Char>>, Int32>)(input => input.OrderByDescending(group => group.Count()).First().Count())).ToFilter();
-                yield return new TestCaseData(FilterData.Create(fifthFilter), FilterData.Create(fifthFilter));
-            }
+            Object newFilterData = createFilterData.MakeGenericMethod(data.InputType, data.OutputType).Invoke(null, new[] { data.Filter });
+            Assert.AreEqual(data.GetHashCode(), newFilterData.GetHashCode());
+            Assert.AreEqual(data, newFilterData);
         }
 
         [Test]
-        [TestCaseSource(nameof(FilterDataEqualityData))]
-        public void FilterDataEquality(FilterData first, FilterData second)
-        {
-            Assert.AreEqual(first.GetHashCode(), second.GetHashCode());
-            Assert.AreEqual(first, second);
-        }
-
-        [Test]
-        [TestCaseSource(nameof(ValidateFilterData))]
+        [TestCaseSource(nameof(TestData))]
         public void ValidateFilter(FilterData data)
         {
             Assert.IsInstanceOf(typeof(IFilter<,>).MakeGenericType(data.InputType, data.OutputType), data.Filter);
