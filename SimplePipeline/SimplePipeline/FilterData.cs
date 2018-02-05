@@ -3,7 +3,7 @@
 namespace SimplePipeline
 {
     /// <summary>
-    /// Contains information about a filter.
+    ///     Contains information about a filter.
     /// </summary>
     public sealed class FilterData : IEquatable<FilterData>
     {
@@ -16,27 +16,27 @@ namespace SimplePipeline
         }
 
         /// <summary>
-        /// Returns the filter that this information is based on.
+        ///     Returns the filter that this information is based on.
         /// </summary>
         public Object Filter { get; }
 
         /// <summary>
-        /// Returns the type of the input of the filter that this information is based on.
+        ///     Returns the type of the input of the filter that this information is based on.
         /// </summary>
         public Type InputType { get; }
 
         /// <summary>
-        /// Returns the type of the output of the filter that this information is based on.
+        ///     Returns the type of the output of the filter that this information is based on.
         /// </summary>
         public Type OutputType { get; }
 
         /// <summary>
-        /// Returns the <see cref="IFilter{TInput,TOutput}"/> type that this information is based on.
+        ///     Returns the <see cref="IFilter{TInput,TOutput}" /> type that this information is based on.
         /// </summary>
         public Type FilterType { get; }
 
         /// <summary>
-        /// Checks if the provided information is equal to this information.
+        ///     Checks if the provided information is equal to this information.
         /// </summary>
         /// <param name="other">The information to check for equality.</param>
         /// <returns>Returns a boolean that indicates if this information equal to the provided information.</returns>
@@ -50,7 +50,7 @@ namespace SimplePipeline
         }
 
         /// <summary>
-        /// Creates information from the provided filter.
+        ///     Creates information from the provided filter.
         /// </summary>
         /// <typeparam name="TInput">The type of the input.</typeparam>
         /// <typeparam name="TOutput">The type of the output.</typeparam>
@@ -60,11 +60,11 @@ namespace SimplePipeline
         {
             if (filter == null)
                 throw new ArgumentNullException(nameof(filter));
-            return new FilterData(filter,typeof(TInput),  typeof(TOutput));
+            return new FilterData(filter, typeof(TInput), typeof(TOutput));
         }
 
         /// <summary>
-        /// Checks if the provided object is equal to this information.
+        ///     Checks if the provided object is equal to this information.
         /// </summary>
         /// <param name="obj">The object to check for equality.</param>
         /// <returns>Returns a boolean that indicates if this information equal to the provided object.</returns>
@@ -74,7 +74,7 @@ namespace SimplePipeline
         }
 
         /// <summary>
-        /// Serves as the default hash function.
+        ///     Serves as the default hash function.
         /// </summary>
         /// <returns>A hash code for the current object.</returns>
         public override Int32 GetHashCode()
