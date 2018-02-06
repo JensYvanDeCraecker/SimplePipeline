@@ -7,20 +7,13 @@ namespace SimplePipeline
 {
     public class Pipeline<TInput, TOutput> : IPipeline<TInput, TOutput>
     {
-        private readonly FilterDataCollection filterDatas = new FilterDataCollection();
+        private readonly FilterDataCollection filterDatas;
 
         public Pipeline(params FilterData[] filterDatas)
         {
             if (filterDatas == null)
                 throw new ArgumentNullException(nameof(filterDatas));
-            Type pipelineInputType = typeof(TInput);
-            Type pipelineOutputType = typeof(TOutput);
-            foreach (FilterData filterData in filterDatas)
-                this.filterDatas.Add(filterData);
-            if (!this.filterDatas.First.InputType.IsAssignableFrom(pipelineInputType))
-                throw new ArgumentException();
-            if (!pipelineOutputType.IsAssignableFrom(this.filterDatas.Last.OutputType))
-                throw new ArgumentException();
+            this.filterDatas = new FilterDataCollection(filterDatas);
         }
 
         public Pipeline() { }
@@ -74,9 +67,12 @@ namespace SimplePipeline
         {
             private readonly Queue<FilterData> innerCollection = new Queue<FilterData>();
 
-            public FilterData First { get; private set; }
+            public FilterDataCollection(IEnumerable<FilterData> filterDatas)
+            {
+                Add(filterDatas);
+            }
 
-            public FilterData Last { get; private set; }
+
 
             public IEnumerator<FilterData> GetEnumerator()
             {
@@ -88,16 +84,30 @@ namespace SimplePipeline
                 return GetEnumerator();
             }
 
-            public void Add(FilterData filterData)
+            private void Add(IEnumerable<FilterData> filterDatas)
             {
-                if (filterData == null)
-                    throw new ArgumentNullException(nameof(filterData));
-                if (Last == null)
-                    First = filterData;
-                else if (!filterData.InputType.IsAssignableFrom(Last.OutputType))
-                    throw new ArgumentException(nameof(filterData));
-                Last = filterData;
-                innerCollection.Enqueue(filterData);
+                FilterData first = null;
+                FilterData last = null;
+                foreach (FilterData filterData in filterDatas)
+                {
+                    if (filterData == null)
+                        throw new ArgumentNullException(nameof(filterData));
+                    if (last == null)
+                        first = filterData;
+                    else if (!filterData.InputType.IsAssignableFrom(last.OutputType))
+                        throw new ArgumentException(nameof(filterData));
+                    last = filterData;
+                    innerCollection.Enqueue(filterData);
+                }
+                if (first != null)
+                {
+                    if (!first.InputType.IsAssignableFrom(typeof(TInput)))
+                        throw new ArgumentException();
+                    if (!typeof(TOutput).IsAssignableFrom(last.OutputType))
+                        throw new ArgumentException();
+                }
+                else if (!typeof(TOutput).IsAssignableFrom(typeof(TInput)))
+                    throw new ArgumentException();
             }
         }
     }
