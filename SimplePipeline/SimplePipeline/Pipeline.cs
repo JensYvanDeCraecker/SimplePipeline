@@ -7,13 +7,13 @@ namespace SimplePipeline
 {
     public class Pipeline<TInput, TOutput> : IPipeline<TInput, TOutput>
     {
-        private readonly FilterDataCollection filterDatas;
+        private readonly IEnumerable<FilterData> filterDatas;
 
         public Pipeline(params FilterData[] filterDatas)
         {
             if (filterDatas == null)
                 throw new ArgumentNullException(nameof(filterDatas));
-            this.filterDatas = new FilterDataCollection(filterDatas);
+            this.filterDatas = ValidateFilterDatas(filterDatas);
         }
 
         public Pipeline() { }
@@ -63,6 +63,34 @@ namespace SimplePipeline
             return filterDatas.GetEnumerator();
         }
 
+        private static IEnumerable<FilterData> ValidateFilterDatas(IEnumerable<FilterData> filterDatas)
+        {
+            Queue<FilterData> validatedFilterDatas = new Queue<FilterData>();
+            FilterData first = null;
+            FilterData last = null;
+            foreach (FilterData filterData in filterDatas)
+            {
+                if (filterData == null)
+                    throw new ArgumentNullException(nameof(filterData));
+                if (last == null)
+                    first = filterData;
+                else if (!filterData.InputType.IsAssignableFrom(last.OutputType))
+                    throw new ArgumentException(nameof(filterData));
+                last = filterData;
+                validatedFilterDatas.Enqueue(filterData);
+            }
+            if (first != null)
+            {
+                if (!first.InputType.IsAssignableFrom(typeof(TInput)))
+                    throw new ArgumentException();
+                if (!typeof(TOutput).IsAssignableFrom(last.OutputType))
+                    throw new ArgumentException();
+            }
+            else if (!typeof(TOutput).IsAssignableFrom(typeof(TInput)))
+                throw new ArgumentException();
+            return validatedFilterDatas;
+        }
+
         private class FilterDataCollection : IEnumerable<FilterData>
         {
             private readonly Queue<FilterData> innerCollection = new Queue<FilterData>();
@@ -71,8 +99,6 @@ namespace SimplePipeline
             {
                 Add(filterDatas);
             }
-
-
 
             public IEnumerator<FilterData> GetEnumerator()
             {
