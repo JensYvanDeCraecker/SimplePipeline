@@ -145,6 +145,24 @@ else
 Console.ReadKey();
 ```
 
+#### Using PipelineBuilder
+
+Because pipelines can contain filters where the output type of the previous filter doesn't match the input type of the following filter, failures can occur.
+
+```cs
+IPipeline<String, String[]> pipeline = new Pipeline<String, String[]>()
+{
+	(IFilter<String, Byte[]>)new FileReadFilter(), // Pipeline fails
+	new JsonFilter<String[]>()
+};
+```
+
+To solve this, we've created the `IPipelineBuilder<in TPipelineInput, out TPipelineOutput>` interface that provides methods for chaining filters at compile time.
+
+```cs
+IPipeline<String, String[]> pipeline = PipelineBuilder.Start<String>().Chain<String>(new FileReadFilter()).Chain(new JsonFilter<String[]>()).Build();
+```
+
 ## Versioning
 
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/JensYvanDeCraecker/SimplePipeline/tags). 
