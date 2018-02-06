@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
+using SimplePipeline.Builder;
 
-namespace SimplePipeline.Builder.Tests
+namespace SimplePipeline.Tests
 {
     [TestFixture]
     public class PipelineBuilderTest
