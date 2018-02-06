@@ -87,7 +87,9 @@ namespace SimplePipeline
                     throw new ArgumentException();
             }
             else if (!typeof(TOutput).IsAssignableFrom(typeof(TInput)))
+            {
                 throw new ArgumentException();
+            }
             return validatedFilterDatas;
         }
 
@@ -133,7 +135,9 @@ namespace SimplePipeline
                         throw new ArgumentException();
                 }
                 else if (!typeof(TOutput).IsAssignableFrom(typeof(TInput)))
+                {
                     throw new ArgumentException();
+                }
             }
         }
     }
