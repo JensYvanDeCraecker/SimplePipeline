@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SimplePipeline
 {
-    public class FilterDataCollection : IEnumerable<FilterData>
+    public sealed class FilterDataCollection : IEnumerable<FilterData>
     {
         private readonly Queue<FilterData> innerCollection = new Queue<FilterData>();
 
