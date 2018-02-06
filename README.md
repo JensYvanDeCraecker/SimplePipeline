@@ -24,12 +24,136 @@ Once the project has been successfully tested and used in example cases to prove
 
 ### Demo
 
-Pipeline creation is based on method chaining called a Fluent API, this makes it easy to read.
+#### Creating filters
 
-```csharp
-IPipeline<String, Byte[]> demoPipeline = PipelineBuilder.Create<String, Byte[]>(builder => builder.Chain(new TrimFilter()).Chain(((Func<String, Byte[]>)(input => Encoding.Unicode.GetBytes(input))).ToFilter()).Chain(new HashingFilter()));
+```cs
+public class FileReadFilter : IFilter<String, String>, IFilter<String, String[]>, IFilter<String, Byte[]>, IFilter<String, FileStream>
+{
+	string IFilter<String, String>.Execute(String input)
+	{
+		if (input == null)
+			throw new ArgumentNullException(nameof(input));
+		return File.ReadAllText(input);
+	}
+
+	String[] IFilter<String, String[]>.Execute(String input)
+	{
+		if (input == null)
+			throw new ArgumentNullException(nameof(input));
+		return File.ReadAllLines(input);
+	}
+
+	Byte[] IFilter<String, Byte[]>.Execute(String input)
+	{
+		if (input == null)
+			throw new ArgumentNullException(nameof(input));
+		return File.ReadAllBytes(input);
+	}
+
+	FileStream IFilter<String, FileStream>.Execute(String input)
+	{
+		if (input == null)
+			throw new ArgumentNullException(nameof(input));
+		return File.OpenRead(input);
+	}
+}
 ```
+
+```cs
+public class JsonFilter<T> : IFilter<String, T>
+{
+	public T Execute(String input)
+	{
+		if (input == null)
+			throw new ArgumentNullException(nameof(input));
+		return JsonConvert.DeserializeObject<T>(input);
+	}
+}
+```
+
+#### Creating pipelines
+
+```cs
+public class DeserializePipeline<T> : IPipeline<String, T>
+{
+	private readonly IPipeline<String, T> innerPipeline;
+
+	public DeserializePipeline()
+	{
+		innerPipeline = new Pipeline<String, T>()
+		{
+			(IFilter<String, String>)new FileReadFilter(),
+			new JsonFilter<T>()
+		};
+	}
+
+	public IEnumerator<FilterData> GetEnumerator()
+	{
+		return innerPipeline.GetEnumerator();
+	}
+
+	IEnumerator IEnumerable.GetEnumerator()
+	{
+		return ((IEnumerable)innerPipeline).GetEnumerator();
+	}
+
+	public T Output
+	{
+		get
+		{
+			return innerPipeline.Output;
+		}
+	}
+
+	public Exception Exception
+	{
+		get
+		{
+			return innerPipeline.Exception;
+		}
+	}
+
+	public Boolean IsBeginState
+	{
+		get
+		{
+			return innerPipeline.IsBeginState;
+		}
+	}
+
+	public Boolean Execute(String input)
+	{
+		return innerPipeline.Execute(input);
+	}
+
+	public void Reset()
+	{
+		innerPipeline.Reset();
+	}
+}
+```
+
+### Using pipelines
+
+```cs
+IPipeline<String, String[]> pipeline = new DeserializePipeline<String[]>();
+if (pipeline.Execute("File path here..."))
+	foreach (String line in pipeline.Output)
+		Console.WriteLine(line);
+else
+	Console.WriteLine(pipeline.Exception.Message);
+Console.ReadKey();
+```
+
+## Versioning
+
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/JensYvanDeCraecker/SimplePipeline/tags). 
+
 
 ## Authors
 
 * **Jens Yvan De Craecker** - *Initial development* - [GitHub](https://github.com/JensYvanDeCraecker/)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
