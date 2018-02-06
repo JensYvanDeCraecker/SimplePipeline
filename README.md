@@ -29,7 +29,7 @@ Once the project has been successfully tested and used in example cases to prove
 ```cs
 public class FileReadFilter : IFilter<String, String>, IFilter<String, String[]>, IFilter<String, Byte[]>, IFilter<String, FileStream>
 {
-	string IFilter<String, String>.Execute(String input)
+	String IFilter<String, String>.Execute(String input)
 	{
 		if (input == null)
 			throw new ArgumentNullException(nameof(input));
@@ -133,7 +133,7 @@ public class DeserializePipeline<T> : IPipeline<String, T>
 }
 ```
 
-### Using pipelines
+#### Using pipelines
 
 ```cs
 IPipeline<String, String[]> pipeline = new DeserializePipeline<String[]>();
@@ -143,6 +143,24 @@ if (pipeline.Execute("File path here..."))
 else
 	Console.WriteLine(pipeline.Exception.Message);
 Console.ReadKey();
+```
+
+#### Using PipelineBuilder
+
+Because pipelines can contain filters where the output type of the previous filter doesn't match the input type of the following filter, failures can occur.
+
+```cs
+IPipeline<String, String[]> pipeline = new Pipeline<String, String[]>()
+{
+	(IFilter<String, Byte[]>)new FileReadFilter(), // Pipeline fails
+	new JsonFilter<String[]>()
+};
+```
+
+To solve this, we've created the `IPipelineBuilder<in TPipelineInput, out TPipelineOutput>` interface that provides methods for chaining filters at compile time.
+
+```cs
+IPipeline<String, String[]> pipeline = PipelineBuilder.Start<String>().Chain<String>(new FileReadFilter()).Chain(new JsonFilter<String[]>()).Build();
 ```
 
 ## Versioning
@@ -156,4 +174,4 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+This project is licensed under the MIT [License](LICENSE).
