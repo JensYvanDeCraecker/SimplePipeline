@@ -29,7 +29,7 @@ Once the project has been successfully tested and used in example cases to prove
 ```cs
 public class FileReadFilter : IFilter<String, String>, IFilter<String, String[]>, IFilter<String, Byte[]>, IFilter<String, FileStream>
 {
-	string IFilter<String, String>.Execute(String input)
+	String IFilter<String, String>.Execute(String input)
 	{
 		if (input == null)
 			throw new ArgumentNullException(nameof(input));
