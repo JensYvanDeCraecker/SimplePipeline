@@ -9,6 +9,7 @@ namespace SimplePipeline
     public sealed class FilterData : IEquatable<FilterData>
     {
         private readonly MethodInfo executeFilter;
+
         private FilterData(Object filter, Type inputType, Type outputType)
         {
             Filter = filter;
@@ -92,7 +93,7 @@ namespace SimplePipeline
         }
 
         /// <summary>
-        /// Execute the filter that this information is based on.
+        ///     Execute the filter that this information is based on.
         /// </summary>
         /// <param name="input">The input for the filterto process.</param>
         /// <returns>The processed output of the filter.</returns>
