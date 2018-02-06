@@ -7,14 +7,20 @@ namespace SimplePipeline
 {
     public class Pipeline<TInput, TOutput> : IPipeline<TInput, TOutput>
     {
-        private readonly IList<FilterData> filters = new List<FilterData>();
+        private readonly FilterDataCollection filterDatas = new FilterDataCollection();
 
-        public Pipeline(IEnumerable<FilterData> filters)
+        public Pipeline(params FilterData[] filterDatas)
         {
-            if (filters == null)
-                throw new ArgumentNullException(nameof(filters));
-            foreach (FilterData filter in filters)
-                this.filters.Add(filter);
+            if (filterDatas == null)
+                throw new ArgumentNullException(nameof(filterDatas));
+            Type pipelineInputType = typeof(TInput);
+            Type pipelineOutputType = typeof(TOutput);
+            foreach (FilterData filterData in filterDatas)
+                this.filterDatas.Add(filterData);
+            if (!this.filterDatas.First.InputType.IsAssignableFrom(pipelineInputType))
+                throw new ArgumentException();
+            if (!pipelineOutputType.IsAssignableFrom(this.filterDatas.Last.OutputType))
+                throw new ArgumentException();
         }
 
         public Pipeline() { }
@@ -61,12 +67,38 @@ namespace SimplePipeline
 
         public IEnumerator<FilterData> GetEnumerator()
         {
-            return filters.GetEnumerator();
+            return filterDatas.GetEnumerator();
         }
 
-        public void Add<TFilterInput, TFilterOutput>(IFilter<TFilterInput, TFilterOutput> filter)
+        private class FilterDataCollection : IEnumerable<FilterData>
         {
-            filters.Add(FilterData.Create(filter));
+            private readonly Queue<FilterData> innerCollection = new Queue<FilterData>();
+
+            public FilterData First { get; private set; }
+
+            public FilterData Last { get; private set; }
+
+            public IEnumerator<FilterData> GetEnumerator()
+            {
+                return innerCollection.GetEnumerator();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
+            }
+
+            public void Add(FilterData filterData)
+            {
+                if (filterData == null)
+                    throw new ArgumentNullException(nameof(filterData));
+                if (Last == null)
+                    First = filterData;
+                else if (!filterData.InputType.IsAssignableFrom(Last.OutputType))
+                    throw new ArgumentException(nameof(filterData));
+                Last = filterData;
+                innerCollection.Enqueue(filterData);
+            }
         }
     }
 }

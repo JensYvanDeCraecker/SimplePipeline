@@ -43,7 +43,7 @@ namespace SimplePipeline.Builder
 
             public IPipeline<TPipelineInput, TPipelineOutput> Build()
             {
-                return new Pipeline<TPipelineInput, TPipelineOutput>(this);
+                return new Pipeline<TPipelineInput, TPipelineOutput>(this.ToArray());
             }
 
             public IPipelineBuilder<TPipelineInput, TFilterOutput> Chain<TFilterOutput>(IFilter<TPipelineOutput, TFilterOutput> filter)
