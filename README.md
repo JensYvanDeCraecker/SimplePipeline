@@ -133,7 +133,7 @@ public class DeserializePipeline<T> : IPipeline<String, T>
 }
 ```
 
-### Using pipelines
+#### Using pipelines
 
 ```cs
 IPipeline<String, String[]> pipeline = new DeserializePipeline<String[]>();
