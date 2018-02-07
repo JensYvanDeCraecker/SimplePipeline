@@ -23,19 +23,6 @@ namespace SimplePipeline
         }
 
         /// <summary>
-        ///     Gets the information from the provided filter.
-        /// </summary>
-        /// <typeparam name="TInput">The type of the input.</typeparam>
-        /// <typeparam name="TOutput">The type of the output.</typeparam>
-        /// <param name="filter">The filter to get the information from.</param>
-        /// <returns>The information that is associated with the provided filter.</returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        public static FilterData GetData<TInput, TOutput>(this IFilter<TInput, TOutput> filter)
-        {
-            return FilterData.Create(filter);
-        }
-
-        /// <summary>
         ///     Converts a pipeline to a filter.
         /// </summary>
         /// <typeparam name="TInput">The type of the input.</typeparam>
