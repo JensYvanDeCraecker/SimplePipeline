@@ -9,19 +9,22 @@ namespace SimplePipeline
     {
         private readonly IEnumerable<FilterData> filterDatas;
 
-        public Pipeline(params FilterData[] filterDatas)
+        public Pipeline(params FilterData[] filterDatas) : this(filterDatas.AsEnumerable())
+        {
+
+        }
+
+        public Pipeline(IEnumerable<FilterData> filterDatas)
         {
             if (filterDatas == null)
                 throw new ArgumentNullException(nameof(filterDatas));
-            if (!ValidateFilterDatas(filterDatas, out Exception exception))
+            IEnumerable<FilterData> enumerable = filterDatas.ToList();
+            if (!ValidateFilterDatas(enumerable, out Exception exception))
                 throw exception;
-            this.filterDatas = filterDatas;
+            this.filterDatas = enumerable;
         }
 
-        public Pipeline() : this(new FilterData[0])
-        {
-
-        }
+        public Pipeline() : this(new FilterData[0]) { }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
@@ -68,36 +71,6 @@ namespace SimplePipeline
             return filterDatas.GetEnumerator();
         }
 
-        private static IEnumerable<FilterData> ValidateFilterDatas(IEnumerable<FilterData> filterDatas)
-        {
-            Queue<FilterData> validatedFilterDatas = new Queue<FilterData>();
-            FilterData first = null;
-            FilterData last = null;
-            foreach (FilterData filterData in filterDatas)
-            {
-                if (filterData == null)
-                    throw new ArgumentNullException(nameof(filterData));
-                if (last == null)
-                    first = filterData;
-                else if (!filterData.InputType.IsAssignableFrom(last.OutputType))
-                    throw new ArgumentException(nameof(filterData));
-                last = filterData;
-                validatedFilterDatas.Enqueue(filterData);
-            }
-            if (first != null)
-            {
-                if (!first.InputType.IsAssignableFrom(typeof(TInput)))
-                    throw new ArgumentException();
-                if (!typeof(TOutput).IsAssignableFrom(last.OutputType))
-                    throw new ArgumentException();
-            }
-            else if (!typeof(TOutput).IsAssignableFrom(typeof(TInput)))
-            {
-                throw new ArgumentException();
-            }
-            return validatedFilterDatas;
-        }
-
         private static Boolean ValidateFilterDatas(IEnumerable<FilterData> filterDatas, out Exception exception)
         {
             try
@@ -132,54 +105,6 @@ namespace SimplePipeline
             {
                 exception = e;
                 return false;
-            }
-        }
-
-        private class FilterDataCollection : IEnumerable<FilterData>
-        {
-            private readonly Queue<FilterData> innerCollection = new Queue<FilterData>();
-
-            public FilterDataCollection(IEnumerable<FilterData> filterDatas)
-            {
-                Add(filterDatas);
-            }
-
-            public IEnumerator<FilterData> GetEnumerator()
-            {
-                return innerCollection.GetEnumerator();
-            }
-
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return GetEnumerator();
-            }
-
-            private void Add(IEnumerable<FilterData> filterDatas)
-            {
-                FilterData first = null;
-                FilterData last = null;
-                foreach (FilterData filterData in filterDatas)
-                {
-                    if (filterData == null)
-                        throw new ArgumentNullException(nameof(filterData));
-                    if (last == null)
-                        first = filterData;
-                    else if (!filterData.InputType.IsAssignableFrom(last.OutputType))
-                        throw new ArgumentException(nameof(filterData));
-                    last = filterData;
-                    innerCollection.Enqueue(filterData);
-                }
-                if (first != null)
-                {
-                    if (!first.InputType.IsAssignableFrom(typeof(TInput)))
-                        throw new ArgumentException();
-                    if (!typeof(TOutput).IsAssignableFrom(last.OutputType))
-                        throw new ArgumentException();
-                }
-                else if (!typeof(TOutput).IsAssignableFrom(typeof(TInput)))
-                {
-                    throw new ArgumentException();
-                }
             }
         }
     }

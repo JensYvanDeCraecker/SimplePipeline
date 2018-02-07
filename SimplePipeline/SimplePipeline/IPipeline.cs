@@ -11,12 +11,12 @@ namespace SimplePipeline
     public interface IPipeline<in TInput, out TOutput> : IEnumerable<FilterData>
     {
         /// <summary>
-        ///     Gets the exception of a processed input, if unsuccessful. If not, the default value is returned.
+        ///     Gets the output of a processed input, if successful. If not, the default value is returned.
         /// </summary>
         TOutput Output { get; }
 
         /// <summary>
-        ///     Gets the exception of a processed input, if unsuccessful. If not, the default value is returned.
+        ///     Gets the exception of a processed input, if unsuccessful. If successful, the default value is returned.
         /// </summary>
         Exception Exception { get; }
 
