@@ -18,6 +18,8 @@ namespace SimplePipeline.Tests
                 yield return new TestCaseData(new List<FilterData>() { FilterData.Create(((Func<String, String>)(input => input.ToUpper())).ToFilter()), FilterData.Create(((Func<String, String>)(input => new String(input.Reverse().ToArray()))).ToFilter()), FilterData.Create(((Func<String, String>)(input => input.Substring(0, 4))).ToFilter()) }, typeof(String), typeof(String), true, true, "SimplePipeline is an easy to use pipeline system.", ".MET");
                 yield return new TestCaseData(new List<FilterData>() { FilterData.Create(((Func<String, IEnumerable<Char>>)(input => input.ToCharArray())).ToFilter()), FilterData.Create(((Func<Char[], String>)(input => new String(input))).ToFilter()) }, typeof(String), typeof(String), false, false, null, null);
                 yield return new TestCaseData(new List<FilterData>() { FilterData.Create(((Func<String, Boolean>)String.IsNullOrWhiteSpace).ToFilter()), FilterData.Create(((Func<Boolean, Boolean>)(input => input ? throw new ArgumentException("Empty string") : false)).ToFilter()) }, typeof(String), typeof(Boolean), true, false, "    ", null);
+                yield return new TestCaseData(new List<FilterData>() { FilterData.Create(((Func<Int32, Double>)(input => Math.Sqrt(input))).ToFilter()) }, typeof(Int32), typeof(Double), true, true, 4, 2);
+                yield return new TestCaseData(Enumerable.Empty<FilterData>(), typeof(Int32), typeof(Int32), true, true, 16, 16);
             }
         }
 
@@ -33,7 +35,9 @@ namespace SimplePipeline.Tests
                     ValidateFailPipeline(createdPipeline, input);
             }
             else
+            {
                 Assert.AreEqual(default(IPipeline<TPipelineInput, TPipelineOutput>), createdPipeline);
+            }
         }
 
         public void ValidateFailPipeline<TPipelineInput, TPipelineOutput>(IPipeline<TPipelineInput, TPipelineOutput> pipeline, TPipelineInput input)
