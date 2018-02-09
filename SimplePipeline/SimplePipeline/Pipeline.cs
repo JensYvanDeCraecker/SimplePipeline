@@ -9,22 +9,15 @@ namespace SimplePipeline
     {
         private readonly IEnumerable<FilterData> filterDatas;
 
-        public Pipeline(params FilterData[] filterDatas) : this(filterDatas.AsEnumerable())
-        {
-
-        }
-
         public Pipeline(IEnumerable<FilterData> filterDatas)
         {
             if (filterDatas == null)
                 throw new ArgumentNullException(nameof(filterDatas));
-            IEnumerable<FilterData> enumerable = filterDatas.ToList();
-            if (!ValidateFilterDatas(enumerable, out Exception exception))
+            IEnumerable<FilterData> copyFilterDatas = filterDatas.ToList();
+            if (!ValidateFilterDatas(copyFilterDatas, out Exception exception))
                 throw exception;
-            this.filterDatas = enumerable;
+            this.filterDatas = copyFilterDatas;
         }
-
-        public Pipeline() : this(new FilterData[0]) { }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
@@ -48,7 +41,7 @@ namespace SimplePipeline
             Reset();
             try
             {
-                Output = (TOutput)this.Aggregate<FilterData, Object>(input, (value, filterData) => filterData.ExecuteFilter(value));
+                Output = (TOutput)filterDatas.Aggregate<FilterData, Object>(input, (value, filterData) => filterData.ExecuteFilter(value));
                 return true;
             }
             catch (Exception e)
@@ -66,9 +59,9 @@ namespace SimplePipeline
             Output = default(TOutput);
         }
 
-        public IEnumerator<FilterData> GetEnumerator()
+        public IEnumerator<Object> GetEnumerator()
         {
-            return filterDatas.GetEnumerator();
+            return new Enumerator(filterDatas.GetEnumerator());
         }
 
         private static Boolean ValidateFilterDatas(IEnumerable<FilterData> filterDatas, out Exception exception)
@@ -95,9 +88,7 @@ namespace SimplePipeline
                         throw new ArgumentException();
                 }
                 else if (!typeof(TOutput).IsAssignableFrom(typeof(TInput)))
-                {
                     throw new ArgumentException();
-                }
                 exception = default(Exception);
                 return true;
             }
@@ -105,6 +96,39 @@ namespace SimplePipeline
             {
                 exception = e;
                 return false;
+            }
+        }
+
+        private class Enumerator : IEnumerator<Object>
+        {
+            private readonly IEnumerator<FilterData> filterDataEnumerator;
+
+            public Enumerator(IEnumerator<FilterData> filterDataEnumerator)
+            {
+                this.filterDataEnumerator = filterDataEnumerator;
+            }
+
+            public Boolean MoveNext()
+            {
+                return filterDataEnumerator.MoveNext();
+            }
+
+            public void Reset()
+            {
+                filterDataEnumerator.Reset();
+            }
+
+            public Object Current
+            {
+                get
+                {
+                    return filterDataEnumerator.Current.Filter;
+                }
+            }
+
+            public void Dispose()
+            {
+                filterDataEnumerator.Dispose();
             }
         }
     }

@@ -35,9 +35,7 @@ namespace SimplePipeline.Tests
                     ValidateFailPipeline(createdPipeline, input);
             }
             else
-            {
                 Assert.AreEqual(default(IPipeline<TPipelineInput, TPipelineOutput>), createdPipeline);
-            }
         }
 
         public void ValidateFailPipeline<TPipelineInput, TPipelineOutput>(IPipeline<TPipelineInput, TPipelineOutput> pipeline, TPipelineInput input)
