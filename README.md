@@ -176,4 +176,4 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## License
 
-This project is licensed under the MIT [License](LICENSE).
+This project is licensed under the MIT [License](LICENSE.txt).
