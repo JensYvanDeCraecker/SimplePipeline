@@ -9,13 +9,13 @@ namespace SimplePipeline
     {
         private readonly IEnumerable<FilterData> filterDatas;
 
-        public Pipeline(IEnumerable<FilterData> filterDatas)
+        public Pipeline(FilterCollection filterCollection)
         {
-            if (filterDatas == null)
-                throw new ArgumentNullException(nameof(filterDatas));
-            IEnumerable<FilterData> copyFilterDatas = filterDatas.ToList();
-            if (!ValidateFilterDatas(copyFilterDatas, out Exception exception))
-                throw exception;
+            if (filterCollection == null)
+                throw new ArgumentNullException(nameof(filterCollection));
+            IEnumerable<FilterData> copyFilterDatas = filterCollection.ToList();
+            if (!filterCollection.CanCreatePipeline(typeof(TInput), typeof(TOutput)))
+                throw new ArgumentException();
             this.filterDatas = copyFilterDatas;
         }
 
@@ -64,40 +64,40 @@ namespace SimplePipeline
             return new Enumerator(filterDatas.GetEnumerator());
         }
 
-        private static Boolean ValidateFilterDatas(IEnumerable<FilterData> filterDatas, out Exception exception)
-        {
-            try
-            {
-                FilterData first = null;
-                FilterData last = null;
-                foreach (FilterData filterData in filterDatas)
-                {
-                    if (filterData == null)
-                        throw new ArgumentNullException(nameof(filterData));
-                    if (last == null)
-                        first = filterData;
-                    else if (!filterData.InputType.IsAssignableFrom(last.OutputType))
-                        throw new ArgumentException(nameof(filterData));
-                    last = filterData;
-                }
-                if (first != null)
-                {
-                    if (!first.InputType.IsAssignableFrom(typeof(TInput)))
-                        throw new ArgumentException();
-                    if (!typeof(TOutput).IsAssignableFrom(last.OutputType))
-                        throw new ArgumentException();
-                }
-                else if (!typeof(TOutput).IsAssignableFrom(typeof(TInput)))
-                    throw new ArgumentException();
-                exception = default(Exception);
-                return true;
-            }
-            catch (Exception e)
-            {
-                exception = e;
-                return false;
-            }
-        }
+        //private static Boolean ValidateFilterDatas(IEnumerable<FilterData> filterDatas, out Exception exception)
+        //{
+        //    try
+        //    {
+        //        FilterData first = null;
+        //        FilterData last = null;
+        //        foreach (FilterData filterData in filterDatas)
+        //        {
+        //            if (filterData == null)
+        //                throw new ArgumentNullException(nameof(filterData));
+        //            if (last == null)
+        //                first = filterData;
+        //            else if (!filterData.InputType.IsAssignableFrom(last.OutputType))
+        //                throw new ArgumentException(nameof(filterData));
+        //            last = filterData;
+        //        }
+        //        if (first != null)
+        //        {
+        //            if (!first.InputType.IsAssignableFrom(typeof(TInput)))
+        //                throw new ArgumentException();
+        //            if (!typeof(TOutput).IsAssignableFrom(last.OutputType))
+        //                throw new ArgumentException();
+        //        }
+        //        else if (!typeof(TOutput).IsAssignableFrom(typeof(TInput)))
+        //            throw new ArgumentException();
+        //        exception = default(Exception);
+        //        return true;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        exception = e;
+        //        return false;
+        //    }
+        //}
 
         private class Enumerator : IEnumerator<Object>
         {

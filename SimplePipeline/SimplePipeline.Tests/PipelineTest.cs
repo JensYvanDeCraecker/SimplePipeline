@@ -15,27 +15,21 @@ namespace SimplePipeline.Tests
         {
             get
             {
-                yield return new TestCaseData(new List<FilterData>() { FilterData.Create(((Func<String, String>)(input => input.ToUpper())).ToFilter()), FilterData.Create(((Func<String, String>)(input => new String(input.Reverse().ToArray()))).ToFilter()), FilterData.Create(((Func<String, String>)(input => input.Substring(0, 4))).ToFilter()) }, typeof(String), typeof(String), true, true, "SimplePipeline is an easy to use pipeline system.", ".MET");
-                yield return new TestCaseData(new List<FilterData>() { FilterData.Create(((Func<String, IEnumerable<Char>>)(input => input.ToCharArray())).ToFilter()), FilterData.Create(((Func<Char[], String>)(input => new String(input))).ToFilter()) }, typeof(String), typeof(String), false, false, null, null);
-                yield return new TestCaseData(new List<FilterData>() { FilterData.Create(((Func<String, Boolean>)String.IsNullOrWhiteSpace).ToFilter()), FilterData.Create(((Func<Boolean, Boolean>)(input => input ? throw new ArgumentException("Empty string") : false)).ToFilter()) }, typeof(String), typeof(Boolean), true, false, "    ", null);
-                yield return new TestCaseData(new List<FilterData>() { FilterData.Create(((Func<Int32, Double>)(input => Math.Sqrt(input))).ToFilter()) }, typeof(Int32), typeof(Double), true, true, 4, 2);
-                yield return new TestCaseData(Enumerable.Empty<FilterData>(), typeof(Int32), typeof(Int32), true, true, 16, 16);
+                yield return new TestCaseData(new FilterCollection() { ((Func<String, String>)(input => input.ToUpper())).ToFilter(), ((Func<String, String>)(input => new String(input.Reverse().ToArray()))).ToFilter(), ((Func<String, String>)(input => input.Substring(0, 4))).ToFilter() }, typeof(String), typeof(String), true, "SimplePipeline is an easy to use pipeline system.", ".MET");
+                yield return new TestCaseData(new FilterCollection() { ((Func<String, Boolean>)String.IsNullOrWhiteSpace).ToFilter(), ((Func<Boolean, Boolean>)(input => input ? throw new ArgumentException("Empty string") : false)).ToFilter() }, typeof(String), typeof(Boolean), false, "    ", null);
+                yield return new TestCaseData(new FilterCollection() { ((Func<Int32, Double>)(input => Math.Sqrt(input))).ToFilter() }, typeof(Int32), typeof(Double), true, 4, 2);
+                yield return new TestCaseData(new FilterCollection(), typeof(Int32), typeof(Int32), true, 16, 16);
             }
         }
 
-        public void ProcessTest<TPipelineInput, TPipelineOutput>(IEnumerable<FilterData> filterDatas, Boolean canBuild, Boolean canExecute, TPipelineInput input, TPipelineOutput expectedOutput)
+        public void ProcessTest<TPipelineInput, TPipelineOutput>(FilterCollection filterCollection, Boolean canExecute, TPipelineInput input, TPipelineOutput expectedOutput)
         {
-            IPipeline<TPipelineInput, TPipelineOutput> createdPipeline = CreatePipeline<TPipelineInput, TPipelineOutput>(filterDatas, canBuild);
-            if (canBuild)
-            {
-                Assert.AreNotEqual(default(IPipeline<TPipelineInput, TPipelineOutput>), createdPipeline);
-                if (canExecute)
-                    ValidateSuccessPipeline(createdPipeline, input, expectedOutput);
-                else
-                    ValidateFailPipeline(createdPipeline, input);
-            }
+            IPipeline<TPipelineInput, TPipelineOutput> createdPipeline = new Pipeline<TPipelineInput, TPipelineOutput>(filterCollection);
+            Assert.AreNotEqual(default(IPipeline<TPipelineInput, TPipelineOutput>), createdPipeline);
+            if (canExecute)
+                ValidateSuccessPipeline(createdPipeline, input, expectedOutput);
             else
-                Assert.AreEqual(default(IPipeline<TPipelineInput, TPipelineOutput>), createdPipeline);
+                ValidateFailPipeline(createdPipeline, input);
         }
 
         public void ValidateFailPipeline<TPipelineInput, TPipelineOutput>(IPipeline<TPipelineInput, TPipelineOutput> pipeline, TPipelineInput input)
@@ -68,21 +62,11 @@ namespace SimplePipeline.Tests
             Assert.AreEqual(expectedOutput, filterOutput);
         }
 
-        public IPipeline<TPipelineInput, TPipelineOutput> CreatePipeline<TPipelineInput, TPipelineOutput>(IEnumerable<FilterData> filterDatas, Boolean canBuild)
-        {
-            IPipeline<TPipelineInput, TPipelineOutput> pipeline = default(IPipeline<TPipelineInput, TPipelineOutput>);
-            if (canBuild)
-                Assert.DoesNotThrow(() => pipeline = new Pipeline<TPipelineInput, TPipelineOutput>(filterDatas));
-            else
-                Assert.Throws<ArgumentException>(() => pipeline = new Pipeline<TPipelineInput, TPipelineOutput>(filterDatas));
-            return pipeline;
-        }
-
         [Test]
         [TestCaseSource(nameof(TestData))]
-        public void BeginTest(IEnumerable<FilterData> filterDatas, Type pipelineInputType, Type pipelineOutputType, Boolean canBuild, Boolean canExecute, Object input, Object expectedOutput)
+        public void BeginTest(FilterCollection filterDatas, Type pipelineInputType, Type pipelineOutputType, Boolean canExecute, Object input, Object expectedOutput)
         {
-            processTestDefinition.MakeGenericMethod(pipelineInputType, pipelineOutputType).Invoke(this, new[] { filterDatas, canBuild, canExecute, input, expectedOutput });
+            processTestDefinition.MakeGenericMethod(pipelineInputType, pipelineOutputType).Invoke(this, new[] { filterDatas, canExecute, input, expectedOutput });
         }
     }
 }
