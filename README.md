@@ -159,6 +159,8 @@ IPipeline<String, String[]> pipeline = new Pipeline<String, String[]>()
 
 To solve this, we've created the `IPipelineBuilder<in TPipelineInput, out TPipelineOutput>` interface that provides methods for chaining filters at compile time.
 
+Will be released as a separate package.
+
 ```cs
 IPipeline<String, String[]> pipeline = PipelineBuilder.Start<String>().Chain<String>(new FileReadFilter()).Chain(new JsonFilter<String[]>()).Build();
 ```
