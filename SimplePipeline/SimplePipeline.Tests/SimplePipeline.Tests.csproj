@@ -45,7 +45,6 @@
   <ItemGroup>
     <Compile Include="FilterDataTest.cs" />
     <Compile Include="FilterTest.cs" />
-    <Compile Include="PipelineBuilderTest.cs" />
     <Compile Include="PipelineTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
