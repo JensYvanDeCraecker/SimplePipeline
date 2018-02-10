@@ -15,7 +15,7 @@ namespace SimplePipeline.Tests
         {
             get
             {
-                yield return new TestCaseData(new FilterCollection() { ((Func<String, String>)(input => input.ToUpper())).ToFilter(), ((Func<String, String>)(input => new String(input.Reverse().ToArray()))).ToFilter(), ((Func<String, String>)(input => input.Substring(0, 4))).ToFilter() }, typeof(String), typeof(String), true, "SimplePipeline is an easy to use pipeline system.", ".MET");
+                yield return new TestCaseData(new FilterCollection() { ((Func<String, String>)(input => input.ToUpper())).ToFilter(), ((Func<String, String>)(input => new String(input.Reverse().ToArray()))).ToFilter(), ((Func<String, String>)(input => input.Substring(0, 4))).ToFilter() }, typeof(String), typeof(IEnumerable<Char>), true, "SimplePipeline is an easy to use pipeline system.", ".MET".AsEnumerable());
                 yield return new TestCaseData(new FilterCollection() { ((Func<String, Boolean>)String.IsNullOrWhiteSpace).ToFilter(), ((Func<Boolean, Boolean>)(input => input ? throw new ArgumentException("Empty string") : false)).ToFilter() }, typeof(String), typeof(Boolean), false, "    ", null);
                 yield return new TestCaseData(new FilterCollection() { ((Func<Int32, Double>)(input => Math.Sqrt(input))).ToFilter() }, typeof(Int32), typeof(Double), true, 4, 2);
                 yield return new TestCaseData(new FilterCollection(), typeof(Int32), typeof(Int32), true, 16, 16);
