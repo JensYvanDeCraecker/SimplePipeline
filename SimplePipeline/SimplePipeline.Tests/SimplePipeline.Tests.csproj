@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FilterCollectionTest.cs" />
     <Compile Include="FilterDataTest.cs" />
     <Compile Include="FilterTest.cs" />
     <Compile Include="PipelineTest.cs" />
