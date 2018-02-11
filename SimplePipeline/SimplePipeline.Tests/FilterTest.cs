@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using NUnit.Framework;
 
 namespace SimplePipeline.Tests
@@ -10,7 +6,6 @@ namespace SimplePipeline.Tests
     [TestFixture]
     public class FilterTest
     {
-
         [Test]
         [TestCaseSource(typeof(TestData), nameof(TestData.ExecuteFilterData))]
         public TOutput ExecuteFilter<TInput, TOutput>(IFilter<TInput, TOutput> filter, TInput input)
