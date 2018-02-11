@@ -62,9 +62,9 @@ namespace SimplePipeline.Tests
             {
                 yield return new TestCaseData(((Func<String, String>)(input => new String(input.Reverse().ToArray()))).ToFilter(), typeof(String), typeof(String));
                 yield return new TestCaseData(((Func<String, Int32>)(input => input.Length)).ToFilter(), typeof(String), typeof(Int32));
-                yield return new TestCaseData(((Func<IEnumerable<Int32>, Double>)(input => input.Average())).ToFilter(), typeof(IEnumerable<Int32>), typeof(Double));
+                yield return new TestCaseData(((Func<IEnumerable<Int32>, Double>)(input => input.Average())).ToFilter(), typeof(Int32[]), typeof(Double));
                 yield return new TestCaseData(((Func<Double, Double>)Math.Round).ToFilter(), typeof(Double), typeof(Double));
-                yield return new TestCaseData(((Func<String, IEnumerable<IGrouping<Char, Char>>>)(input => input.GroupBy(character => character))).ToFilter(), typeof(String), typeof(IEnumerable<IGrouping<Char, Char>>));
+                yield return new TestCaseData(((Func<String, IEnumerable<IGrouping<Char, Char>>>)(input => input.GroupBy(character => character))).ToFilter(), typeof(String), typeof(IEnumerable<IEnumerable<Char>>));
                 yield return new TestCaseData(((Func<IEnumerable<IGrouping<Char, Char>>, Int32>)(input => input.OrderByDescending(group => group.Count()).First().Count())).ToFilter(), typeof(IEnumerable<IGrouping<Char, Char>>), typeof(Int32));
                 yield return new TestCaseData(((Func<IEnumerable<String>, List<String>>)(input => input.ToList())).ToFilter(), typeof(IEnumerable<String>), typeof(List<String>));
                 yield return new TestCaseData(((Func<IEnumerable<Object>, List<Object>>)(input => input.ToList())).ToFilter(), typeof(IEnumerable<Object>), typeof(List<Object>));
