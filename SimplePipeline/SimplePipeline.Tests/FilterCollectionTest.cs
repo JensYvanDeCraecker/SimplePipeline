@@ -19,6 +19,9 @@ namespace SimplePipeline.Tests
                 yield return new TestCaseData(new List<FilterData>() { FilterData.Create(((Func<String, IEnumerable<Char>>)(input => input.ToCharArray())).ToFilter()), FilterData.Create(((Func<Char[], Int32>)(input => input.Length)).ToFilter()) }, false);
                 yield return new TestCaseData(new List<FilterData>() { FilterData.Create(((Func<String, Char[]>)(input => input.ToCharArray())).ToFilter()), FilterData.Create(((Func<IEnumerable<Char>, Int32>)(input => input.Count())).ToFilter()) }, true);
                 yield return new TestCaseData(new List<FilterData>() { FilterData.Create(((Func<String, Int32>)(input => input.Length)).ToFilter()), FilterData.Create(((Func<Double, Int32>)(input => (Int32)input)).ToFilter()) }, false);
+                yield return new TestCaseData(new List<FilterData>() { FilterData.Create(((Func<String, String>)(input => input.Trim())).ToFilter()), FilterData.Create(((Func<IEnumerable<Char>, String>)(input => new String(input.ToArray()))).ToFilter()) }, true);
+                yield return new TestCaseData(new List<FilterData>() { FilterData.Create(((Func<Int32, IEnumerable<Boolean>>)(input => new Boolean[input])).ToFilter()), FilterData.Create(((Func<Boolean[], Boolean>)(input => input.All(value => value))).ToFilter()) }, false);
+                yield return new TestCaseData(new List<FilterData>() { FilterData.Create(((Func<IEnumerable<String>, List<String>>)(input => input.ToList())).ToFilter()), FilterData.Create(((Func<IEnumerable<Object>, List<Object>>)(input => input.ToList())).ToFilter()) }, true);
             }
         }
 
