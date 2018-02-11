@@ -27,39 +27,33 @@ namespace SimplePipeline.Tests
             IPipeline<TPipelineInput, TPipelineOutput> createdPipeline = new Pipeline<TPipelineInput, TPipelineOutput>(filterCollection);
             Assert.AreNotEqual(default(IPipeline<TPipelineInput, TPipelineOutput>), createdPipeline);
             if (canExecute)
-                ValidateSuccessPipeline(createdPipeline, input, expectedOutput);
-            else
-                ValidateFailPipeline(createdPipeline, input);
-        }
-
-        public void ValidateFailPipeline<TPipelineInput, TPipelineOutput>(IPipeline<TPipelineInput, TPipelineOutput> pipeline, TPipelineInput input)
-        {
-            Assert.IsFalse(pipeline.Execute(input));
-            Assert.AreEqual(default(TPipelineOutput), pipeline.Output);
-            Assert.AreNotEqual(default(Exception), pipeline.Exception);
-            Type exceptionType = pipeline.Exception.GetType();
-            Assert.IsFalse(pipeline.IsBeginState);
-            pipeline.Reset();
-            Assert.IsTrue(pipeline.IsBeginState);
-            IFilter<TPipelineInput, TPipelineOutput> convertedFilter = pipeline.ToFilter();
-            Assert.Throws(exceptionType, () => convertedFilter.Execute(input));
-        }
-
-        public void ValidateSuccessPipeline<TPipelineInput, TPipelineOutput>(IPipeline<TPipelineInput, TPipelineOutput> pipeline, TPipelineInput input, TPipelineOutput expectedOutput)
-        {
-            Assert.IsTrue(pipeline.Execute(input));
-            Assert.AreEqual(default(Exception), pipeline.Exception);
-            Assert.AreEqual(expectedOutput, pipeline.Output);
-            if (!pipeline.IsBeginState)
             {
-                Assert.AreNotEqual(default(TPipelineOutput), pipeline.Output);
-                pipeline.Reset();
-                Assert.IsTrue(pipeline.IsBeginState);
+                Assert.IsTrue(createdPipeline.Execute(input));
+                Assert.AreEqual(default(Exception), createdPipeline.Exception);
+                Assert.AreEqual(expectedOutput, createdPipeline.Output);
+                if (!createdPipeline.IsBeginState)
+                {
+                    Assert.AreNotEqual(default(TPipelineOutput), createdPipeline.Output);
+                    createdPipeline.Reset();
+                    Assert.IsTrue(createdPipeline.IsBeginState);
+                }
+                IFilter<TPipelineInput, TPipelineOutput> convertedFilter = createdPipeline.ToFilter();
+                TPipelineOutput filterOutput = default(TPipelineOutput);
+                Assert.DoesNotThrow(() => filterOutput = convertedFilter.Execute(input));
+                Assert.AreEqual(expectedOutput, filterOutput);
             }
-            IFilter<TPipelineInput, TPipelineOutput> convertedFilter = pipeline.ToFilter();
-            TPipelineOutput filterOutput = default(TPipelineOutput);
-            Assert.DoesNotThrow(() => filterOutput = convertedFilter.Execute(input));
-            Assert.AreEqual(expectedOutput, filterOutput);
+            else
+            {
+                Assert.IsFalse(createdPipeline.Execute(input));
+                Assert.AreEqual(default(TPipelineOutput), createdPipeline.Output);
+                Assert.AreNotEqual(default(Exception), createdPipeline.Exception);
+                Type exceptionType = createdPipeline.Exception.GetType();
+                Assert.IsFalse(createdPipeline.IsBeginState);
+                createdPipeline.Reset();
+                Assert.IsTrue(createdPipeline.IsBeginState);
+                IFilter<TPipelineInput, TPipelineOutput> convertedFilter = createdPipeline.ToFilter();
+                Assert.Throws(exceptionType, () => convertedFilter.Execute(input));
+            }
         }
 
         [Test]
