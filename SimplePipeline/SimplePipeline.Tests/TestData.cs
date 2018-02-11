@@ -66,6 +66,12 @@ namespace SimplePipeline.Tests
                 yield return new TestCaseData(((Func<Double, Double>)Math.Round).ToFilter(), typeof(Double), typeof(Double));
                 yield return new TestCaseData(((Func<String, IEnumerable<IGrouping<Char, Char>>>)(input => input.GroupBy(character => character))).ToFilter(), typeof(String), typeof(IEnumerable<IGrouping<Char, Char>>));
                 yield return new TestCaseData(((Func<IEnumerable<IGrouping<Char, Char>>, Int32>)(input => input.OrderByDescending(group => group.Count()).First().Count())).ToFilter(), typeof(IEnumerable<IGrouping<Char, Char>>), typeof(Int32));
+                yield return new TestCaseData(((Func<IEnumerable<String>, List<String>>)(input => input.ToList())).ToFilter(), typeof(IEnumerable<String>), typeof(List<String>));
+                yield return new TestCaseData(((Func<IEnumerable<Object>, List<Object>>)(input => input.ToList())).ToFilter(), typeof(IEnumerable<Object>), typeof(List<Object>));
+                yield return new TestCaseData(((Func<String, IEnumerable<Char>>)(input => input.ToCharArray())).ToFilter(), typeof(String), typeof(IEnumerable<Char>));
+                yield return new TestCaseData(((Func<Char[], Int32>)(input => input.Length)).ToFilter(), typeof(Char[]), typeof(Int32));
+                yield return new TestCaseData(((Func<Int32, IEnumerable<Boolean>>)(input => new Boolean[input])).ToFilter(), typeof(Int32), typeof(IEnumerable<Boolean>));
+                yield return new TestCaseData(((Func<Boolean[], Boolean>)(input => input.All(value => value))).ToFilter(), typeof(Boolean[]), typeof(Boolean));
             }
         }
 
@@ -79,6 +85,12 @@ namespace SimplePipeline.Tests
                 yield return new TestCaseData(FilterData.Create(((Func<Double, Double>)Math.Round).ToFilter()));
                 yield return new TestCaseData(FilterData.Create(((Func<String, IEnumerable<IGrouping<Char, Char>>>)(input => input.GroupBy(character => character))).ToFilter()));
                 yield return new TestCaseData(FilterData.Create(((Func<IEnumerable<IGrouping<Char, Char>>, Int32>)(input => input.OrderByDescending(group => group.Count()).First().Count())).ToFilter()));
+                yield return new TestCaseData(FilterData.Create(((Func<IEnumerable<String>, List<String>>)(input => input.ToList())).ToFilter()));
+                yield return new TestCaseData(FilterData.Create(((Func<IEnumerable<Object>, List<Object>>)(input => input.ToList())).ToFilter()));
+                yield return new TestCaseData(FilterData.Create(((Func<String, IEnumerable<Char>>)(input => input.ToCharArray())).ToFilter()));
+                yield return new TestCaseData(FilterData.Create(((Func<Char[], Int32>)(input => input.Length)).ToFilter()));
+                yield return new TestCaseData(FilterData.Create(((Func<Int32, IEnumerable<Boolean>>)(input => new Boolean[input])).ToFilter()));
+                yield return new TestCaseData(FilterData.Create(((Func<Boolean[], Boolean>)(input => input.All(value => value))).ToFilter()));
             }
         }
     }
