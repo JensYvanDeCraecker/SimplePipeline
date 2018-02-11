@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
 
@@ -9,43 +7,27 @@ namespace SimplePipeline.Tests
     [TestFixture]
     public class FilterDataTest
     {
-        private readonly MethodInfo createFilterData = typeof(FilterData).GetMethod("Create", BindingFlags.Static | BindingFlags.Public);
+        private readonly MethodInfo processFilterDataEqualityDefenition = typeof(FilterDataTest).GetMethod("ProcessFilterDataEquality");
 
-        public static IEnumerable<TestCaseData> TestData
+        public void ProcessFilterDataEquality<TFilterInput, TFilterOutput>(IFilter<TFilterInput, TFilterOutput> filter)
         {
-            get
-            {
-                yield return new TestCaseData(FilterData.Create(((Func<String, String>)(input => new String(input.Reverse().ToArray()))).ToFilter()));
-                yield return new TestCaseData(FilterData.Create(((Func<String, Int32>)(input => input.Length)).ToFilter()));
-                yield return new TestCaseData(FilterData.Create(((Func<IEnumerable<Int32>, Double>)(input => input.Average())).ToFilter()));
-                yield return new TestCaseData(FilterData.Create(((Func<Double, Double>)Math.Round).ToFilter()));
-                yield return new TestCaseData(FilterData.Create(((Func<String, IEnumerable<IGrouping<Char, Char>>>)(input => input.GroupBy(character => character))).ToFilter()));
-                yield return new TestCaseData(FilterData.Create(((Func<IEnumerable<IGrouping<Char, Char>>, Int32>)(input => input.OrderByDescending(group => group.Count()).First().Count())).ToFilter()));
-            }
+            Assert.AreEqual(FilterData.Create(filter), FilterData.Create(filter));
         }
 
         [Test]
-        [TestCaseSource(nameof(TestData))]
-        public void ValidateEquality(FilterData data)
+        [TestCaseSource(typeof(TestData), nameof(TestData.CompareFilterTypeData))]
+        public void CompareFilterType(FilterData data)
         {
-            Object newFilterData = createFilterData.MakeGenericMethod(data.InputType, data.OutputType).Invoke(null, new[] { data.Filter });
-            Assert.AreEqual(data.GetHashCode(), newFilterData.GetHashCode());
-            Assert.AreEqual(data, newFilterData);
+            Type expectedFilterType = typeof(IFilter<,>).MakeGenericType(data.InputType, data.OutputType);
+            Assert.AreEqual(expectedFilterType, data.FilterType);
+            Assert.IsTrue(expectedFilterType.IsInstanceOfType(data.Filter));
         }
 
         [Test]
-        [TestCaseSource(nameof(TestData))]
-        public void ValidateFilter(FilterData data)
+        [TestCaseSource(typeof(TestData), nameof(TestData.FilterDataEqualityData))]
+        public void FilterDataEquality(Object filter, Type filterInputType, Type filterOutputType)
         {
-            Assert.AreEqual(typeof(IFilter<,>).MakeGenericType(data.InputType, data.OutputType), data.FilterType);
-            Assert.IsInstanceOf(data.FilterType, data.Filter);
-        }
-
-        [Test]
-        [TestCaseSource(nameof(TestData))]
-        public void ValidateFilterType(FilterData data)
-        {
-            Assert.AreEqual(typeof(IFilter<,>).MakeGenericType(data.InputType, data.OutputType), data.FilterType);
+            processFilterDataEqualityDefenition.MakeGenericMethod(filterInputType, filterOutputType).Invoke(this, new[] { filter });
         }
     }
 }
