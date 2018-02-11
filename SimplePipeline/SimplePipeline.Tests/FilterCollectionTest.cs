@@ -11,19 +11,7 @@ namespace SimplePipeline.Tests
     {
         private readonly MethodInfo addFilterDefenition = typeof(FilterCollectionTest).GetMethod("AddFilter");
 
-        public static IEnumerable<TestCaseData> TestData
-        {
-            get
-            {
-                yield return new TestCaseData(new List<FilterData>() { FilterData.Create(((Func<String, String>)(input => input.ToUpper())).ToFilter()), FilterData.Create(((Func<String, String>)(input => new String(input.Reverse().ToArray()))).ToFilter()), FilterData.Create(((Func<String, String>)(input => input.Substring(0, 4))).ToFilter()) }, true);
-                yield return new TestCaseData(new List<FilterData>() { FilterData.Create(((Func<String, IEnumerable<Char>>)(input => input.ToCharArray())).ToFilter()), FilterData.Create(((Func<Char[], Int32>)(input => input.Length)).ToFilter()) }, false);
-                yield return new TestCaseData(new List<FilterData>() { FilterData.Create(((Func<String, Char[]>)(input => input.ToCharArray())).ToFilter()), FilterData.Create(((Func<IEnumerable<Char>, Int32>)(input => input.Count())).ToFilter()) }, true);
-                yield return new TestCaseData(new List<FilterData>() { FilterData.Create(((Func<String, Int32>)(input => input.Length)).ToFilter()), FilterData.Create(((Func<Double, Int32>)(input => (Int32)input)).ToFilter()) }, false);
-                yield return new TestCaseData(new List<FilterData>() { FilterData.Create(((Func<String, String>)(input => input.Trim())).ToFilter()), FilterData.Create(((Func<IEnumerable<Char>, String>)(input => new String(input.ToArray()))).ToFilter()) }, true);
-                yield return new TestCaseData(new List<FilterData>() { FilterData.Create(((Func<Int32, IEnumerable<Boolean>>)(input => new Boolean[input])).ToFilter()), FilterData.Create(((Func<Boolean[], Boolean>)(input => input.All(value => value))).ToFilter()) }, false);
-                yield return new TestCaseData(new List<FilterData>() { FilterData.Create(((Func<IEnumerable<String>, List<String>>)(input => input.ToList())).ToFilter()), FilterData.Create(((Func<IEnumerable<Object>, List<Object>>)(input => input.ToList())).ToFilter()) }, true);
-            }
-        }
+        
 
         public void AddFilter<TInput, TOutput>(FilterCollection collection, IFilter<TInput, TOutput> filter)
         {
@@ -31,8 +19,8 @@ namespace SimplePipeline.Tests
         }
 
         [Test]
-        [TestCaseSource(nameof(TestData))]
-        public void BeginTest(IEnumerable<FilterData> filterDatas, Boolean canAdd)
+        [TestCaseSource(typeof(TestData), nameof(TestData.BuildCollectionData))]
+        public void BuildCollection(IEnumerable<FilterData> filterDatas, Boolean canAdd)
         {
             FilterCollection collection = new FilterCollection();
             if (canAdd)
