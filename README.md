@@ -80,21 +80,21 @@ public class DeserializePipeline<T> : IPipeline<String, T>
 
 	public DeserializePipeline()
 	{
-		innerPipeline = new Pipeline<String, T>()
+		innerPipeline = new Pipeline<String, T>(new FilterCollection()
 		{
 			(IFilter<String, String>)new FileReadFilter(),
 			new JsonFilter<T>()
-		};
+		});
 	}
 
-	public IEnumerator<FilterData> GetEnumerator()
+	public IEnumerator<Object> GetEnumerator()
 	{
 		return innerPipeline.GetEnumerator();
 	}
 
 	IEnumerator IEnumerable.GetEnumerator()
 	{
-		return ((IEnumerable)innerPipeline).GetEnumerator();
+		return GetEnumerator();
 	}
 
 	public T Output
@@ -150,11 +150,11 @@ Console.ReadKey();
 Because pipelines can contain filters where the output type of the previous filter doesn't match the input type of the following filter, failures can occur.
 
 ```cs
-IPipeline<String, String[]> pipeline = new Pipeline<String, String[]>()
+IPipeline<String, String[]> pipeline = new Pipeline<String, String[]>(new FilterCollection()
 {
-	(IFilter<String, Byte[]>)new FileReadFilter(), // Pipeline fails
-	new JsonFilter<String[]>()
-};
+		(IFilter<String, Byte[]>)new FileReadFilter(),
+		new JsonFilter<String[]>() // Pipeline fails, String is not assignable from Byte[].
+});
 ```
 
 To solve this, we've created the `IPipelineBuilder<in TPipelineInput, out TPipelineOutput>` interface that provides methods for chaining filters at compile time.
@@ -167,7 +167,7 @@ IPipeline<String, String[]> pipeline = PipelineBuilder.Start<String>().Chain<Str
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/JensYvanDeCraecker/SimplePipeline/tags). 
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/JensYvanDeCraecker/SimplePipeline/tags).
 
 
 ## Authors
