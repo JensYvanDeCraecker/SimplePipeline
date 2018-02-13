@@ -99,7 +99,14 @@ namespace SimplePipeline
         /// <returns>The processed output of the filter.</returns>
         public Object ExecuteFilter(Object input)
         {
-            return executeFilter.Invoke(Filter, new[] { input });
+            try
+            {
+                return executeFilter.Invoke(Filter, new[] { input });
+            }
+            catch (TargetInvocationException e)
+            {
+                throw e.InnerException;
+            }
         }
     }
 }

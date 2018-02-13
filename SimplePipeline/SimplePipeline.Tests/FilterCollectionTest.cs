@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using NUnit.Framework;
 
 namespace SimplePipeline.Tests
@@ -16,25 +17,33 @@ namespace SimplePipeline.Tests
         }
 
         [Test]
-        [TestCaseSource(typeof(TestData), nameof(TestData.BuildCollectionData))]
-        public void BuildCollection(IEnumerable<FilterData> filterDatas, Boolean canAdd)
+        [TestCaseSource(typeof(TestData), nameof(TestData.PossibleFilterCollectionData))]
+        public void PossibleFilterCollection(IEnumerable<Tuple<Object, Type, Type>> tuples)
         {
             FilterCollection collection = new FilterCollection();
-            if (canAdd)
-                Assert.DoesNotThrow(() =>
-                {
-                    foreach (FilterData filterData in filterDatas)
-                        addFilterDefenition.MakeGenericMethod(filterData.InputType, filterData.OutputType).Invoke(this, new[] { collection, filterData.Filter });
-                });
-            else
+            Assert.DoesNotThrow(() =>
             {
-                TargetInvocationException exception = Assert.Throws<TargetInvocationException>(() =>
+                foreach (Tuple<Object, Type, Type> tuple in tuples)
                 {
-                    foreach (FilterData filterData in filterDatas)
-                        addFilterDefenition.MakeGenericMethod(filterData.InputType, filterData.OutputType).Invoke(this, new[] { collection, filterData.Filter });
-                });
-                Assert.AreEqual(exception.InnerException?.GetType(), typeof(ArgumentException));
-            }
+                    addFilterDefenition.MakeGenericMethod(tuple.Item2, tuple.Item3).Invoke(this, new[] { collection,tuple.Item1 });
+                }
+            });
+        }
+
+
+        [Test]
+        [TestCaseSource(typeof(TestData), nameof(TestData.UnpossibleFilterCollectionData))]
+        public void UnpossibleFilterCollection(IEnumerable<Tuple<Object, Type, Type>> tuples)
+        {
+            FilterCollection collection = new FilterCollection();
+            TargetInvocationException exception = Assert.Throws<TargetInvocationException>(() =>
+             {
+                 foreach (Tuple<Object, Type, Type> tuple in tuples)
+                 {
+                     addFilterDefenition.MakeGenericMethod(tuple.Item2, tuple.Item3).Invoke(this, new[] { collection,tuple.Item1 });
+                 }
+             });
+            Assert.AreEqual(typeof(ArgumentException), exception.InnerException?.GetType());
         }
     }
 }

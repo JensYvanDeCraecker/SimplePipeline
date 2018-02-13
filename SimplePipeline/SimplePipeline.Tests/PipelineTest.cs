@@ -28,13 +28,14 @@ namespace SimplePipeline.Tests
             Assert.AreEqual(expectedPipelineOutput, filterOutput);
         }
 
-        public void ProcessPipelineFailure<TPipelineInput, TPipelineOutput>(FilterCollection filters, TPipelineInput pipelineInput)
+        public void ProcessPipelineFailure<TPipelineInput, TPipelineOutput>(FilterCollection filters, TPipelineInput pipelineInput, Type expectedExceptionType)
         {
             IPipeline<TPipelineInput, TPipelineOutput> createdPipeline = new Pipeline<TPipelineInput, TPipelineOutput>(filters);
             Assert.IsFalse(createdPipeline.Execute(pipelineInput));
             Assert.AreEqual(default(TPipelineOutput), createdPipeline.Output);
             Assert.AreNotEqual(default(Exception), createdPipeline.Exception);
             Type exceptionType = createdPipeline.Exception.GetType();
+            Assert.AreEqual(expectedExceptionType, exceptionType);
             Assert.IsFalse(createdPipeline.IsBeginState);
             createdPipeline.Reset();
             Assert.IsTrue(createdPipeline.IsBeginState);
@@ -44,9 +45,9 @@ namespace SimplePipeline.Tests
 
         [Test]
         [TestCaseSource(typeof(TestData), nameof(TestData.PipelineFailureData))]
-        public void PipelineFailure(FilterCollection filters, Type pipelineInputType, Type pipelineOutputType, Object pipelineInput)
+        public void PipelineFailure(FilterCollection filters, Type pipelineInputType, Type pipelineOutputType, Object pipelineInput, Type expectedExceptionType)
         {
-            processPipelineFailureDefenition.MakeGenericMethod(pipelineInputType, pipelineOutputType).Invoke(this, new[] { filters, pipelineInput });
+            processPipelineFailureDefenition.MakeGenericMethod(pipelineInputType, pipelineOutputType).Invoke(this, new[] { filters, pipelineInput, expectedExceptionType });
         }
 
         [Test]
