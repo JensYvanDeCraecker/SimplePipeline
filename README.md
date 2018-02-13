@@ -152,8 +152,8 @@ Because pipelines can contain filters where the output type of the previous filt
 ```cs
 IPipeline<String, String[]> pipeline = new Pipeline<String, String[]>(new FilterCollection()
 {
-		(IFilter<String, Byte[]>)new FileReadFilter(),
-		new JsonFilter<String[]>() // Pipeline fails, String is not assignable from Byte[].
+	(IFilter<String, Byte[]>)new FileReadFilter(),
+	new JsonFilter<String[]>() // Pipeline fails, String is not assignable from Byte[].
 });
 ```
 
