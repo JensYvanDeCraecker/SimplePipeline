@@ -40,9 +40,9 @@ namespace SimplePipeline.Tests
             {
                 yield return new TestCaseData(new FilterCollection()
                 {
-                    (IFilter<Tuple<String, Int32, Int32>, String>)Filters[11],
-                    (IFilter<String, String>)Filters[1],
-                    (IFilter<String, String>)Filters[0]
+                    (IFilter<Tuple<String, Int32, Int32>, String>)Filters[11], // ((Func<Tuple<String, Int32, Int32>, String>)(input => input.Item1.Substring(input.Item2, input.Item3))).ToFilter()
+                    (IFilter<String, String>)Filters[1], // ((Func<String, String>)(input => input.ToUpper())).ToFilter()
+                    (IFilter<String, String>)Filters[0] // ((Func<String, String>)(input => new String(input.Reverse().ToArray()))).ToFilter()
                 }, typeof(Tuple<String, Int32, Int32>), typeof(String), Tuple.Create("SimplePipeline is an easy to use pipeline system.", 0, 4), "PMIS");
             }
         }
@@ -53,8 +53,8 @@ namespace SimplePipeline.Tests
             {
                 yield return new TestCaseData(new FilterCollection()
                 {
-                    (IFilter<Boolean, Boolean>)Filters[15],
-                    (IFilter<Boolean, Boolean>)Filters[12]
+                    (IFilter<Boolean, Boolean>)Filters[15], // ((Func<Boolean, Boolean>)(input => !input)).ToFilter()
+                    (IFilter<Boolean, Boolean>)Filters[12] // ((Func<Boolean, Boolean>)(input => input ? throw new ArgumentException() : false)).ToFilter()
                 }, typeof(Boolean), typeof(Boolean), false, typeof(ArgumentException));
             }
         }
