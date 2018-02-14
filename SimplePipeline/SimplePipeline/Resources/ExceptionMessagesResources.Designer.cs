@@ -79,7 +79,7 @@ namespace SimplePipeline.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} is not assignable to {1}..
+        ///   Looks up a localized string similar to {0} is not assignable from {1}..
         /// </summary>
         internal static string InvalidFilterExceptionMessage {
             get {

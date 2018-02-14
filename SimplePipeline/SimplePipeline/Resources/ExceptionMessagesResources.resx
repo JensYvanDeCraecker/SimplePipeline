@@ -124,6 +124,6 @@
     <value>The provided FilterCollection is invalid and cannot be used for this pipeline.</value>
   </data>
   <data name="InvalidFilterExceptionMessage" xml:space="preserve">
-    <value>{0} is not assignable to {1}.</value>
+    <value>{0} is not assignable from {1}.</value>
   </data>
 </root>
