@@ -61,7 +61,7 @@ namespace SimplePipeline.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following parametercan&apos;t be null: &quot;{0}&quot;..
+        ///   Looks up a localized string similar to The following parameter can&apos;t be null: &quot;{0}&quot;..
         /// </summary>
         internal static string ArgumentNullExceptionMessage {
             get {
@@ -72,9 +72,18 @@ namespace SimplePipeline.Resources {
         /// <summary>
         ///   Looks up a localized string similar to The provided FilterCollection is invalid and cannot be used for this pipeline..
         /// </summary>
-        internal static string InvalidFilterCollectionException {
+        internal static string InvalidFilterCollectionExceptionMessage {
             get {
-                return ResourceManager.GetString("InvalidFilterCollectionException", resourceCulture);
+                return ResourceManager.GetString("InvalidFilterCollectionExceptionMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is not assignable to {1}..
+        /// </summary>
+        internal static string InvalidFilterExceptionMessage {
+            get {
+                return ResourceManager.GetString("InvalidFilterExceptionMessage", resourceCulture);
             }
         }
     }

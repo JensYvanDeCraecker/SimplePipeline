@@ -43,7 +43,7 @@ namespace SimplePipeline.Tests
                      addFilterDefenition.MakeGenericMethod(tuple.Item2, tuple.Item3).Invoke(this, new[] { collection,tuple.Item1 });
                  }
              });
-            Assert.AreEqual(typeof(ArgumentException), exception.InnerException?.GetType());
+            Assert.AreEqual(typeof(InvalidFilterException), exception.InnerException?.GetType());
         }
     }
 }

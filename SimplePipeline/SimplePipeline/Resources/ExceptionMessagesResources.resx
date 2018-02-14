@@ -118,9 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ArgumentNullExceptionMessage" xml:space="preserve">
-    <value>The following parametercan't be null: "{0}".</value>
+    <value>The following parameter can't be null: "{0}".</value>
   </data>
-  <data name="InvalidFilterCollectionException" xml:space="preserve">
+  <data name="InvalidFilterCollectionExceptionMessage" xml:space="preserve">
     <value>The provided FilterCollection is invalid and cannot be used for this pipeline.</value>
+  </data>
+  <data name="InvalidFilterExceptionMessage" xml:space="preserve">
+    <value>{0} is not assignable to {1}.</value>
   </data>
 </root>

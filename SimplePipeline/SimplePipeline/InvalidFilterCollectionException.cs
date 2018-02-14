@@ -5,7 +5,7 @@ namespace SimplePipeline
 {
     public class InvalidFilterCollectionException : Exception
     {
-        public InvalidFilterCollectionException() : base(ExceptionMessagesResources.InvalidFilterCollectionException)
+        public InvalidFilterCollectionException() : base(ExceptionMessagesResources.InvalidFilterCollectionExceptionMessage)
         {
         }
     }

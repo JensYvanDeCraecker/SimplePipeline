@@ -35,7 +35,7 @@ namespace SimplePipeline
             if (first == null)
                 first = filterData;
             else if (!filterData.InputType.IsAssignableFrom(last.OutputType))
-                throw new ArgumentException(nameof(filterData));        
+                throw new InvalidFilterException(filterData.InputType, last.OutputType);       
             last = filterData;
             innerCollection.Enqueue(filterData);
         }
