@@ -16,7 +16,7 @@ namespace SimplePipeline
                 throw new ArgumentNullException(String.Format(ExceptionMessagesResources.ArgumentNullExceptionMessage, nameof(filterCollection)));
             IEnumerable<FilterData> copyFilterDatas = filterCollection.ToList();
             if (!filterCollection.CanCreatePipeline(typeof(TInput), typeof(TOutput)))
-                throw new ArgumentException();
+                throw new InvalidFilterCollectionException();
             filterDatas = copyFilterDatas;
         }
 

@@ -120,4 +120,7 @@
   <data name="ArgumentNullExceptionMessage" xml:space="preserve">
     <value>The following parametercan't be null: "{0}".</value>
   </data>
+  <data name="InvalidFilterCollectionException" xml:space="preserve">
+    <value>The provided FilterCollection is invalid and cannot be used for this pipeline.</value>
+  </data>
 </root>

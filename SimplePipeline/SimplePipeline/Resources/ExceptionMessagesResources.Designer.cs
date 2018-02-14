@@ -68,5 +68,14 @@ namespace SimplePipeline.Resources {
                 return ResourceManager.GetString("ArgumentNullExceptionMessage", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The provided FilterCollection is invalid and cannot be used for this pipeline..
+        /// </summary>
+        internal static string InvalidFilterCollectionException {
+            get {
+                return ResourceManager.GetString("InvalidFilterCollectionException", resourceCulture);
+            }
+        }
     }
 }
