@@ -34,15 +34,33 @@ namespace SimplePipeline.Tests
             }
         }
 
+        public static IEnumerable<TestCaseData> PipelineInvalidFilterCollectionData
+        {
+            get
+            {
+                yield return new TestCaseData(new FilterCollection()
+                {
+                    (IFilter<Boolean, Boolean>)Filters[15],
+                    (IFilter<Boolean, Boolean>)Filters[12]
+                }, typeof(Object), typeof(Boolean));
+                yield return new TestCaseData(new FilterCollection()
+                {
+                    (IFilter<Tuple<String, Int32, Int32>, String>)Filters[11],
+                    (IFilter<String, String>)Filters[1],
+                    (IFilter<String, Object>)Filters[0]
+                }, typeof(Tuple<String, Int32, Int32>), typeof(String));
+            }
+        }
+
         public static IEnumerable<TestCaseData> PipelineSuccessData
         {
             get
             {
                 yield return new TestCaseData(new FilterCollection()
                 {
-                    (IFilter<Tuple<String, Int32, Int32>, String>)Filters[11], 
-                    (IFilter<String, String>)Filters[1], 
-                    (IFilter<String, String>)Filters[0] 
+                    (IFilter<Tuple<String, Int32, Int32>, String>)Filters[11],
+                    (IFilter<String, String>)Filters[1],
+                    (IFilter<String, String>)Filters[0]
                 }, typeof(Tuple<String, Int32, Int32>), typeof(String), Tuple.Create("SimplePipeline is an easy to use pipeline system.", 0, 4), "PMIS");
             }
         }
@@ -54,7 +72,7 @@ namespace SimplePipeline.Tests
                 yield return new TestCaseData(new FilterCollection()
                 {
                     (IFilter<Boolean, Boolean>)Filters[15],
-                    (IFilter<Boolean, Boolean>)Filters[12] 
+                    (IFilter<Boolean, Boolean>)Filters[12]
                 }, typeof(Boolean), typeof(Boolean), false, typeof(ArgumentException));
             }
         }
@@ -65,21 +83,21 @@ namespace SimplePipeline.Tests
             {
                 yield return new TestCaseData(new List<Tuple<Object, Type, Type>>()
                 {
-                    Tuple.Create(Filters[0], typeof(String), typeof(String)), 
-                    Tuple.Create(Filters[1], typeof(String), typeof(String)), 
-                    Tuple.Create(Filters[6], typeof(String), typeof(Char[])), 
-                    Tuple.Create(Filters[8], typeof(IEnumerable<Char>), typeof(Char)) 
+                    Tuple.Create(Filters[0], typeof(String), typeof(String)),
+                    Tuple.Create(Filters[1], typeof(String), typeof(String)),
+                    Tuple.Create(Filters[6], typeof(String), typeof(Char[])),
+                    Tuple.Create(Filters[8], typeof(IEnumerable<Char>), typeof(Char))
                 });
                 yield return new TestCaseData(new List<Tuple<Object, Type, Type>>()
                 {
-                    Tuple.Create(Filters[5], typeof(String), typeof(Boolean)), 
-                    Tuple.Create(Filters[13], typeof(Object), typeof(String)) 
+                    Tuple.Create(Filters[5], typeof(String), typeof(Boolean)),
+                    Tuple.Create(Filters[13], typeof(Object), typeof(String))
                 });
                 yield return new TestCaseData(new List<Tuple<Object, Type, Type>>()
                 {
-                    Tuple.Create(Filters[10], typeof(IEnumerable<Object>), typeof(List<Object>)), 
-                    Tuple.Create(Filters[13], typeof(Object), typeof(String)), 
-                    Tuple.Create(Filters[14], typeof(Object), typeof(Int32)) 
+                    Tuple.Create(Filters[10], typeof(IEnumerable<Object>), typeof(List<Object>)),
+                    Tuple.Create(Filters[13], typeof(Object), typeof(String)),
+                    Tuple.Create(Filters[14], typeof(Object), typeof(Int32))
                 });
             }
         }
@@ -90,18 +108,18 @@ namespace SimplePipeline.Tests
             {
                 yield return new TestCaseData(new List<Tuple<Object, Type, Type>>()
                 {
-                    Tuple.Create(Filters[6], typeof(String), typeof(IEnumerable<Char>)), 
-                    Tuple.Create(Filters[10], typeof(IEnumerable<Object>), typeof(List<Object>)) 
+                    Tuple.Create(Filters[6], typeof(String), typeof(IEnumerable<Char>)),
+                    Tuple.Create(Filters[10], typeof(IEnumerable<Object>), typeof(List<Object>))
                 });
                 yield return new TestCaseData(new List<Tuple<Object, Type, Type>>()
                 {
-                    Tuple.Create(Filters[13], typeof(Object), typeof(String)), 
-                    Tuple.Create(Filters[12], typeof(Boolean), typeof(Boolean)) 
+                    Tuple.Create(Filters[13], typeof(Object), typeof(String)),
+                    Tuple.Create(Filters[12], typeof(Boolean), typeof(Boolean))
                 });
                 yield return new TestCaseData(new List<Tuple<Object, Type, Type>>()
                 {
-                    Tuple.Create(Filters[9], typeof(List<String>), typeof(IEnumerable<String>)), 
-                    Tuple.Create(Filters[9], typeof(List<String>), typeof(IEnumerable<String>)) 
+                    Tuple.Create(Filters[9], typeof(List<String>), typeof(IEnumerable<String>)),
+                    Tuple.Create(Filters[9], typeof(List<String>), typeof(IEnumerable<String>))
                 });
             }
         }
@@ -110,22 +128,22 @@ namespace SimplePipeline.Tests
         {
             get
             {
-                yield return new TestCaseData(Filters[0], typeof(String), typeof(String)); 
-                yield return new TestCaseData(Filters[1], typeof(String), typeof(String)); 
-                yield return new TestCaseData(Filters[2], typeof(String), typeof(String)); 
-                yield return new TestCaseData(Filters[3], typeof(String), typeof(Object)); 
-                yield return new TestCaseData(Filters[4], typeof(String), typeof(Int32)); 
-                yield return new TestCaseData(Filters[5], typeof(String), typeof(Boolean)); 
-                yield return new TestCaseData(Filters[6], typeof(String), typeof(IEnumerable<Char>)); 
-                yield return new TestCaseData(Filters[7], typeof(Int32[]), typeof(Double)); 
-                yield return new TestCaseData(Filters[8], typeof(List<Char>), typeof(Char)); 
-                yield return new TestCaseData(Filters[9], typeof(List<String>), typeof(IEnumerable<String>)); 
-                yield return new TestCaseData(Filters[10], typeof(IEnumerable<Object>), typeof(List<Object>)); 
-                yield return new TestCaseData(Filters[11], typeof(Tuple<String, Int32, Int32>), typeof(String)); 
+                yield return new TestCaseData(Filters[0], typeof(String), typeof(String));
+                yield return new TestCaseData(Filters[1], typeof(String), typeof(String));
+                yield return new TestCaseData(Filters[2], typeof(String), typeof(String));
+                yield return new TestCaseData(Filters[3], typeof(String), typeof(Object));
+                yield return new TestCaseData(Filters[4], typeof(String), typeof(Int32));
+                yield return new TestCaseData(Filters[5], typeof(String), typeof(Boolean));
+                yield return new TestCaseData(Filters[6], typeof(String), typeof(IEnumerable<Char>));
+                yield return new TestCaseData(Filters[7], typeof(Int32[]), typeof(Double));
+                yield return new TestCaseData(Filters[8], typeof(List<Char>), typeof(Char));
+                yield return new TestCaseData(Filters[9], typeof(List<String>), typeof(IEnumerable<String>));
+                yield return new TestCaseData(Filters[10], typeof(IEnumerable<Object>), typeof(List<Object>));
+                yield return new TestCaseData(Filters[11], typeof(Tuple<String, Int32, Int32>), typeof(String));
                 yield return new TestCaseData(Filters[12], typeof(Boolean), typeof(Boolean));
                 yield return new TestCaseData(Filters[13], typeof(Object), typeof(String));
                 yield return new TestCaseData(Filters[14], typeof(Object), typeof(Int32));
-                yield return new TestCaseData(Filters[15], typeof(Boolean), typeof(Boolean)); 
+                yield return new TestCaseData(Filters[15], typeof(Boolean), typeof(Boolean));
             }
         }
 
@@ -133,10 +151,10 @@ namespace SimplePipeline.Tests
         {
             get
             {
-                yield return new TestCaseData(FilterData.Create((IFilter<String, String>)Filters[0])); 
+                yield return new TestCaseData(FilterData.Create((IFilter<String, String>)Filters[0]));
                 yield return new TestCaseData(FilterData.Create((IFilter<String, String>)Filters[1]));
-                yield return new TestCaseData(FilterData.Create((IFilter<String, String>)Filters[2])); 
-                yield return new TestCaseData(FilterData.Create((IFilter<String, Object>)Filters[3])); 
+                yield return new TestCaseData(FilterData.Create((IFilter<String, String>)Filters[2]));
+                yield return new TestCaseData(FilterData.Create((IFilter<String, Object>)Filters[3]));
                 yield return new TestCaseData(FilterData.Create((IFilter<String, Int32>)Filters[4]));
                 yield return new TestCaseData(FilterData.Create((IFilter<String, Boolean>)Filters[5]));
                 yield return new TestCaseData(FilterData.Create((IFilter<String, IEnumerable<Char>>)Filters[6]));

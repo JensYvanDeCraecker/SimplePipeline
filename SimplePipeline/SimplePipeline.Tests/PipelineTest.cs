@@ -9,6 +9,7 @@ namespace SimplePipeline.Tests
     {
         private readonly MethodInfo processPipelineSuccessDefenition = typeof(PipelineTest).GetMethod("ProcessPipelineSuccess");
         private readonly MethodInfo processPipelineFailureDefenition = typeof(PipelineTest).GetMethod("ProcessPipelineFailure");
+        private readonly MethodInfo processPipelineInvalidFilterCollectionDefenition = typeof(PipelineTest).GetMethod("ProcessPipelineInvalidFilterCollection");
 
         public void ProcessPipelineSuccess<TPipelineInput, TPipelineOutput>(FilterCollection filters, TPipelineInput pipelineInput, TPipelineOutput expectedPipelineOutput)
         {
@@ -43,11 +44,27 @@ namespace SimplePipeline.Tests
             Assert.Throws(exceptionType, () => convertedFilter.Execute(pipelineInput));
         }
 
+        public void ProcessPipelineInvalidFilterCollection<TPipelineInput, TPipelineOutput>(FilterCollection filters)
+        {
+            Assert.Throws<InvalidFilterCollectionException>(() =>
+            {
+                // ReSharper disable once ObjectCreationAsStatement
+                new Pipeline<TPipelineInput, TPipelineOutput>(filters);
+            });
+        }
+
         [Test]
         [TestCaseSource(typeof(TestData), nameof(TestData.PipelineFailureData))]
         public void PipelineFailure(FilterCollection filters, Type pipelineInputType, Type pipelineOutputType, Object pipelineInput, Type expectedExceptionType)
         {
             processPipelineFailureDefenition.MakeGenericMethod(pipelineInputType, pipelineOutputType).Invoke(this, new[] { filters, pipelineInput, expectedExceptionType });
+        }
+
+        [Test]
+        [TestCaseSource(typeof(TestData), nameof(TestData.PipelineInvalidFilterCollectionData))]
+        public void PipelineInvalidFilterCollection(FilterCollection filters, Type pipelineInputType, Type pipelineOutputType)
+        {
+            processPipelineInvalidFilterCollectionDefenition.MakeGenericMethod(pipelineInputType, pipelineOutputType).Invoke(this, new Object[] { filters });
         }
 
         [Test]
