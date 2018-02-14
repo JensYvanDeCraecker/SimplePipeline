@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using SimplePipeline.Resources;
 
 namespace SimplePipeline
 {
@@ -63,7 +64,7 @@ namespace SimplePipeline
         public static FilterData Create<TInput, TOutput>(IFilter<TInput, TOutput> filter)
         {
             if (filter == null)
-                throw new ArgumentNullException(nameof(filter));
+                throw new ArgumentNullException(String.Format(ExceptionMessagesResources.ArgumentNullExceptionMessage, nameof(filter)));
             return new FilterData(filter, typeof(TInput), typeof(TOutput));
         }
 

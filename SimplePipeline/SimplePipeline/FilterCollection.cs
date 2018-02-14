@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using SimplePipeline.Resources;
 
 namespace SimplePipeline
 {
@@ -29,7 +30,7 @@ namespace SimplePipeline
         public void Add<TInput, TOutput>(IFilter<TInput, TOutput> filter)
         {
             if (filter == null)
-                throw new ArgumentNullException(nameof(filter));
+                throw new ArgumentNullException(String.Format(ExceptionMessagesResources.ArgumentNullExceptionMessage, nameof(filter)));
             FilterData filterData = FilterData.Create(filter);
             if (first == null)
                 first = filterData;
@@ -42,9 +43,9 @@ namespace SimplePipeline
         public Boolean CanCreatePipeline(Type pipelineInputType, Type pipelineOutputType)
         {
             if (pipelineInputType == null)
-                throw new ArgumentNullException(nameof(pipelineInputType));
+                throw new ArgumentNullException(String.Format(ExceptionMessagesResources.ArgumentNullExceptionMessage, nameof(pipelineInputType)));
             if (pipelineOutputType == null)
-                throw new ArgumentNullException(nameof(pipelineOutputType));
+                throw new ArgumentNullException(String.Format(ExceptionMessagesResources.ArgumentNullExceptionMessage, nameof(pipelineOutputType)));
             if (Count > 0)
                 return InputType.IsAssignableFrom(pipelineInputType) && pipelineOutputType.IsAssignableFrom(OutputType);
             return pipelineOutputType.IsAssignableFrom(pipelineInputType);

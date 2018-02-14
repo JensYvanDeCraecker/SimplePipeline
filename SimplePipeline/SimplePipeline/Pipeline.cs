@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using SimplePipeline.Resources;
 
 namespace SimplePipeline
 {
@@ -12,7 +13,7 @@ namespace SimplePipeline
         public Pipeline(FilterCollection filterCollection)
         {
             if (filterCollection == null)
-                throw new ArgumentNullException(nameof(filterCollection));
+                throw new ArgumentNullException(String.Format(ExceptionMessagesResources.ArgumentNullExceptionMessage, nameof(filterCollection)));
             IEnumerable<FilterData> copyFilterDatas = filterCollection.ToList();
             if (!filterCollection.CanCreatePipeline(typeof(TInput), typeof(TOutput)))
                 throw new ArgumentException();
