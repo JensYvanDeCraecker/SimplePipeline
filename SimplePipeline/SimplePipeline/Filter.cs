@@ -11,8 +11,8 @@ namespace SimplePipeline
         /// <summary>
         ///     Converts a function to a filter.
         /// </summary>
-        /// <typeparam name="TInput">The type of the input.</typeparam>
-        /// <typeparam name="TOutput">The type of the output.</typeparam>
+        /// <typeparam name="TInput">The type of the function input.</typeparam>
+        /// <typeparam name="TOutput">The type of the function output.</typeparam>
         /// <param name="func">The function to convert to a filter.</param>
         /// <returns>A newly constructed filter that is based on the provided function.</returns>
         /// <exception cref="ArgumentNullException"></exception>
@@ -26,8 +26,8 @@ namespace SimplePipeline
         /// <summary>
         ///     Converts a pipeline to a filter.
         /// </summary>
-        /// <typeparam name="TInput">The type of the input.</typeparam>
-        /// <typeparam name="TOutput">The type of the output.</typeparam>
+        /// <typeparam name="TInput">The type of the pipeline input.</typeparam>
+        /// <typeparam name="TOutput">The type of the pipeline output.</typeparam>
         /// <param name="pipeline">The pipeline to convert to a filter.</param>
         /// <returns>A newly constructed filter that is based on the provided pipeline.</returns>
         public static IFilter<TInput, TOutput> ToFilter<TInput, TOutput>(this IPipeline<TInput, TOutput> pipeline)

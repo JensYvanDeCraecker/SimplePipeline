@@ -61,6 +61,7 @@ namespace SimplePipeline
         /// <typeparam name="TOutput">The type of the output.</typeparam>
         /// <param name="filter">The filter to create the information from.</param>
         /// <returns>The information about the provided filter.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public static FilterData Create<TInput, TOutput>(IFilter<TInput, TOutput> filter)
         {
             if (filter == null)

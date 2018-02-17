@@ -6,10 +6,21 @@ using SimplePipeline.Resources;
 
 namespace SimplePipeline
 {
+    /// <summary>
+    ///     Represents a concrete implementation of the <see cref="IPipeline{TInput,TOutput}" /> interface.
+    /// </summary>
+    /// <typeparam name="TInput"></typeparam>
+    /// <typeparam name="TOutput"></typeparam>
     public class Pipeline<TInput, TOutput> : IPipeline<TInput, TOutput>
     {
         private readonly IEnumerable<FilterData> filterDatas;
 
+        /// <summary>
+        ///     Creates a new <see cref="Pipeline{TInput,TOutput}" /> instance.
+        /// </summary>
+        /// <param name="filterCollection">The filter sequence to populate this pipeline with.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="InvalidFilterCollectionException"></exception>
         public Pipeline(FilterCollection filterCollection)
         {
             if (filterCollection == null)
@@ -20,15 +31,28 @@ namespace SimplePipeline
             filterDatas = copyFilterDatas;
         }
 
+        /// <summary>
+        ///     Returns an enumerator that iterates through the collection.
+        /// </summary>
+        /// <returns>An enumerator that can be used to iterate through the collection.</returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
 
+        /// <summary>
+        ///     Gets the output of a processed input, if successful. If not, the default value is returned.
+        /// </summary>
         public TOutput Output { get; private set; }
 
+        /// <summary>
+        ///     Gets the exception of a processed input, if unsuccessful. If successful, the default value is returned.
+        /// </summary>
         public Exception Exception { get; private set; }
 
+        /// <summary>
+        ///     Gets the state of the pipeline.
+        /// </summary>
         public Boolean IsBeginState
         {
             get
@@ -37,6 +61,12 @@ namespace SimplePipeline
             }
         }
 
+        /// <summary>
+        ///     Processes the input in a collection of filters and returns a boolean that determines if the processing was
+        ///     successful.
+        /// </summary>
+        /// <param name="input">The input to process in a collection of filters.</param>
+        /// <returns>True if the processing was successful. If not, false is returned.</returns>
         public Boolean Execute(TInput input)
         {
             Reset();
@@ -52,6 +82,9 @@ namespace SimplePipeline
             }
         }
 
+        /// <summary>
+        ///     Resets the pipeline to a state that is similar to a pipeline that has not yet processed any inputs.
+        /// </summary>
         public void Reset()
         {
             if (IsBeginState)
@@ -60,6 +93,10 @@ namespace SimplePipeline
             Output = default(TOutput);
         }
 
+        /// <summary>
+        ///     Returns an enumerator that iterates through the collection.
+        /// </summary>
+        /// <returns>An enumerator that can be used to iterate through the collection.</returns>
         public IEnumerator<Object> GetEnumerator()
         {
             return new Enumerator(filterDatas.GetEnumerator());

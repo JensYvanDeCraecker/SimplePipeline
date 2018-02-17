@@ -3,8 +3,8 @@
     /// <summary>
     ///     Provides a method that can process a given input and returns an output.
     /// </summary>
-    /// <typeparam name="TInput">The type of the input.</typeparam>
-    /// <typeparam name="TOutput">The type of the output.</typeparam>
+    /// <typeparam name="TInput">The type of the filter input.</typeparam>
+    /// <typeparam name="TOutput">The type of the filter output.</typeparam>
     public interface IFilter<in TInput, out TOutput>
     {
         /// <summary>
