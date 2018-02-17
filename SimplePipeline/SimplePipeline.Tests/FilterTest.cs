@@ -9,8 +9,9 @@ namespace SimplePipeline.Tests
         [Test]
         public void ToFilterFuncNull()
         {
-            Assert.Throws<ArgumentNullException>(() => ((Func<String,String>)null).ToFilter());
+            Assert.Throws<ArgumentNullException>(() => ((Func<String, String>)null).ToFilter());
         }
+
         [Test]
         public void ToFilterPipelineNull()
         {

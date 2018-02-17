@@ -16,8 +16,6 @@ namespace SimplePipeline.Tests
             collection.Add(filter);
         }
 
-
-
         [Test]
         [TestCaseSource(typeof(TestData), nameof(TestData.PossibleFilterCollectionData))]
         public void PossibleFilterCollection(IEnumerable<Object> items)
@@ -26,12 +24,10 @@ namespace SimplePipeline.Tests
             Assert.DoesNotThrow(() =>
             {
                 foreach (Object item in items)
-                {
                     if (item is Tuple<Object, Type, Type> tuple)
                         addFilterDefenition.MakeGenericMethod(tuple.Item2, tuple.Item3).Invoke(this, new[] { collection, tuple.Item1 });
                     else
                         collection.Add((FilterData)item);
-                }        
             });
         }
 
@@ -45,12 +41,10 @@ namespace SimplePipeline.Tests
                 try
                 {
                     foreach (Object item in items)
-                    {
                         if (item is Tuple<Object, Type, Type> tuple)
                             addFilterDefenition.MakeGenericMethod(tuple.Item2, tuple.Item3).Invoke(this, new[] { collection, tuple.Item1 });
                         else
                             collection.Add((FilterData)item);
-                    }
                 }
                 catch (TargetInvocationException e)
                 {
