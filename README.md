@@ -20,7 +20,11 @@ Because code acts independently in a pipeline design, code from another pipeline
 
 ### Installing
 
-Once the project has been successfully tested and used in example cases to prove that the concept works en all provided implementations of the interfaces works exactly expected, the project will be released en hosted on NuGet. Currently, the project is still under development.
+The current version is 1.0.0, installing it is possible by using NuGet package manager console or download the library directly from [GitHub](https://github.com/JensYvanDeCraecker/SimplePipeline/releases)
+
+```
+PM> Install-Package SimplePipeline -Version 1.0.0
+```
 
 ### Demo
 
