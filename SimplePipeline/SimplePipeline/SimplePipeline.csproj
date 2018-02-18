@@ -4,6 +4,10 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard2.0\SimplePipeline.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Update="Resources\ExceptionMessagesResources.Designer.cs">
       <DesignTime>True</DesignTime>
