@@ -20,7 +20,7 @@ Because code acts independently in a pipeline design, code from another pipeline
 
 ### Installing
 
-The current version is 1.0.0, installing it is possible by using NuGet package manager console or download the library directly from [GitHub](https://github.com/JensYvanDeCraecker/SimplePipeline/releases)
+The current version is 1.0.0, installing it is possible by using NuGet package manager console or download the library directly from [GitHub](https://github.com/JensYvanDeCraecker/SimplePipeline/releases).
 
 ```
 PM> Install-Package SimplePipeline -Version 1.0.0
