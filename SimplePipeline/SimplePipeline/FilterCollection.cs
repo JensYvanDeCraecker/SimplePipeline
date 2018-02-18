@@ -95,7 +95,7 @@ namespace SimplePipeline
         }
 
         /// <summary>
-        ///     Checks whether this sequence of filters can be used to create a pipeline of the provided input & output type.
+        ///     Checks whether this sequence of filters can be used to create a pipeline of the provided input and output type.
         /// </summary>
         /// <param name="pipelineInputType">The type of the pipeline input to check if it is compatible with this sequence.</param>
         /// <param name="pipelineOutputType">The type of the pipeline output to check if it is compatible with this sequence.</param>
