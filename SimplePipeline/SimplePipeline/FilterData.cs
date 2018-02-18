@@ -97,7 +97,7 @@ namespace SimplePipeline
         /// <summary>
         ///     Execute the filter that this information is based on.
         /// </summary>
-        /// <param name="input">The input for the filterto process.</param>
+        /// <param name="input">The input for the filter to process.</param>
         /// <returns>The processed output of the filter.</returns>
         public Object ExecuteFilter(Object input)
         {
