@@ -72,7 +72,7 @@ namespace SimplePipeline
         public void Add<TInput, TOutput>(IFilter<TInput, TOutput> filter)
         {
             if (filter == null)
-                throw new ArgumentNullException(String.Format(ExceptionMessagesResources.ArgumentNullExceptionMessage, nameof(filter)));
+                throw new ArgumentNullException(nameof(filter));
             Add(FilterData.Create(filter));
         }
 
@@ -85,7 +85,7 @@ namespace SimplePipeline
         public void Add(FilterData filterData)
         {
             if (filterData == null)
-                throw new ArgumentNullException(String.Format(ExceptionMessagesResources.ArgumentNullExceptionMessage, nameof(filterData)));
+                throw new ArgumentNullException(nameof(filterData));
             if (first == null)
                 first = filterData;
             else if (!filterData.InputType.IsAssignableFrom(last.OutputType))
@@ -104,9 +104,9 @@ namespace SimplePipeline
         public Boolean CanCreatePipeline(Type pipelineInputType, Type pipelineOutputType)
         {
             if (pipelineInputType == null)
-                throw new ArgumentNullException(String.Format(ExceptionMessagesResources.ArgumentNullExceptionMessage, nameof(pipelineInputType)));
+                throw new ArgumentNullException(nameof(pipelineInputType));
             if (pipelineOutputType == null)
-                throw new ArgumentNullException(String.Format(ExceptionMessagesResources.ArgumentNullExceptionMessage, nameof(pipelineOutputType)));
+                throw new ArgumentNullException(nameof(pipelineOutputType));
             if (Count > 0)
                 return InputType.IsAssignableFrom(pipelineInputType) && pipelineOutputType.IsAssignableFrom(OutputType);
             return pipelineOutputType.IsAssignableFrom(pipelineInputType);
