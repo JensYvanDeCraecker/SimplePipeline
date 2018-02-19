@@ -2,6 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Authors>Jens Yvan De Craecker</Authors>
+    <Company />
+    <Description>SimplePipeline is an easy to use pipeline system. Our code uses custom interfaces making it highly extensible.</Description>
+    <PackageLicenseUrl>https://github.com/JensYvanDeCraecker/SimplePipeline/blob/master/LICENSE.txt</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/JensYvanDeCraecker/SimplePipeline</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <PackageTags>Pipeline, Filters, Interfaces, Easy, Simple</PackageTags>
+    <PackageProjectUrl>https://github.com/JensYvanDeCraecker/SimplePipeline</PackageProjectUrl>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
