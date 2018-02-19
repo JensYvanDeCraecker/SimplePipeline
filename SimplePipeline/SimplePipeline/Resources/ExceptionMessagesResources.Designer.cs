@@ -61,15 +61,6 @@ namespace SimplePipeline.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following parameter can&apos;t be null: &quot;{0}&quot;..
-        /// </summary>
-        internal static string ArgumentNullExceptionMessage {
-            get {
-                return ResourceManager.GetString("ArgumentNullExceptionMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The provided FilterCollection is invalid and cannot be used for this pipeline..
         /// </summary>
         internal static string InvalidFilterCollectionExceptionMessage {
