@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using SimplePipeline.Resources;
 
 namespace SimplePipeline
 {

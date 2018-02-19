@@ -1,5 +1,4 @@
 ﻿using System;
-using SimplePipeline.Resources;
 
 namespace SimplePipeline
 {
