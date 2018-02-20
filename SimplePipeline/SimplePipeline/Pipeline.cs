@@ -8,8 +8,8 @@ namespace SimplePipeline
     /// <summary>
     ///     Represents a concrete implementation of the <see cref="IPipeline{TInput,TOutput}" /> interface.
     /// </summary>
-    /// <typeparam name="TInput"></typeparam>
-    /// <typeparam name="TOutput"></typeparam>
+    /// <typeparam name="TInput">The type of the pipeline input.</typeparam>
+    /// <typeparam name="TOutput">The type of the pipeline output.</typeparam>
     public class Pipeline<TInput, TOutput> : IPipeline<TInput, TOutput>
     {
         private readonly IEnumerable<FilterData> filterDatas;

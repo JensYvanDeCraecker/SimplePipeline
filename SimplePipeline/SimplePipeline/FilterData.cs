@@ -56,8 +56,8 @@ namespace SimplePipeline
         /// <summary>
         ///     Creates information from the provided filter.
         /// </summary>
-        /// <typeparam name="TInput">The type of the input.</typeparam>
-        /// <typeparam name="TOutput">The type of the output.</typeparam>
+        /// <typeparam name="TInput">The type of the filter input.</typeparam>
+        /// <typeparam name="TOutput">The type of the filter output.</typeparam>
         /// <param name="filter">The filter to create the information from.</param>
         /// <returns>The information about the provided filter.</returns>
         /// <exception cref="ArgumentNullException"></exception>

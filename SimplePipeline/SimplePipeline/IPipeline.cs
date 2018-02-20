@@ -6,8 +6,8 @@ namespace SimplePipeline
     /// <summary>
     ///     Provides methods and properties to process a generic input in a collection of filters.
     /// </summary>
-    /// <typeparam name="TInput">The type of the input.</typeparam>
-    /// <typeparam name="TOutput">The type of the output.</typeparam>
+    /// <typeparam name="TInput">The type of the pipeline input.</typeparam>
+    /// <typeparam name="TOutput">The type of the pipeline output.</typeparam>
     public interface IPipeline<in TInput, out TOutput> : IEnumerable<Object>
     {
         /// <summary>
