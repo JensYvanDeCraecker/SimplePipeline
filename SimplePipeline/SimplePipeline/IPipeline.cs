@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace SimplePipeline
 {
     /// <summary>
-    ///     Provides methods and properties to process a generic input in a collection of filters.
+    ///     Provides methods and properties to process a generic input in a sequence of filters.
     /// </summary>
     /// <typeparam name="TInput">The type of the pipeline input.</typeparam>
     /// <typeparam name="TOutput">The type of the pipeline output.</typeparam>
