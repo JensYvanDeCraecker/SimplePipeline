@@ -6,7 +6,7 @@ SimplePipeline is an easy to use pipeline system. Our code uses custom interface
 
 ### Download & Install
 
-Please go to the [releases](https://github.com/JensYvanDeCraecker/SimplePipeline/releases) section to download the latest release of this code or install the libray directly from [NuGet](https://www.nuget.org/packages/SimplePipeline/).
+Please go to the [releases](https://github.com/JensYvanDeCraecker/SimplePipeline/releases) section to download the latest release of SimplePipeline or install the library directly from [NuGet](https://www.nuget.org/packages/SimplePipeline/).
 
 ```
 PM> Install-Package SimplePipeline -Version 1.0.0
