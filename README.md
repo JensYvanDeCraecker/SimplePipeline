@@ -2,21 +2,15 @@
 
 SimplePipeline is an easy to use pipeline system. Our code uses custom interfaces making it highly extensible.
 
-## Introduction
-
-### What is a pipeline?
-
-A pipeline is a sequence of code that is independent of each other. These bits of code take an input, process the input and returns an output. This means that the input in the pipeline gets passed into the first bit of code that processes it and returns an output that the following code takes as an input.
-
-![Pipeline example](http://tomasp.net/articles/parallel-extra-image-pipeline/pipeline.png)
-
-### Advantages
-
-#### Reuse code
-
-Because code acts independently in a pipeline design, code from another pipeline can be used again and again in other pipelines. This means you will be saving time on writing the same thing.
-
 ## Getting Started
+
+### Download & Install
+
+Please go to the [releases](https://github.com/JensYvanDeCraecker/SimplePipeline/releases) section to download the latest release of this code or install the libray directly from [NuGet](https://www.nuget.org/packages/SimplePipeline/).
+
+```
+PM> Install-Package SimplePipeline -Version 1.0.0
+```
 
 ### Documentation
 
