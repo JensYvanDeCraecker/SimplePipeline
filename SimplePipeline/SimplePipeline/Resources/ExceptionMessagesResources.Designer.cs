@@ -61,7 +61,7 @@ namespace SimplePipeline.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The provided FilterCollection is invalid and cannot be used for this pipeline..
+        ///   Looks up a localized string similar to The provided FilterCollection cannot be used for this pipeline..
         /// </summary>
         internal static string InvalidFilterCollectionExceptionMessage {
             get {
