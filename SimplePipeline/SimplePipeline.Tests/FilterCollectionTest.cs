@@ -47,7 +47,8 @@ namespace SimplePipeline.Tests
                 }
                 catch (TargetInvocationException e)
                 {
-                    throw e.InnerException ?? new Exception();
+                    // ReSharper disable once PossibleNullReferenceException
+                    throw e.InnerException;
                 }
             });
         }
