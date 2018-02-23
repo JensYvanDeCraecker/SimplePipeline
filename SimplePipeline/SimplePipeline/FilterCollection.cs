@@ -99,14 +99,9 @@ namespace SimplePipeline
         /// <param name="pipelineInputType">The type of the pipeline input to check if it is compatible with this sequence.</param>
         /// <param name="pipelineOutputType">The type of the pipeline output to check if it is compatible with this sequence.</param>
         /// <returns>A value indicating if this sequence is compatible.</returns>
-        /// <exception cref="ArgumentNullException"></exception>
         public Boolean CanCreatePipeline(Type pipelineInputType, Type pipelineOutputType)
         {
-            if (pipelineInputType == null)
-                throw new ArgumentNullException(nameof(pipelineInputType));
-            if (pipelineOutputType == null)
-                throw new ArgumentNullException(nameof(pipelineOutputType));
-            return Count > 0 && InputType.IsAssignableFrom(pipelineInputType) && pipelineOutputType.IsAssignableFrom(OutputType);
+            return pipelineInputType != null && pipelineOutputType != null && Count > 0 && InputType.IsAssignableFrom(pipelineInputType) && pipelineOutputType.IsAssignableFrom(OutputType);
         }
     }
 }
