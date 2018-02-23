@@ -34,7 +34,7 @@ namespace SimplePipeline.Tests
             }
         }
 
-        public static IEnumerable<TestCaseData> PipelineInvalidFilterCollectionData
+        public static IEnumerable<TestCaseData> PipelineInvalidSequenceData
         {
             get
             {
@@ -53,7 +53,7 @@ namespace SimplePipeline.Tests
             }
         }
 
-        public static IEnumerable<TestCaseData> PipelineSuccessData
+        public static IEnumerable<TestCaseData> PipelineSuccessfulData
         {
             get
             {
@@ -78,7 +78,7 @@ namespace SimplePipeline.Tests
             }
         }
 
-        public static IEnumerable<TestCaseData> PossibleFilterCollectionData
+        public static IEnumerable<TestCaseData> PossibleSequenceData
         {
             get
             {
@@ -103,7 +103,7 @@ namespace SimplePipeline.Tests
             }
         }
 
-        public static IEnumerable<TestCaseData> UnpossibleFilterCollectionData
+        public static IEnumerable<TestCaseData> UnpossibleSequenceData
         {
             get
             {

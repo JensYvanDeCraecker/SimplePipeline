@@ -35,8 +35,8 @@ namespace SimplePipeline.Tests
         }
 
         [Test]
-        [TestCaseSource(typeof(TestData), nameof(TestData.PossibleFilterCollectionData))]
-        public void PossibleFilterCollection(IEnumerable<Object> items)
+        [TestCaseSource(typeof(TestData), nameof(TestData.PossibleSequenceData))]
+        public void PossibleSequence(IEnumerable<Object> items)
         {
             Assert.DoesNotThrow(() =>
             {
@@ -45,8 +45,8 @@ namespace SimplePipeline.Tests
         }
 
         [Test]
-        [TestCaseSource(typeof(TestData), nameof(TestData.UnpossibleFilterCollectionData))]
-        public void UnpossibleFilterCollection(IEnumerable<Object> items)
+        [TestCaseSource(typeof(TestData), nameof(TestData.UnpossibleSequenceData))]
+        public void UnpossibleSequence(IEnumerable<Object> items)
         {
             Assert.Throws<InvalidFilterException>(() =>
             {
