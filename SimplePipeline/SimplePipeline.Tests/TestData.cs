@@ -49,7 +49,6 @@ namespace SimplePipeline.Tests
                     (IFilter<String, String>)Filters[1],
                     (IFilter<String, Object>)Filters[0]
                 }, typeof(Tuple<String, Int32, Int32>), typeof(String));
-                yield return new TestCaseData(new FilterCollection(), typeof(String), typeof(String));
             }
         }
 

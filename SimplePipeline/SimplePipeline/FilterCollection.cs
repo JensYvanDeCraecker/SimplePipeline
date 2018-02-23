@@ -106,7 +106,9 @@ namespace SimplePipeline
                 throw new ArgumentNullException(nameof(pipelineInputType));
             if (pipelineOutputType == null)
                 throw new ArgumentNullException(nameof(pipelineOutputType));
-            return Count > 0 && InputType.IsAssignableFrom(pipelineInputType) && pipelineOutputType.IsAssignableFrom(OutputType);
+            if (Count > 0)
+                return InputType.IsAssignableFrom(pipelineInputType) && pipelineOutputType.IsAssignableFrom(OutputType);
+            return pipelineOutputType.IsAssignableFrom(pipelineInputType);
         }
     }
 }
