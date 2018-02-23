@@ -7,11 +7,12 @@ namespace SimplePipeline.Tests
     [TestFixture]
     public class PipelineTest
     {
-        private readonly MethodInfo processPipelineSuccessDefenition = typeof(PipelineTest).GetMethod("ProcessPipelineSuccess");
-        private readonly MethodInfo processPipelineFailureDefenition = typeof(PipelineTest).GetMethod("ProcessPipelineFailure");
-        private readonly MethodInfo processPipelineInvalidFilterCollectionDefenition = typeof(PipelineTest).GetMethod("ProcessPipelineInvalidFilterCollection");
+        private readonly MethodInfo processPipelineSuccessDefenition = typeof(PipelineTest).GetMethod("ProcessPipelineSuccess", BindingFlags.NonPublic | BindingFlags.Instance);
+        private readonly MethodInfo processPipelineFailureDefenition = typeof(PipelineTest).GetMethod("ProcessPipelineFailure",BindingFlags.NonPublic | BindingFlags.Instance);
+        private readonly MethodInfo processPipelineInvalidFilterCollectionDefenition = typeof(PipelineTest).GetMethod("ProcessPipelineInvalidFilterCollection", BindingFlags.NonPublic | BindingFlags.Instance);
 
-        public void ProcessPipelineSuccess<TPipelineInput, TPipelineOutput>(FilterCollection filters, TPipelineInput pipelineInput, TPipelineOutput expectedPipelineOutput)
+        // ReSharper disable once UnusedMember.Local
+        private void ProcessPipelineSuccess<TPipelineInput, TPipelineOutput>(FilterCollection filters, TPipelineInput pipelineInput, TPipelineOutput expectedPipelineOutput)
         {
             IPipeline<TPipelineInput, TPipelineOutput> createdPipeline = new Pipeline<TPipelineInput, TPipelineOutput>(filters);
             Assert.IsTrue(createdPipeline.Execute(pipelineInput));
@@ -29,7 +30,8 @@ namespace SimplePipeline.Tests
             Assert.AreEqual(expectedPipelineOutput, filterOutput);
         }
 
-        public void ProcessPipelineFailure<TPipelineInput, TPipelineOutput>(FilterCollection filters, TPipelineInput pipelineInput, Type expectedExceptionType)
+        // ReSharper disable once UnusedMember.Local
+        private void ProcessPipelineFailure<TPipelineInput, TPipelineOutput>(FilterCollection filters, TPipelineInput pipelineInput, Type expectedExceptionType)
         {
             IPipeline<TPipelineInput, TPipelineOutput> createdPipeline = new Pipeline<TPipelineInput, TPipelineOutput>(filters);
             Assert.IsFalse(createdPipeline.Execute(pipelineInput));
@@ -44,7 +46,9 @@ namespace SimplePipeline.Tests
             Assert.Throws(exceptionType, () => convertedFilter.Execute(pipelineInput));
         }
 
-        public void ProcessPipelineInvalidFilterCollection<TPipelineInput, TPipelineOutput>(FilterCollection filters)
+
+        // ReSharper disable once UnusedMember.Local
+        private void ProcessPipelineInvalidFilterCollection<TPipelineInput, TPipelineOutput>(FilterCollection filters)
         {
             Assert.Throws<InvalidFilterCollectionException>(() =>
             {

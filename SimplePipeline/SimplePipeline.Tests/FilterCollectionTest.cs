@@ -8,14 +8,15 @@ namespace SimplePipeline.Tests
     [TestFixture]
     public class FilterCollectionTest
     {
-        private readonly MethodInfo addFilterDefenition = typeof(FilterCollectionTest).GetMethod("AddFilter");
+        private readonly MethodInfo addFilterDefenition = typeof(FilterCollectionTest).GetMethod("AddFilter", BindingFlags.NonPublic | BindingFlags.Instance);
 
-        public void AddFilter<TInput, TOutput>(FilterCollection collection, IFilter<TInput, TOutput> filter)
+        // ReSharper disable once UnusedMember.Local
+        private void AddFilter<TInput, TOutput>(FilterCollection collection, IFilter<TInput, TOutput> filter)
         {
             collection.Add(filter);
         }
 
-        public void FillSequence(IEnumerable<Object> items)
+        private void FillSequence(IEnumerable<Object> items)
         {
             try
             {

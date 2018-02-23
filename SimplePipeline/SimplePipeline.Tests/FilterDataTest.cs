@@ -7,9 +7,10 @@ namespace SimplePipeline.Tests
     [TestFixture]
     public class FilterDataTest
     {
-        private readonly MethodInfo processFilterDataEqualityDefenition = typeof(FilterDataTest).GetMethod("ProcessFilterDataEquality");
+        private readonly MethodInfo processFilterDataEqualityDefenition = typeof(FilterDataTest).GetMethod("ProcessFilterDataEquality", BindingFlags.NonPublic | BindingFlags.Instance);
 
-        public void ProcessFilterDataEquality<TFilterInput, TFilterOutput>(IFilter<TFilterInput, TFilterOutput> filter)
+        // ReSharper disable once UnusedMember.Local
+        private void ProcessFilterDataEquality<TFilterInput, TFilterOutput>(IFilter<TFilterInput, TFilterOutput> filter)
         {
             Assert.AreEqual(FilterData.Create(filter), FilterData.Create(filter));
         }
