@@ -8,7 +8,7 @@ namespace SimplePipeline.Tests
     [TestFixture]
     public class FilterCollectionTest
     {
-        private readonly MethodInfo addFilterDefenition = typeof(FilterCollectionTest).GetMethod("AddFilter", BindingFlags.NonPublic | BindingFlags.Instance);
+        private readonly MethodInfo addFilterDefinition = typeof(FilterCollectionTest).GetMethod("AddFilter", BindingFlags.NonPublic | BindingFlags.Instance);
 
         // ReSharper disable once UnusedMember.Local
         private void AddFilter<TInput, TOutput>(FilterCollection collection, IFilter<TInput, TOutput> filter)
@@ -23,7 +23,7 @@ namespace SimplePipeline.Tests
                 FilterCollection collection = new FilterCollection();
                 foreach (Object item in items)
                     if (item is Tuple<Object, Type, Type> tuple)
-                        addFilterDefenition.MakeGenericMethod(tuple.Item2, tuple.Item3).Invoke(this, new[] { collection, tuple.Item1 });
+                        addFilterDefinition.MakeGenericMethod(tuple.Item2, tuple.Item3).Invoke(this, new[] { collection, tuple.Item1 });
                     else
                         collection.Add((FilterData)item);
             }

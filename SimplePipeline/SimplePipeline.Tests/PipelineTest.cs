@@ -7,9 +7,9 @@ namespace SimplePipeline.Tests
     [TestFixture]
     public class PipelineTest
     {
-        private readonly MethodInfo processPipelineSuccessfulDefenition = typeof(PipelineTest).GetMethod("ProcessPipelineSuccessful", BindingFlags.NonPublic | BindingFlags.Instance);
-        private readonly MethodInfo processPipelineFailureDefenition = typeof(PipelineTest).GetMethod("ProcessPipelineFailure", BindingFlags.NonPublic | BindingFlags.Instance);
-        private readonly MethodInfo processPipelineInvalidSequenceDefenition = typeof(PipelineTest).GetMethod("ProcessPipelineInvalidSequence", BindingFlags.NonPublic | BindingFlags.Instance);
+        private readonly MethodInfo processPipelineSuccessfulDefinition = typeof(PipelineTest).GetMethod("ProcessPipelineSuccessful", BindingFlags.NonPublic | BindingFlags.Instance);
+        private readonly MethodInfo processPipelineFailureDefinition = typeof(PipelineTest).GetMethod("ProcessPipelineFailure", BindingFlags.NonPublic | BindingFlags.Instance);
+        private readonly MethodInfo processPipelineInvalidSequenceDefinition = typeof(PipelineTest).GetMethod("ProcessPipelineInvalidSequence", BindingFlags.NonPublic | BindingFlags.Instance);
 
         // ReSharper disable once UnusedMember.Local
         private void ProcessPipelineSuccessful<TPipelineInput, TPipelineOutput>(FilterCollection filters, TPipelineInput pipelineInput, TPipelineOutput expectedPipelineOutput)
@@ -62,21 +62,21 @@ namespace SimplePipeline.Tests
         [TestCaseSource(typeof(TestData), nameof(TestData.PipelineFailureData))]
         public void PipelineFailure(FilterCollection filters, Type pipelineInputType, Type pipelineOutputType, Object pipelineInput, Type expectedExceptionType)
         {
-            processPipelineFailureDefenition.MakeGenericMethod(pipelineInputType, pipelineOutputType).Invoke(this, new[] { filters, pipelineInput, expectedExceptionType });
+            processPipelineFailureDefinition.MakeGenericMethod(pipelineInputType, pipelineOutputType).Invoke(this, new[] { filters, pipelineInput, expectedExceptionType });
         }
 
         [Test]
         [TestCaseSource(typeof(TestData), nameof(TestData.PipelineInvalidSequenceData))]
         public void PipelineInvalidSequence(FilterCollection filters, Type pipelineInputType, Type pipelineOutputType)
         {
-            processPipelineInvalidSequenceDefenition.MakeGenericMethod(pipelineInputType, pipelineOutputType).Invoke(this, new Object[] { filters });
+            processPipelineInvalidSequenceDefinition.MakeGenericMethod(pipelineInputType, pipelineOutputType).Invoke(this, new Object[] { filters });
         }
 
         [Test]
         [TestCaseSource(typeof(TestData), nameof(TestData.PipelineSuccessfulData))]
         public void PipelineSuccessful(FilterCollection filters, Type pipelineInputType, Type pipelineOutputType, Object pipelineInput, Object expectedPipelineOutput)
         {
-            processPipelineSuccessfulDefenition.MakeGenericMethod(pipelineInputType, pipelineOutputType).Invoke(this, new[] { filters, pipelineInput, expectedPipelineOutput });
+            processPipelineSuccessfulDefinition.MakeGenericMethod(pipelineInputType, pipelineOutputType).Invoke(this, new[] { filters, pipelineInput, expectedPipelineOutput });
         }
     }
 }
