@@ -9,7 +9,6 @@ namespace SimplePipeline.Tests
     public class FilterCollectionTest
     {
         private readonly MethodInfo addFilterDefenition = typeof(FilterCollectionTest).GetMethod("AddFilter");
-        private readonly Type filterType = typeof(IFilter<,>);
 
         public void AddFilter<TInput, TOutput>(FilterCollection collection, IFilter<TInput, TOutput> filter)
         {
