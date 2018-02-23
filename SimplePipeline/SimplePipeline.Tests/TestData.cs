@@ -8,31 +8,25 @@ namespace SimplePipeline.Tests
 {
     public class TestData
     {
-        public static IReadOnlyList<Object> Filters
+        public static IReadOnlyList<Object> Filters { get; } = new ReadOnlyCollection<Object>(new List<Object>()
         {
-            get
-            {
-                return new ReadOnlyCollection<Object>(new List<Object>()
-                {
-                    ((Func<String, String>)(input => new String(input.Reverse().ToArray()))).ToFilter(), // 0
-                    ((Func<String, String>)(input => input.ToUpper())).ToFilter(), // 1
-                    ((Func<String, String>)(input => input.ToLower())).ToFilter(), // 2
-                    ((Func<String, String>)(input => input.Replace(" ", ""))).ToFilter(), // 3
-                    ((Func<String, Int32>)(input => input.Length)).ToFilter(), // 4
-                    ((Func<String, Boolean>)String.IsNullOrWhiteSpace).ToFilter(), // 5
-                    ((Func<String, Char[]>)(input => input.ToCharArray())).ToFilter(), // 6
-                    ((Func<IEnumerable<Int32>, Double>)(input => input.Average())).ToFilter(), // 7
-                    ((Func<IEnumerable<Char>, Char>)(input => input.GroupBy(character => character).OrderByDescending(characterGroups => characterGroups.Count()).First().Key)).ToFilter(), // 8
-                    ((Func<IEnumerable<String>, List<String>>)(input => input.ToList())).ToFilter(), // 9
-                    ((Func<IEnumerable<Object>, List<Object>>)(input => input.ToList())).ToFilter(), // 10
-                    ((Func<Tuple<String, Int32, Int32>, String>)(input => input.Item1.Substring(input.Item2, input.Item3))).ToFilter(), // 11
-                    ((Func<Boolean, Boolean>)(input => input ? throw new ArgumentException() : false)).ToFilter(), // 12
-                    ((Func<Object, String>)(input => input.ToString())).ToFilter(), // 13
-                    ((Func<Object, Int32>)(input => input.GetHashCode())).ToFilter(), // 14
-                    ((Func<Boolean, Boolean>)(input => !input)).ToFilter() // 15
-                });
-            }
-        }
+            ((Func<String, String>)(input => new String(input.Reverse().ToArray()))).ToFilter(), // 0
+            ((Func<String, String>)(input => input.ToUpper())).ToFilter(), // 1
+            ((Func<String, String>)(input => input.ToLower())).ToFilter(), // 2
+            ((Func<String, String>)(input => input.Replace(" ", ""))).ToFilter(), // 3
+            ((Func<String, Int32>)(input => input.Length)).ToFilter(), // 4
+            ((Func<String, Boolean>) String.IsNullOrWhiteSpace).ToFilter(), // 5
+            ((Func<String, Char[]>)(input => input.ToCharArray())).ToFilter(), // 6
+            ((Func<IEnumerable<Int32>, Double>)(input => input.Average())).ToFilter(), // 7
+            ((Func<IEnumerable<Char>, Char>)(input => input.GroupBy(character => character).OrderByDescending(characterGroups => characterGroups.Count()).First().Key)).ToFilter(), // 8
+            ((Func<IEnumerable<String>, List<String>>)(input => input.ToList())).ToFilter(), // 9
+            ((Func<IEnumerable<Object>, List<Object>>)(input => input.ToList())).ToFilter(), // 10
+            ((Func<Tuple<String, Int32, Int32>, String>)(input => input.Item1.Substring(input.Item2, input.Item3))).ToFilter(), // 11
+            ((Func<Boolean, Boolean>)(input => input? throw new ArgumentException() : false)).ToFilter(), // 12
+            ((Func<Object, String>)(input => input.ToString())).ToFilter(), // 13
+            ((Func<Object, Int32>)(input => input.GetHashCode())).ToFilter(), // 14
+            ((Func<Boolean, Boolean>)(input => !input)).ToFilter() // 15
+        });
 
         public static IEnumerable<TestCaseData> PipelineInvalidSequenceData
         {
@@ -170,5 +164,24 @@ namespace SimplePipeline.Tests
                 yield return new TestCaseData(FilterData.Create((IFilter<Boolean, Boolean>)Filters[15]));
             }
         }
+
+        public static IEnumerable<TestCaseData> FilterDataEqualsTrueData
+        {
+            get
+            {
+                yield return new TestCaseData(FilterData.Create((IFilter<String, String>)Filters[0]), FilterData.Create((IFilter<String, String>)Filters[0]));
+                yield return new TestCaseData(FilterData.Create((IFilter<String, String>)Filters[1]), FilterData.Create((IFilter<String, String>)Filters[1]));
+            }
+        }
+
+        public static IEnumerable<TestCaseData> FilterDataEqualsFalseData
+        {
+            get
+            {
+                yield return new TestCaseData(FilterData.Create((IFilter<String, String>)Filters[0]), FilterData.Create((IFilter<String, IEnumerable<Char>>)Filters[0]));
+                yield return new TestCaseData(FilterData.Create((IFilter<String, String>)Filters[1]), FilterData.Create((IFilter<String, Object>)Filters[1]));
+            }
+        }
     }
+
 }
