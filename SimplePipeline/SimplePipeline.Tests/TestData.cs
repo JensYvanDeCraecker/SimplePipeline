@@ -179,7 +179,7 @@ namespace SimplePipeline.Tests
             get
             {
                 yield return new TestCaseData(FilterData.Create((IFilter<String, String>)Filters[0]), FilterData.Create((IFilter<String, IEnumerable<Char>>)Filters[0]));
-                yield return new TestCaseData(FilterData.Create((IFilter<String, String>)Filters[1]), FilterData.Create((IFilter<String, Object>)Filters[1]));
+                yield return new TestCaseData(FilterData.Create((IFilter<IEnumerable<Int32>, Double>)Filters[7]), FilterData.Create((IFilter<Int32[], Double>)Filters[7]));
             }
         }
     }
