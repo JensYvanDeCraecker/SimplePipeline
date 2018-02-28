@@ -69,6 +69,10 @@
       <Project>{a88bbd0c-0709-4a62-af43-9e8c7cec9e10}</Project>
       <Name>SimplePipeline.Tests.Filters</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SimplePipeline.Tests.Pipelines\SimplePipeline.Tests.Pipelines.csproj">
+      <Project>{e7acab09-893d-4d76-8174-665af6f03afa}</Project>
+      <Name>SimplePipeline.Tests.Pipelines</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SimplePipeline\SimplePipeline.csproj">
       <Project>{885f31ac-bb57-40c4-b33e-0ce124c4ed27}</Project>
       <Name>SimplePipeline</Name>
