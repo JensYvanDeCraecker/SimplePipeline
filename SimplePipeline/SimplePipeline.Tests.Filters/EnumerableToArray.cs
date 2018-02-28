@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace SimplePipeline.Tests.Filters
 {
-    public class CharEnumerableToArray : IFilter<IEnumerable<Char>, Char[]>
+    public class EnumerableToArray<T> : IFilter<IEnumerable<T>, T[]>
     {
-        public Char[] Execute(IEnumerable<Char> input)
+        public T[] Execute(IEnumerable<T> input)
         {
             return input.ToArray();
         }
