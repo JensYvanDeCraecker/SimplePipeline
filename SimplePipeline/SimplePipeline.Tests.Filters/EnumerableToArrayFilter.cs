@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace SimplePipeline.Tests.Filters
 {
-    public class EnumerableToArray<T> : IFilter<IEnumerable<T>, T[]>
+    public class EnumerableToArrayFilter<T> : IFilter<IEnumerable<T>, T[]>
     {
         public T[] Execute(IEnumerable<T> input)
         {
