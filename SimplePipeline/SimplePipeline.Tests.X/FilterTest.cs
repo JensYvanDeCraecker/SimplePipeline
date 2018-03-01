@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using SimplePipeline.Tests.Pipelines;
 using Xunit;
 
 namespace SimplePipeline.Tests.X
 {
-    // TODO: Add pipeline to filter test
     public class FilterTest
     {
         private readonly MethodInfo processFunctionToFilterDefinition = typeof(FilterTest).GetMethod("ProcessFunctionToFilter", BindingFlags.NonPublic | BindingFlags.Instance);
+        private readonly MethodInfo processPipelineToFilterDefinition = typeof(FilterTest).GetMethod("ProcessPipelineToFilter", BindingFlags.NonPublic | BindingFlags.Instance);
 
         public static IEnumerable<Object[]> Functions
         {
@@ -19,6 +20,17 @@ namespace SimplePipeline.Tests.X
                 yield return new Object[] { (Func<String, Char[]>)(input => input.ToCharArray()), typeof(String), typeof(IEnumerable<Char>) };
                 yield return new Object[] { (Func<IEnumerable<Char>, Int32>)(input => input.Count()), typeof(String), typeof(Int32) };
                 yield return new Object[] { (Func<IEnumerable<Char>, String>)(input => new String(input.ToArray())), typeof(String), typeof(IEnumerable<Char>) };
+            }
+        }
+
+        public static IEnumerable<Object[]> Pipelines
+        {
+            get
+            {
+                yield return new Object[] { new EnumerableToArrayPipeline<Char>(), typeof(IEnumerable<Char>), typeof(Char[]) };
+                yield return new Object[]{new EnumerableToArrayPipeline<Char>(), typeof(IEnumerable<Char>), typeof(IEnumerable<Char>) };
+                yield return new Object[]{new EnumerableToArrayPipeline<Char>(), typeof(String), typeof(Char[]) };
+                yield return new Object[] { new EnumerableToArrayPipeline<Char>(), typeof(String), typeof(IEnumerable<Char>) };
             }
         }
 
@@ -46,5 +58,19 @@ namespace SimplePipeline.Tests.X
         {
             Assert.NotNull(function.ToFilter());
         }
+
+        [Theory]
+        [MemberData(nameof(Pipelines))]
+        public void PipelineToFilter(Object pipeline, Type pipelineInputType, Type pipelineOutputType)
+        {
+            processPipelineToFilterDefinition.MakeGenericMethod(pipelineInputType, pipelineOutputType).Invoke(this, new[] { pipeline });
+        }
+
+        // ReSharper disable once UnusedMember.Local
+        private void ProcessPipelineToFilter<TPipelineInput, TPipelineOutput>(IPipeline<TPipelineInput, TPipelineOutput> pipeline)
+        {
+            Assert.NotNull(pipeline.ToFilter());
+        }
+
     }
 }
