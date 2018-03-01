@@ -28,22 +28,10 @@ namespace SimplePipeline.Tests.X
             get
             {
                 yield return new Object[] { new EnumerableToArrayPipeline<Char>(), typeof(IEnumerable<Char>), typeof(Char[]) };
-                yield return new Object[]{new EnumerableToArrayPipeline<Char>(), typeof(IEnumerable<Char>), typeof(IEnumerable<Char>) };
-                yield return new Object[]{new EnumerableToArrayPipeline<Char>(), typeof(String), typeof(Char[]) };
+                yield return new Object[] { new EnumerableToArrayPipeline<Char>(), typeof(IEnumerable<Char>), typeof(IEnumerable<Char>) };
+                yield return new Object[] { new EnumerableToArrayPipeline<Char>(), typeof(String), typeof(Char[]) };
                 yield return new Object[] { new EnumerableToArrayPipeline<Char>(), typeof(String), typeof(IEnumerable<Char>) };
             }
-        }
-
-        [Fact]
-        public void FunctionToFilterNull()
-        {
-            Assert.Throws<ArgumentNullException>(() => ((Func<Object, Object>)null).ToFilter());
-        }
-
-        [Fact]
-        public void PipelineToFilterNull()
-        {
-            Assert.Throws<ArgumentNullException>(() => ((IPipeline<Object, Object>)null).ToFilter());
         }
 
         [Theory]
@@ -72,5 +60,16 @@ namespace SimplePipeline.Tests.X
             Assert.NotNull(pipeline.ToFilter());
         }
 
+        [Fact]
+        public void FunctionToFilterNull()
+        {
+            Assert.Throws<ArgumentNullException>(() => ((Func<Object, Object>)null).ToFilter());
+        }
+
+        [Fact]
+        public void PipelineToFilterNull()
+        {
+            Assert.Throws<ArgumentNullException>(() => ((IPipeline<Object, Object>)null).ToFilter());
+        }
     }
 }
