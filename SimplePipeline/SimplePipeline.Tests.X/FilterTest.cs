@@ -12,6 +12,7 @@ namespace SimplePipeline.Tests.X
         private readonly MethodInfo processFunctionToFilterDefinition = typeof(FilterTest).GetMethod("ProcessFunctionToFilter", BindingFlags.NonPublic | BindingFlags.Instance);
         private readonly MethodInfo processPipelineToFilterDefinition = typeof(FilterTest).GetMethod("ProcessPipelineToFilter", BindingFlags.NonPublic | BindingFlags.Instance);
 
+        // Syntax: Func<in T, out TResult>, T type, TResult type
         public static IEnumerable<Object[]> Functions
         {
             get
@@ -23,6 +24,7 @@ namespace SimplePipeline.Tests.X
             }
         }
 
+        // Syntax: IPipeline<in TInput, out TOutput>, TInput type, TOutput type
         public static IEnumerable<Object[]> Pipelines
         {
             get
