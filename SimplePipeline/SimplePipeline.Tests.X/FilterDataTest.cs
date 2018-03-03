@@ -35,12 +35,13 @@ namespace SimplePipeline.Tests.X
             }
         }
 
-        // Syntax: FilterData, Object, Object
+        // Syntax: FilterData, Boolean, Object, Object, Type
         public static IEnumerable<Object[]> FilterDatas
         {
             get
             {
-                yield return new Object[] { FilterData.Create(new CharEnumerableToStringFilter()), new[] { 'S', 'i', 'm', 'p', 'l', 'e', 'P', 'i', 'p', 'e', 'l', 'i', 'n', 'e' }, "SimplePipeline" };
+                yield return new Object[] { FilterData.Create(new CharEnumerableToStringFilter()), true, new[] { 'S', 'i', 'm', 'p', 'l', 'e', 'P', 'i', 'p', 'e', 'l', 'i', 'n', 'e' }, "SimplePipeline", null };
+                yield return new Object[] { FilterData.Create(((Func<Object, Object>)(input => throw new Exception())).ToFilter()), false, null, null, typeof(Exception) };
             }
         }
 
@@ -70,21 +71,18 @@ namespace SimplePipeline.Tests.X
 
         [Theory]
         [MemberData(nameof(FilterDatas))]
-        public void FilterDataExecuteFilter(FilterData data, Object filterInput, Object expectedFilterOutput)
+        public void FilterDataExecuteFilter(FilterData data, Boolean shouldSucceed, Object filterInput, Object expectedFilterOutput, Type expectedExceptionType)
         {
-            Assert.Equal(expectedFilterOutput, data.ExecuteFilter(filterInput));
+            if (shouldSucceed)
+                Assert.Equal(expectedFilterOutput, data.ExecuteFilter(filterInput));
+            else
+                Assert.Throws(expectedExceptionType, () => data.ExecuteFilter(filterInput));
         }
 
         [Fact]
         public void CreateFilterDataNull()
         {
             Assert.Throws<ArgumentNullException>(() => FilterData.Create<Object, Object>(null));
-        }
-
-        [Fact]
-        public void FilterDataExecuteFilterException()
-        {
-            Assert.Throws<Exception>(() => FilterData.Create(((Func<Object, Object>)(input => throw new Exception())).ToFilter()).ExecuteFilter(null));
         }
     }
 }
