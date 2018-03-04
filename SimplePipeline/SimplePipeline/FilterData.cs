@@ -4,7 +4,7 @@ using System.Reflection;
 namespace SimplePipeline
 {
     /// <summary>
-    ///     Contains information about a filter.
+    ///     Represents a filter in a non-generic environment.
     /// </summary>
     public sealed class FilterData : IEquatable<FilterData>
     {
@@ -20,17 +20,17 @@ namespace SimplePipeline
         }
 
         /// <summary>
-        ///     Returns the filter that this information is based on.
+        ///     Gets the filter that this data represents.
         /// </summary>
         public Object Filter { get; }
 
         /// <summary>
-        ///     Returns the type of the input of the filter that this information is based on.
+        ///     Gets the input type that this data represents.
         /// </summary>
         public Type InputType { get; }
 
         /// <summary>
-        ///     Returns the type of the output of the filter that this information is based on.
+        ///     Gets the output type that this data represents.
         /// </summary>
         public Type OutputType { get; }
 
@@ -40,10 +40,10 @@ namespace SimplePipeline
         public Type FilterType { get; }
 
         /// <summary>
-        ///     Checks if the provided information is equal to this information.
+        ///     Checks if the provided data is equal to this data.
         /// </summary>
-        /// <param name="other">The information to check for equality.</param>
-        /// <returns>Returns a boolean that indicates if this information equal to the provided information.</returns>
+        /// <param name="other">The data to check for equality.</param>
+        /// <returns>Returns a boolean that indicates if this data equal to the provided data.</returns>
         public Boolean Equals(FilterData other)
         {
             if (other is null)
@@ -54,12 +54,12 @@ namespace SimplePipeline
         }
 
         /// <summary>
-        ///     Creates information from the provided filter.
+        ///     Creates a non-generic filter representation.
         /// </summary>
         /// <typeparam name="TInput">The type of the filter input.</typeparam>
         /// <typeparam name="TOutput">The type of the filter output.</typeparam>
-        /// <param name="filter">The filter to create the information from.</param>
-        /// <returns>The information about the provided filter.</returns>
+        /// <param name="filter">The filter to create a non-generic representation from.</param>
+        /// <returns>The non-generic representation of the provided filter.</returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static FilterData Create<TInput, TOutput>(IFilter<TInput, TOutput> filter)
         {
@@ -69,10 +69,10 @@ namespace SimplePipeline
         }
 
         /// <summary>
-        ///     Checks if the provided object is equal to this information.
+        ///     Checks if the provided object is equal to this data.
         /// </summary>
         /// <param name="obj">The object to check for equality.</param>
-        /// <returns>Returns a boolean that indicates if this information equal to the provided object.</returns>
+        /// <returns>Returns a boolean that indicates if this data equal to the provided object.</returns>
         public override Boolean Equals(Object obj)
         {
             return obj is FilterData data && Equals(data);
@@ -94,7 +94,7 @@ namespace SimplePipeline
         }
 
         /// <summary>
-        ///     Execute the filter that this information is based on.
+        ///     Executes the filter of this non-generic representation.
         /// </summary>
         /// <param name="input">The input for the filter to process.</param>
         /// <returns>The processed output of the filter.</returns>
