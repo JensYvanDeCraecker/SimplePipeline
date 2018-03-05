@@ -101,7 +101,7 @@ namespace SimplePipeline
         /// <returns>A value indicating if this sequence is compatible.</returns>
         public Boolean CanCreatePipeline(Type pipelineInputType, Type pipelineOutputType)
         {
-            return pipelineInputType != null && pipelineOutputType != null && Count > 0 && InputType.IsAssignableFrom(pipelineInputType) && pipelineOutputType.IsAssignableFrom(OutputType);
+            return pipelineInputType != null && pipelineOutputType != null && (Count > 0 ? InputType.IsAssignableFrom(pipelineInputType) && pipelineOutputType.IsAssignableFrom(OutputType) : pipelineOutputType.IsAssignableFrom(pipelineInputType));
         }
     }
 }
