@@ -20,22 +20,22 @@ namespace SimplePipeline
         }
 
         /// <summary>
-        ///     Gets the filter that this data represents.
+        ///     Gets the filter instance.
         /// </summary>
         public Object Filter { get; }
 
         /// <summary>
-        ///     Gets the input type that this data represents.
+        ///     Gets the input type of the filter.
         /// </summary>
         public Type InputType { get; }
 
         /// <summary>
-        ///     Gets the output type that this data represents.
+        ///     Gets the output type of the filter.
         /// </summary>
         public Type OutputType { get; }
 
         /// <summary>
-        ///     Returns the <see cref="IFilter{TInput,TOutput}" /> type that this information is based on.
+        ///     Returns the <see cref="IFilter{TInput,TOutput}"/> type of the filter instance.
         /// </summary>
         public Type FilterType { get; }
 
@@ -54,12 +54,12 @@ namespace SimplePipeline
         }
 
         /// <summary>
-        ///     Creates a non-generic filter representation.
+        ///     Creates a non-generic filter.
         /// </summary>
         /// <typeparam name="TInput">The type of the filter input.</typeparam>
         /// <typeparam name="TOutput">The type of the filter output.</typeparam>
-        /// <param name="filter">The filter to create a non-generic representation from.</param>
-        /// <returns>The non-generic representation of the provided filter.</returns>
+        /// <param name="filter">The filter to create a non-generic filter from.</param>
+        /// <returns>The non-generic filter of the provided filter.</returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static FilterData Create<TInput, TOutput>(IFilter<TInput, TOutput> filter)
         {
@@ -94,7 +94,7 @@ namespace SimplePipeline
         }
 
         /// <summary>
-        ///     Executes the filter of this non-generic representation.
+        ///     Executes the filter of this non-generic filter.
         /// </summary>
         /// <param name="input">The input for the filter to process.</param>
         /// <returns>The processed output of the filter.</returns>
