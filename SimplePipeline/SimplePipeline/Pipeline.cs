@@ -23,10 +23,10 @@ namespace SimplePipeline
         public Pipeline(FilterCollection filterCollection)
         {
             if (filterCollection == null)
-                throw new ArgumentNullException(nameof(filterCollection));
-            IEnumerable<FilterData> copyFilterDatas = filterCollection.ToList();
+                throw new ArgumentNullException(nameof(filterCollection));         
             if (!filterCollection.CanCreatePipeline(typeof(TInput), typeof(TOutput)))
                 throw new InvalidFilterCollectionException();
+            IEnumerable<FilterData> copyFilterDatas = filterCollection.ToList();
             filterDatas = copyFilterDatas;
         }
 
