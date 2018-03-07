@@ -35,7 +35,7 @@ namespace SimplePipeline
         public Type OutputType { get; }
 
         /// <summary>
-        ///     Returns the <see cref="IFilter{TInput,TOutput}"/> type of the filter instance.
+        ///     Returns the <see cref="IFilter{TInput,TOutput}" /> type of the filter instance.
         /// </summary>
         public Type FilterType { get; }
 
@@ -86,9 +86,9 @@ namespace SimplePipeline
         {
             unchecked
             {
-                Int32 hashCode = Filter != null ? Filter.GetHashCode() : 0;
-                hashCode = (hashCode * 397) ^ (InputType != null ? InputType.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (OutputType != null ? OutputType.GetHashCode() : 0);
+                Int32 hashCode = Filter.GetHashCode();
+                hashCode = (hashCode * 397) ^ InputType.GetHashCode();
+                hashCode = (hashCode * 397) ^ OutputType.GetHashCode();
                 return hashCode;
             }
         }
