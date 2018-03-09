@@ -8,35 +8,34 @@ namespace SimplePipeline.Tests.X
 {
     public class FilterCollectionTest
     {
-        [Fact]
-        public void SequenceCanCreatePipelineParametersNull()
+        // ReSharper disable once MemberCanBePrivate.Global
+        public static IEnumerable<Object[]> CreateSequenceTestData
         {
-            FilterCollection sequence = new FilterCollection();
-            Assert.False(sequence.CanCreatePipeline(null, typeof(Object)));
-            Assert.False(sequence.CanCreatePipeline(typeof(Object), null));
-            Assert.False(sequence.CanCreatePipeline(null, null));
-        }
-
-        public static IEnumerable<Object[]> FilterDataCollections
-        {
+            // ReSharper disable once UnusedMember.Global
             get
             {
-                yield return new Object[]{ new List<FilterData>()
+                yield return new Object[]
                 {
-                    FilterData.Create(new CharEnumerableToStringFilter()),
-                    FilterData.Create(new EnumerableCountFilter<Char>())
-                }};
-                yield return new Object[]{ new List<FilterData>()
+                    new List<FilterData>()
+                    {
+                        FilterData.Create(new CharEnumerableToStringFilter()),
+                        FilterData.Create(new EnumerableCountFilter<Char>())
+                    }
+                };
+                yield return new Object[]
                 {
-                    FilterData.Create(new EnumerableToArrayFilter<Char>()),
-                    FilterData.Create(((Func<String, Int32>)(input => input.Length)).ToFilter())
-                }};
+                    new List<FilterData>()
+                    {
+                        FilterData.Create(new EnumerableToArrayFilter<Char>()),
+                        FilterData.Create(((Func<String, Int32>)(input => input.Length)).ToFilter())
+                    }
+                };
             }
         }
 
         [Theory]
-        [MemberData(nameof(FilterDataCollections))]
-        public void CreateSequence(IEnumerable<FilterData> datas)
+        [MemberData(nameof(CreateSequenceTestData))]
+        public void CreateSequenceTest(IEnumerable<FilterData> datas)
         {
             FilterCollection sequence = new FilterCollection();
             foreach (FilterData data in datas)
@@ -55,24 +54,39 @@ namespace SimplePipeline.Tests.X
             }
         }
 
-        public static IEnumerable<Object[]> Sequences
+        // ReSharper disable once MemberCanBePrivate.Global
+        public static IEnumerable<Object[]> SequenceCanCreatePipelineTestData
         {
+            // ReSharper disable once UnusedMember.Global
             get
             {
-                yield return new Object[] { new FilterCollection()
+                yield return new Object[]
                 {
-                    new EnumerableToArrayFilter<Char>(),
-                    new CharEnumerableToStringFilter(),
-                    new EnumerableCountFilter<Char>()
-                }, typeof(String), typeof(Int32), true };
+                    new FilterCollection()
+                    {
+                        new EnumerableToArrayFilter<Char>(),
+                        new CharEnumerableToStringFilter(),
+                        new EnumerableCountFilter<Char>()
+                    },
+                    typeof(String), typeof(Int32), true
+                };
             }
         }
 
         [Theory]
-        [MemberData(nameof(Sequences))]
-        public void SequenceCanCreatePipeline(FilterCollection sequence, Type pipelineInputType, Type pipelineOutputType, Boolean canCreate)
+        [MemberData(nameof(SequenceCanCreatePipelineTestData))]
+        public void SequenceCanCreatePipelineTest(FilterCollection sequence, Type pipelineInputType, Type pipelineOutputType, Boolean canCreate)
         {
             Assert.Equal(canCreate, sequence.CanCreatePipeline(pipelineInputType, pipelineOutputType));
+        }
+
+        [Fact]
+        public void SequenceCanCreatePipelineParametersNull()
+        {
+            FilterCollection sequence = new FilterCollection();
+            Assert.False(sequence.CanCreatePipeline(null, typeof(Object)));
+            Assert.False(sequence.CanCreatePipeline(typeof(Object), null));
+            Assert.False(sequence.CanCreatePipeline(null, null));
         }
     }
 }
