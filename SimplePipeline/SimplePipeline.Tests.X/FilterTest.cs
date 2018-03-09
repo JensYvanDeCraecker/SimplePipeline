@@ -9,12 +9,14 @@ namespace SimplePipeline.Tests.X
 {
     public class FilterTest
     {
-        private readonly MethodInfo processFunctionToFilterDefinition = typeof(FilterTest).GetMethod("ProcessFunctionToFilter", BindingFlags.NonPublic | BindingFlags.Instance);
-        private readonly MethodInfo processPipelineToFilterDefinition = typeof(FilterTest).GetMethod("ProcessPipelineToFilter", BindingFlags.NonPublic | BindingFlags.Instance);
+        private readonly MethodInfo processFunctionToFilterDefinition = typeof(FilterTest).GetMethod("ProcessFunctionToFilterTest", BindingFlags.NonPublic | BindingFlags.Instance);
+        private readonly MethodInfo processPipelineToFilterDefinition = typeof(FilterTest).GetMethod("ProcessPipelineToFilterTest", BindingFlags.NonPublic | BindingFlags.Instance);
 
         // Syntax: Func<in T, out TResult>, T type, TResult type
-        public static IEnumerable<Object[]> Functions
+        // ReSharper disable once MemberCanBePrivate.Global
+        public static IEnumerable<Object[]> FunctionToFilterTestData
         {
+            // ReSharper disable once UnusedMember.Global
             get
             {
                 yield return new Object[] { (Func<String, Int32>)Int32.Parse, typeof(String), typeof(Int32) };
@@ -25,8 +27,10 @@ namespace SimplePipeline.Tests.X
         }
 
         // Syntax: IPipeline<in TInput, out TOutput>, TInput type, TOutput type
-        public static IEnumerable<Object[]> Pipelines
+        // ReSharper disable once MemberCanBePrivate.Global
+        public static IEnumerable<Object[]> PipelineToFilterTestData
         {
+            // ReSharper disable once UnusedMember.Global
             get
             {
                 yield return new Object[] { new EnumerableToArrayPipeline<Char>(), typeof(IEnumerable<Char>), typeof(Char[]) };
@@ -37,39 +41,39 @@ namespace SimplePipeline.Tests.X
         }
 
         [Theory]
-        [MemberData(nameof(Functions))]
-        public void FunctionToFilter(Delegate function, Type functionInputType, Type functionOutputType)
+        [MemberData(nameof(FunctionToFilterTestData))]
+        public void FunctionToFilterTest(Delegate function, Type functionInputType, Type functionOutputType)
         {
             processFunctionToFilterDefinition.MakeGenericMethod(functionInputType, functionOutputType).Invoke(this, new Object[] { function });
         }
 
         // ReSharper disable once UnusedMember.Local
-        private void ProcessFunctionToFilter<TFunctionInput, TFunctionOutput>(Func<TFunctionInput, TFunctionOutput> function)
+        private void ProcessFunctionToFilterTest<TFunctionInput, TFunctionOutput>(Func<TFunctionInput, TFunctionOutput> function)
         {
             Assert.NotNull(function.ToFilter());
         }
 
         [Theory]
-        [MemberData(nameof(Pipelines))]
-        public void PipelineToFilter(Object pipeline, Type pipelineInputType, Type pipelineOutputType)
+        [MemberData(nameof(PipelineToFilterTestData))]
+        public void PipelineToFilterTest(Object pipeline, Type pipelineInputType, Type pipelineOutputType)
         {
             processPipelineToFilterDefinition.MakeGenericMethod(pipelineInputType, pipelineOutputType).Invoke(this, new[] { pipeline });
         }
 
         // ReSharper disable once UnusedMember.Local
-        private void ProcessPipelineToFilter<TPipelineInput, TPipelineOutput>(IPipeline<TPipelineInput, TPipelineOutput> pipeline)
+        private void ProcessPipelineToFilterTest<TPipelineInput, TPipelineOutput>(IPipeline<TPipelineInput, TPipelineOutput> pipeline)
         {
             Assert.NotNull(pipeline.ToFilter());
         }
 
         [Fact]
-        public void FunctionToFilterNull()
+        public void FunctionToFilterNullTest()
         {
             Assert.Throws<ArgumentNullException>(() => ((Func<Object, Object>)null).ToFilter());
         }
 
         [Fact]
-        public void PipelineToFilterNull()
+        public void PipelineToFilterNullTest()
         {
             Assert.Throws<ArgumentNullException>(() => ((IPipeline<Object, Object>)null).ToFilter());
         }
