@@ -13,11 +13,18 @@ namespace SimplePipeline
         private FilterData first;
         private FilterData last;
 
+        /// <summary>
+        /// Creates a new <see cref="FilterCollection"/> instance.
+        /// </summary>
         public FilterCollection()
         {
                 
         }
 
+        /// <summary>
+        /// Create a new <see cref="FilterCollection"/> instance.
+        /// </summary>
+        /// <param name="filterDatas">The collection of data to add to this sequence.</param>
         // ReSharper disable once UnusedMember.Global
         public FilterCollection(IEnumerable<FilterData> filterDatas)
         {
