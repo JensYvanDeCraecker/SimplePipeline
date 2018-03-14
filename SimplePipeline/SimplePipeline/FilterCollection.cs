@@ -13,6 +13,26 @@ namespace SimplePipeline
         private FilterData first;
         private FilterData last;
 
+        public FilterCollection()
+        {
+                
+        }
+
+        // ReSharper disable once UnusedMember.Global
+        public FilterCollection(IEnumerable<FilterData> filterDatas)
+        {
+            if (filterDatas == null)
+                throw new ArgumentNullException(nameof(filterDatas));
+            Load(filterDatas);
+
+        }
+
+        private void Load(IEnumerable<FilterData> filterDatas)
+        {
+            foreach (FilterData filterData in filterDatas)
+                Add(filterData);
+        }
+
         /// <summary>
         ///     Gets the input type of the first filter in this sequence.
         /// </summary>
