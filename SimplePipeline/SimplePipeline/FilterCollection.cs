@@ -14,6 +14,33 @@ namespace SimplePipeline
         private FilterData last;
 
         /// <summary>
+        /// Creates a new <see cref="FilterCollection"/> instance.
+        /// </summary>
+        public FilterCollection()
+        {
+                
+        }
+
+        /// <summary>
+        /// Create a new <see cref="FilterCollection"/> instance.
+        /// </summary>
+        /// <param name="filterDatas">The collection of data to add to this sequence.</param>
+        // ReSharper disable once UnusedMember.Global
+        public FilterCollection(IEnumerable<FilterData> filterDatas)
+        {
+            if (filterDatas == null)
+                throw new ArgumentNullException(nameof(filterDatas));
+            Load(filterDatas);
+
+        }
+
+        private void Load(IEnumerable<FilterData> filterDatas)
+        {
+            foreach (FilterData filterData in filterDatas)
+                Add(filterData);
+        }
+
+        /// <summary>
         ///     Gets the input type of the first filter in this sequence.
         /// </summary>
         public Type InputType
