@@ -18,13 +18,14 @@ namespace SimplePipeline
         /// </summary>
         public FilterCollection()
         {
-                
+
         }
 
         /// <summary>
         /// Create a new <see cref="FilterCollection"/> instance.
         /// </summary>
         /// <param name="filterDatas">The collection of data to add to this sequence.</param>
+        /// <exception cref="ArgumentNullException"></exception>
         // ReSharper disable once UnusedMember.Global
         public FilterCollection(IEnumerable<FilterData> filterDatas)
         {
@@ -100,6 +101,20 @@ namespace SimplePipeline
             if (filter == null)
                 throw new ArgumentNullException(nameof(filter));
             Add(FilterData.Create(filter));
+        }
+
+        public void Add<TInput, TOutput>(Func<TInput, TOutput> func)
+        {
+            if (func == null)
+                throw new ArgumentNullException(nameof(func));
+            Add(func.ToFilter());
+        }
+
+        public void Add<TInput, TOutput>(IPipeline<TInput, TOutput> pipeline)
+        {
+            if (pipeline == null)
+                throw new ArgumentNullException(nameof(pipeline));
+            Add(pipeline.ToFilter());
         }
 
         /// <summary>
