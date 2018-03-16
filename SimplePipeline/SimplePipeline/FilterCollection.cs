@@ -9,9 +9,10 @@ namespace SimplePipeline
     /// </summary>
     public sealed class FilterCollection : IReadOnlyCollection<FilterData>
     {
-        private readonly Queue<FilterData> innerCollection = new Queue<FilterData>();
-        private FilterData first;
-        private FilterData last;
+        //private readonly Queue<FilterData> innerCollection = new Queue<FilterData>();
+        //private FilterData first;
+        //private FilterData last;
+        private readonly LinkedList<FilterData> innerCollection = new LinkedList<FilterData>();
 
         /// <summary>
         /// Creates a new <see cref="FilterCollection"/> instance.
@@ -41,6 +42,22 @@ namespace SimplePipeline
                 Add(filterData);
         }
 
+        public FilterData FirstFilter
+        {
+            get
+            {
+                return innerCollection.First?.Value;
+            }
+        }
+
+        public FilterData LastFilter
+        {
+            get
+            {
+                return innerCollection.Last?.Value;
+            }
+        }
+
         /// <summary>
         ///     Gets the input type of the first filter in this sequence.
         /// </summary>
@@ -48,7 +65,7 @@ namespace SimplePipeline
         {
             get
             {
-                return first?.InputType;
+                return FirstFilter?.InputType;
             }
         }
 
@@ -59,7 +76,7 @@ namespace SimplePipeline
         {
             get
             {
-                return last?.OutputType;
+                return LastFilter?.OutputType;
             }
         }
 
@@ -127,12 +144,9 @@ namespace SimplePipeline
         {
             if (filterData == null)
                 throw new ArgumentNullException(nameof(filterData));
-            if (first == null)
-                first = filterData;
-            else if (!filterData.InputType.IsAssignableFrom(last.OutputType))
-                throw new InvalidFilterException(filterData.InputType, last.OutputType);
-            last = filterData;
-            innerCollection.Enqueue(filterData);
+            if (Count > 0 && !filterData.InputType.IsAssignableFrom(LastFilter.OutputType))
+                throw new InvalidFilterException(filterData.InputType, LastFilter.OutputType);
+            innerCollection.AddLast(filterData);
         }
 
         /// <summary>
