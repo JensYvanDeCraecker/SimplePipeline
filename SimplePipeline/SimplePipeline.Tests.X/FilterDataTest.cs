@@ -63,6 +63,8 @@ namespace SimplePipeline.Tests.X
         public void FilterDataEqualityTest(FilterData firstData, FilterData secondData, Boolean expectedResult)
         {
             Assert.Equal(expectedResult, Equals(firstData, secondData));
+            Assert.Equal(expectedResult, firstData == secondData);
+            Assert.Equal(!expectedResult, firstData != secondData);
             Assert.Equal(expectedResult, Equals(firstData.GetHashCode(), secondData.GetHashCode()));
         }
 
