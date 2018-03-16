@@ -30,6 +30,17 @@ namespace SimplePipeline
             filterDatas = copyFilterDatas;
         }
 
+        /// <summary>
+        ///     Creates a new <see cref="Pipeline{TInput,TOutput}" /> instance.
+        /// </summary>
+        /// <param name="filterDatas">The filter collection to populate this pipeline with.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="InvalidFilterCollectionException"></exception>
+        public Pipeline(IEnumerable<FilterData> filterDatas) : this(new FilterCollection(filterDatas))
+        {
+
+        }
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
