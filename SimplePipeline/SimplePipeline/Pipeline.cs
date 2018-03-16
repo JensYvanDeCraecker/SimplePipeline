@@ -24,16 +24,12 @@ namespace SimplePipeline
         {
             if (filterCollection == null)
                 throw new ArgumentNullException(nameof(filterCollection));
-            IEnumerable<FilterData> copyFilterDatas = filterCollection.ToList();
             if (!filterCollection.CanCreatePipeline(typeof(TInput), typeof(TOutput)))
                 throw new InvalidFilterCollectionException();
+            IEnumerable<FilterData> copyFilterDatas = filterCollection.ToList();
             filterDatas = copyFilterDatas;
         }
 
-        /// <summary>
-        ///     Returns an enumerator that iterates through the collection.
-        /// </summary>
-        /// <returns>An enumerator that can be used to iterate through the collection.</returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
@@ -98,40 +94,7 @@ namespace SimplePipeline
         /// <returns>An enumerator that can be used to iterate through the collection.</returns>
         public IEnumerator<Object> GetEnumerator()
         {
-            return new Enumerator(filterDatas.GetEnumerator());
-        }
-
-        private class Enumerator : IEnumerator<Object>
-        {
-            private readonly IEnumerator<FilterData> filterDataEnumerator;
-
-            public Enumerator(IEnumerator<FilterData> filterDataEnumerator)
-            {
-                this.filterDataEnumerator = filterDataEnumerator;
-            }
-
-            public Boolean MoveNext()
-            {
-                return filterDataEnumerator.MoveNext();
-            }
-
-            public void Reset()
-            {
-                filterDataEnumerator.Reset();
-            }
-
-            public Object Current
-            {
-                get
-                {
-                    return filterDataEnumerator.Current.Filter;
-                }
-            }
-
-            public void Dispose()
-            {
-                filterDataEnumerator.Dispose();
-            }
+            return filterDatas.Select(data => data.Filter).GetEnumerator();
         }
     }
 }
