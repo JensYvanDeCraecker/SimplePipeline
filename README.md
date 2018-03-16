@@ -14,7 +14,7 @@ PM> Install-Package SimplePipeline
 
 ### Documentation
 
-Documentation and examples for this code can be found on the [Wiki page](https://github.com/JensYvanDeCraecker/SimplePipeline/wiki).
+Documentation and examples for this code can be found on the [Wiki page](https://github.com/JensYvanDeCraecker/SimplePipeline/wiki) (coming soon).
 
 ## Versioning
 
