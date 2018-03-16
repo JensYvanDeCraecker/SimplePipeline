@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using SimplePipeline.Tests.Filters;
 using Xunit;
 
@@ -16,18 +15,20 @@ namespace SimplePipeline.Tests.X
             {
                 yield return new Object[]
                 {
-                    new List<FilterData>()
+                    new List<Tuple<FilterData, Boolean>>()
                     {
-                        FilterData.Create(new CharEnumerableToStringFilter()),
-                        FilterData.Create(new EnumerableCountFilter<Char>())
+                        Tuple.Create(FilterData.Create(new CharEnumerableToStringFilter()), true),
+                        Tuple.Create(FilterData.Create(new EnumerableCountFilter<Char>()), true),
+                        Tuple.Create(FilterData.Create(new ObjectToStringFilter()), true)
                     }
                 };
                 yield return new Object[]
                 {
-                    new List<FilterData>()
+                    new List<Tuple<FilterData, Boolean>>()
                     {
-                        FilterData.Create(new EnumerableToArrayFilter<Char>()),
-                        FilterData.Create(((Func<String, Int32>)(input => input.Length)).ToFilter())
+                        Tuple.Create(FilterData.Create(new EnumerableToArrayFilter<Char>()), true),
+                        Tuple.Create(FilterData.Create(((Func<String, Int32>)(input => input.Length)).ToFilter()), false),
+                        Tuple.Create(FilterData.Create(new CharEnumerableToStringFilter()), true)
                     }
                 };
             }
@@ -35,20 +36,22 @@ namespace SimplePipeline.Tests.X
 
         [Theory]
         [MemberData(nameof(CreateSequenceTestData))]
-        public void CreateSequenceTest(IEnumerable<FilterData> datas)
+        public void CreateSequenceTest(IEnumerable<Tuple<FilterData, Boolean>> tuples)
         {
             FilterCollection sequence = new FilterCollection();
-            foreach (FilterData data in datas)
+            foreach (Tuple<FilterData, Boolean> tuple in tuples)
             {
+                FilterData data = tuple.Item1;
+                Boolean shouldSucceed = tuple.Item2;
                 Int32 countBeforeAdd = sequence.Count;
-                try
+                if (shouldSucceed)
                 {
                     sequence.Add(data);
                     Assert.Equal(countBeforeAdd + 1, sequence.Count);
-                    Assert.True(Equals(sequence.Last(), data));
                 }
-                catch (InvalidFilterException)
+                else
                 {
+                    Assert.Throws<InvalidFilterException>(() => sequence.Add(data));
                     Assert.Equal(countBeforeAdd, sequence.Count);
                 }
             }
@@ -68,6 +71,16 @@ namespace SimplePipeline.Tests.X
                         new CharEnumerableToStringFilter(),
                         new EnumerableCountFilter<Char>()
                     },
+                    typeof(String), typeof(Int32), true
+                };
+                yield return new Object[]
+                {
+                    new FilterCollection(new List<FilterData>()
+                    {
+                        FilterData.Create(new EnumerableToArrayFilter<Char>()),
+                        FilterData.Create(new CharEnumerableToStringFilter()),
+                        FilterData.Create(new EnumerableCountFilter<Char>())
+                    }),
                     typeof(String), typeof(Int32), true
                 };
             }
