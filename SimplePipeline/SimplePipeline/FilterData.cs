@@ -109,5 +109,15 @@ namespace SimplePipeline
                 throw e.InnerException;
             }
         }
+
+        public static Boolean operator ==(FilterData first, FilterData second)
+        {
+            return Equals(first, second);
+        }
+
+        public static Boolean operator !=(FilterData first, FilterData second)
+        {
+            return !(first == second);
+        }
     }
 }
