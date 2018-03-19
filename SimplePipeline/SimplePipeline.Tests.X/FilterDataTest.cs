@@ -55,7 +55,7 @@ namespace SimplePipeline.Tests.X
         [MemberData(nameof(CreateFilterDataTestData))]
         public void CreateFilterDataTest(Object filter, Type filterInputType, Type filterOutputType)
         {
-            processCreateFilterDataDefinition.MakeGenericMethod(filterInputType, filterOutputType).Invoke(this, new[] { filter });
+            processCreateFilterDataDefinition.MakeGenericMethod(filterInputType, filterOutputType).Invoke(null, new[] { filter });
         }
 
         [Theory]

@@ -44,7 +44,7 @@ namespace SimplePipeline.Tests.X
         [MemberData(nameof(FunctionToFilterTestData))]
         public void FunctionToFilterTest(Delegate function, Type functionInputType, Type functionOutputType)
         {
-            processFunctionToFilterDefinition.MakeGenericMethod(functionInputType, functionOutputType).Invoke(this, new Object[] { function });
+            processFunctionToFilterDefinition.MakeGenericMethod(functionInputType, functionOutputType).Invoke(null, new Object[] { function });
         }
 
         // ReSharper disable once UnusedMember.Local
@@ -57,7 +57,7 @@ namespace SimplePipeline.Tests.X
         [MemberData(nameof(PipelineToFilterTestData))]
         public void PipelineToFilterTest(Object pipeline, Type pipelineInputType, Type pipelineOutputType)
         {
-            processPipelineToFilterDefinition.MakeGenericMethod(pipelineInputType, pipelineOutputType).Invoke(this, new[] { pipeline });
+            processPipelineToFilterDefinition.MakeGenericMethod(pipelineInputType, pipelineOutputType).Invoke(null, new[] { pipeline });
         }
 
         // ReSharper disable once UnusedMember.Local
