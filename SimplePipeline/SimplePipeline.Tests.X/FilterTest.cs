@@ -9,8 +9,8 @@ namespace SimplePipeline.Tests.X
 {
     public class FilterTest
     {
-        private readonly MethodInfo processFunctionToFilterDefinition = typeof(FilterTest).GetMethod("ProcessFunctionToFilterTest", BindingFlags.NonPublic | BindingFlags.Instance);
-        private readonly MethodInfo processPipelineToFilterDefinition = typeof(FilterTest).GetMethod("ProcessPipelineToFilterTest", BindingFlags.NonPublic | BindingFlags.Instance);
+        private readonly MethodInfo processFunctionToFilterDefinition = typeof(FilterTest).GetMethod("ProcessFunctionToFilterTest", BindingFlags.NonPublic | BindingFlags.Static);
+        private readonly MethodInfo processPipelineToFilterDefinition = typeof(FilterTest).GetMethod("ProcessPipelineToFilterTest", BindingFlags.NonPublic | BindingFlags.Static);
 
         // Syntax: Func<in T, out TResult>, T type, TResult type
         // ReSharper disable once MemberCanBePrivate.Global
@@ -48,7 +48,7 @@ namespace SimplePipeline.Tests.X
         }
 
         // ReSharper disable once UnusedMember.Local
-        private void ProcessFunctionToFilterTest<TFunctionInput, TFunctionOutput>(Func<TFunctionInput, TFunctionOutput> function)
+        private static void ProcessFunctionToFilterTest<TFunctionInput, TFunctionOutput>(Func<TFunctionInput, TFunctionOutput> function)
         {
             Assert.NotNull(function.ToFilter());
         }
@@ -61,7 +61,7 @@ namespace SimplePipeline.Tests.X
         }
 
         // ReSharper disable once UnusedMember.Local
-        private void ProcessPipelineToFilterTest<TPipelineInput, TPipelineOutput>(IPipeline<TPipelineInput, TPipelineOutput> pipeline)
+        private static void ProcessPipelineToFilterTest<TPipelineInput, TPipelineOutput>(IPipeline<TPipelineInput, TPipelineOutput> pipeline)
         {
             Assert.NotNull(pipeline.ToFilter());
         }

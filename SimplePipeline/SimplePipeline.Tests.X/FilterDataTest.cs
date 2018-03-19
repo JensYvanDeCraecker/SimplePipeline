@@ -8,7 +8,7 @@ namespace SimplePipeline.Tests.X
 {
     public class FilterDataTest
     {
-        private readonly MethodInfo processCreateFilterDataDefinition = typeof(FilterDataTest).GetMethod("ProcessCreateFilterDataTest", BindingFlags.NonPublic | BindingFlags.Instance);
+        private readonly MethodInfo processCreateFilterDataDefinition = typeof(FilterDataTest).GetMethod("ProcessCreateFilterDataTest", BindingFlags.NonPublic | BindingFlags.Static);
 
         // Syntax: IFilter<in TInput, out TOutput>, TInput type, TOutput type
         // ReSharper disable once MemberCanBePrivate.Global
@@ -69,7 +69,7 @@ namespace SimplePipeline.Tests.X
         }
 
         // ReSharper disable once UnusedMember.Local
-        private void ProcessCreateFilterDataTest<TFilterInput, TFilterOutput>(IFilter<TFilterInput, TFilterOutput> filter)
+        private static void ProcessCreateFilterDataTest<TFilterInput, TFilterOutput>(IFilter<TFilterInput, TFilterOutput> filter)
         {
             FilterData data = FilterData.Create(filter);
             Assert.Equal(typeof(IFilter<TFilterInput, TFilterOutput>), data.FilterType);
