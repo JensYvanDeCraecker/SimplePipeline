@@ -13,7 +13,7 @@ namespace SimplePipeline.Tests.Pipelines
         {
             innerPipeline = new Pipeline<IEnumerable<T>, T[]>(new FilterCollection()
             {
-                new EnumerableToArrayFilter<Char>()
+                new EnumerableToArrayFilter<T>()
             });
         }
 
