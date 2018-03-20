@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JetBrains.Annotations;
 using SimplePipeline.Tests.Pipelines;
 using Xunit;
 
@@ -12,7 +13,6 @@ namespace SimplePipeline.Tests.X
         private readonly MethodInfo processFunctionToFilterDefinition = typeof(FilterTest).GetMethod("ProcessFunctionToFilterTest", BindingFlags.NonPublic | BindingFlags.Static);
         private readonly MethodInfo processPipelineToFilterDefinition = typeof(FilterTest).GetMethod("ProcessPipelineToFilterTest", BindingFlags.NonPublic | BindingFlags.Static);
 
-        // Syntax: Func<in T, out TResult>, T type, TResult type
         // ReSharper disable once MemberCanBePrivate.Global
         public static IEnumerable<Object[]> FunctionToFilterTestData
         {
@@ -26,7 +26,6 @@ namespace SimplePipeline.Tests.X
             }
         }
 
-        // Syntax: IPipeline<in TInput, out TOutput>, TInput type, TOutput type
         // ReSharper disable once MemberCanBePrivate.Global
         public static IEnumerable<Object[]> PipelineToFilterTestData
         {
@@ -42,40 +41,46 @@ namespace SimplePipeline.Tests.X
 
         [Theory]
         [MemberData(nameof(FunctionToFilterTestData))]
+        [AssertionMethod]
         public void FunctionToFilterTest(Delegate function, Type functionInputType, Type functionOutputType)
         {
             processFunctionToFilterDefinition.MakeGenericMethod(functionInputType, functionOutputType).Invoke(null, new Object[] { function });
         }
 
         // ReSharper disable once UnusedMember.Local
+        [AssertionMethod]
         private static void ProcessFunctionToFilterTest<TFunctionInput, TFunctionOutput>(Func<TFunctionInput, TFunctionOutput> function)
         {
-            Assert.NotNull(function.ToFilter());
+            Assert.NotNull(function.ToFilter()); // Test if the 'ToFilter' method returns an instance.
         }
 
         [Theory]
         [MemberData(nameof(PipelineToFilterTestData))]
+        [AssertionMethod]
         public void PipelineToFilterTest(Object pipeline, Type pipelineInputType, Type pipelineOutputType)
         {
             processPipelineToFilterDefinition.MakeGenericMethod(pipelineInputType, pipelineOutputType).Invoke(null, new[] { pipeline });
         }
 
         // ReSharper disable once UnusedMember.Local
+        [AssertionMethod]
         private static void ProcessPipelineToFilterTest<TPipelineInput, TPipelineOutput>(IPipeline<TPipelineInput, TPipelineOutput> pipeline)
         {
-            Assert.NotNull(pipeline.ToFilter());
+            Assert.NotNull(pipeline.ToFilter()); // Test if the 'ToFilter' method returns an instance.
         }
 
         [Fact]
+        [AssertionMethod]
         public void FunctionToFilterNullTest()
         {
-            Assert.Throws<ArgumentNullException>(() => ((Func<Object, Object>)null).ToFilter());
+            Assert.Throws<ArgumentNullException>(() => ((Func<Object, Object>)null).ToFilter()); // Null can't be converted to a filter.
         }
 
         [Fact]
+        [AssertionMethod]
         public void PipelineToFilterNullTest()
         {
-            Assert.Throws<ArgumentNullException>(() => ((IPipeline<Object, Object>)null).ToFilter());
+            Assert.Throws<ArgumentNullException>(() => ((IPipeline<Object, Object>)null).ToFilter()); // Null can't be converted to a filter.
         }
     }
 }
