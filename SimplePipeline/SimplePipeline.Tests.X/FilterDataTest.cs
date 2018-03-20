@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using JetBrains.Annotations;
 using SimplePipeline.Tests.Filters;
 using Xunit;
 
@@ -10,7 +11,6 @@ namespace SimplePipeline.Tests.X
     {
         private readonly MethodInfo processCreateFilterDataDefinition = typeof(FilterDataTest).GetMethod("ProcessCreateFilterDataTest", BindingFlags.NonPublic | BindingFlags.Static);
 
-        // Syntax: IFilter<in TInput, out TOutput>, TInput type, TOutput type
         // ReSharper disable once MemberCanBePrivate.Global
         public static IEnumerable<Object[]> CreateFilterDataTestData
         {
@@ -24,7 +24,6 @@ namespace SimplePipeline.Tests.X
             }
         }
 
-        // Syntax: FilterData, FilterData, Boolean
         // ReSharper disable once MemberCanBePrivate.Global
         public static IEnumerable<Object[]> FilterDataEqualityTestData
         {
@@ -36,10 +35,10 @@ namespace SimplePipeline.Tests.X
                 yield return new Object[] { FilterData.Create(charEnumerableToString), FilterData.Create<IEnumerable<Char>, IEnumerable<Char>>(charEnumerableToString), false };
                 yield return new Object[] { FilterData.Create(charEnumerableToString), FilterData.Create<String, String>(charEnumerableToString), false };
                 yield return new Object[] { FilterData.Create(charEnumerableToString), FilterData.Create<String, IEnumerable<Char>>(charEnumerableToString), false };
+                yield return new Object[] { FilterData.Create(charEnumerableToString), FilterData.Create(new CharEnumerableToStringFilter()), false };
             }
         }
 
-        // Syntax: FilterData, Boolean, Object, Object, Type
         // ReSharper disable once MemberCanBePrivate.Global
         public static IEnumerable<Object[]> FilterDataExecuteFilterTestData
         {
@@ -53,6 +52,7 @@ namespace SimplePipeline.Tests.X
 
         [Theory]
         [MemberData(nameof(CreateFilterDataTestData))]
+        [AssertionMethod]
         public void CreateFilterDataTest(Object filter, Type filterInputType, Type filterOutputType)
         {
             processCreateFilterDataDefinition.MakeGenericMethod(filterInputType, filterOutputType).Invoke(null, new[] { filter });
@@ -60,37 +60,42 @@ namespace SimplePipeline.Tests.X
 
         [Theory]
         [MemberData(nameof(FilterDataEqualityTestData))]
+        [AssertionMethod]
         public void FilterDataEqualityTest(FilterData firstData, FilterData secondData, Boolean expectedResult)
         {
-            Assert.Equal(expectedResult, Equals(firstData, secondData));
-            Assert.Equal(expectedResult, firstData == secondData);
-            Assert.Equal(!expectedResult, firstData != secondData);
-            Assert.Equal(expectedResult, Equals(firstData.GetHashCode(), secondData.GetHashCode()));
+            Assert.Equal(expectedResult, Equals(firstData, secondData)); // Test if the equality is equal to the expected result.
+            Assert.Equal(expectedResult, firstData == secondData); // Test if the equality is equal to the expected result.
+            Assert.Equal(!expectedResult, firstData != secondData); // Test if the equality is equal to the expected result.
+            Assert.Equal(expectedResult, firstData.GetHashCode() == secondData.GetHashCode()); // Test if the equality of the hash code is equal to the expected result.
         }
 
         // ReSharper disable once UnusedMember.Local
+        [AssertionMethod]
         private static void ProcessCreateFilterDataTest<TFilterInput, TFilterOutput>(IFilter<TFilterInput, TFilterOutput> filter)
         {
             FilterData data = FilterData.Create(filter);
-            Assert.Equal(typeof(IFilter<TFilterInput, TFilterOutput>), data.FilterType);
-            Assert.Equal(typeof(TFilterInput), data.InputType);
-            Assert.Equal(typeof(TFilterOutput), data.OutputType);
+            Assert.Equal(typeof(IFilter<TFilterInput, TFilterOutput>), data.FilterType); // Test if the 'FilterType' property is equal to the type of the filter interface with the generic arguments.
+            Assert.Equal(typeof(TFilterInput), data.InputType); // Test if the 'InputType' property is equal to the input type of the filter.
+            Assert.Equal(typeof(TFilterOutput), data.OutputType); // Test if the 'OutputType' property is equal to the output type of the filter.
+            Assert.Same(filter, data.Filter); // Test if the 'Filter' property is the same as the filter.
         }
 
         [Theory]
         [MemberData(nameof(FilterDataExecuteFilterTestData))]
+        [AssertionMethod]
         public void FilterDataExecuteFilterTest(FilterData data, Boolean shouldSucceed, Object filterInput, Object expectedFilterOutput, Type expectedExceptionType)
         {
             if (shouldSucceed)
-                Assert.Equal(expectedFilterOutput, data.ExecuteFilter(filterInput));
+                Assert.Equal(expectedFilterOutput, data.ExecuteFilter(filterInput)); // Test if the output of the 'ExecuteFilter' method is equal to the expected output.
             else
-                Assert.Throws(expectedExceptionType, () => data.ExecuteFilter(filterInput));
+                Assert.Throws(expectedExceptionType, () => data.ExecuteFilter(filterInput)); // Test if the expected exception is thrown when the 'ExecuteFilter' method is expected to fail.
         }
 
         [Fact]
+        [AssertionMethod]
         public void CreateFilterDataNullTest()
         {
-            Assert.Throws<ArgumentNullException>(() => FilterData.Create<Object, Object>(null));
+            Assert.Throws<ArgumentNullException>(() => FilterData.Create<Object, Object>(null)); // A 'FilterData' instance can't be created from null.
         }
     }
 }
