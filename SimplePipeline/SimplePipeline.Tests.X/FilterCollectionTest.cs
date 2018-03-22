@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using JetBrains.Annotations;
 using SimplePipeline.Tests.Filters;
@@ -14,6 +15,67 @@ namespace SimplePipeline.Tests.X
         private readonly MethodInfo sequenceAddPipelineDefinition = typeof(FilterCollectionTest).GetMethod("SequenceAddPipeline", BindingFlags.NonPublic | BindingFlags.Static);
         private readonly MethodInfo sequenceAddFunctionDefinition = typeof(FilterCollectionTest).GetMethod("SequenceAddFunction", BindingFlags.NonPublic | BindingFlags.Static);
         private readonly MethodInfo sequenceAddFilterData = typeof(FilterCollectionTest).GetMethod("SequenceAddFilterData", BindingFlags.NonPublic | BindingFlags.Static);
+
+        // ReSharper disable once MemberCanBePrivate.Global
+        public static IEnumerable<Object[]> CreateSequenceFilledTestData
+        {
+            get
+            {
+                yield return new Object[]
+                {
+                    new List<FilterData>()
+                    {
+                        FilterData.Create(new CharEnumerableToStringFilter()),
+                        FilterData.Create(new EnumerableCountFilter<Char>()),
+                        FilterData.Create(((Func<Object, String>)(input => input.ToString())).ToFilter()),
+                        FilterData.Create(new CharEnumerableToStringFilter()),
+                        FilterData.Create(new EnumerableCountFilter<Char>()),
+                        FilterData.Create(((Func<Object, String>)(input => input.ToString())).ToFilter()),
+                        FilterData.Create(new CharEnumerableToStringFilter()),
+                        FilterData.Create(new EnumerableCountFilter<Char>()),
+                        FilterData.Create(((Func<Object, String>)(input => input.ToString())).ToFilter()),
+                        FilterData.Create(new CharEnumerableToStringFilter()),
+                        FilterData.Create(new EnumerableCountFilter<Char>()),
+                        FilterData.Create(((Func<Object, String>)(input => input.ToString())).ToFilter())
+                    },
+                    true
+                };
+                yield return new Object[]
+                {
+                    new List<FilterData>()
+                    {
+                        FilterData.Create(new CharEnumerableToStringFilter()),
+                        FilterData.Create(new EnumerableCountFilter<Char>()),
+                        FilterData.Create(((Func<Object, String>)(input => input.ToString())).ToFilter()),
+                        FilterData.Create(new EnumerableToArrayFilter<String>())
+                    },
+                    false
+                };
+            }
+        }
+
+        [Theory]
+        [MemberData(nameof(CreateSequenceFilledTestData))]
+        [AssertionMethod]
+        public void CreateSequenceFilledTest(IEnumerable<FilterData> filterDatas, Boolean shouldSucceed)
+        {
+            filterDatas = filterDatas.ToList();
+
+            FilterCollection CreateSequence()
+            {
+                return new FilterCollection(filterDatas);
+            }
+
+            if (shouldSucceed)
+            {
+                FilterCollection sequence = CreateSequence();
+                Assert.Equal(filterDatas.First(), sequence.FirstFilter);
+                Assert.Equal(filterDatas.Last(), sequence.LastFilter);
+                Assert.Equal(filterDatas.Count(), sequence.Count);
+            }
+            else
+                Assert.Throws<ArgumentException>(() => CreateSequence());
+        }
 
         // ReSharper disable once MemberCanBePrivate.Global
         public static IEnumerable<Object[]> CreateSequenceTestData
