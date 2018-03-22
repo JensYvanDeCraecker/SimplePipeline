@@ -26,12 +26,20 @@ namespace SimplePipeline
         /// Create a new <see cref="FilterCollection"/> instance.
         /// </summary>
         /// <param name="filterDatas">The collection of data to add to this sequence.</param>
+        /// <exception cref="ArgumentNullException"></exception>
         // ReSharper disable once UnusedMember.Global
         public FilterCollection(IEnumerable<FilterData> filterDatas)
         {
             if (filterDatas == null)
                 throw new ArgumentNullException(nameof(filterDatas));
-            Load(filterDatas);
+            try
+            {
+                Load(filterDatas);
+            }
+            catch (InvalidFilterException e)
+            {
+                throw new ArgumentException("", nameof(filterDatas), e);
+            }
 
         }
 
