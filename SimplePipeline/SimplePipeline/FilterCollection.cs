@@ -32,7 +32,14 @@ namespace SimplePipeline
         {
             if (filterDatas == null)
                 throw new ArgumentNullException(nameof(filterDatas));
-            Load(filterDatas);
+            try
+            {
+                Load(filterDatas);
+            }
+            catch (InvalidFilterException e)
+            {
+                throw new ArgumentException("", nameof(filterDatas), e);
+            }
 
         }
 
