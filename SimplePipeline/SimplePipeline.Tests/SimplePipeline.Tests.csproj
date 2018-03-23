@@ -5,11 +5,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5CF82076-5558-42C2-8F1F-239591245AF3}</ProjectGuid>
+    <ProjectGuid>{C97833AD-FB87-46AF-9F1A-677B326E9C48}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SimplePipeline.Tests.X</RootNamespace>
-    <AssemblyName>SimplePipeline.Tests.X</AssemblyName>
+    <RootNamespace>SimplePipeline.Tests</RootNamespace>
+    <AssemblyName>SimplePipeline.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
@@ -65,12 +65,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Analyzer Include="..\packages\xunit.analyzers.0.7.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\SimplePipeline.Tests.Filters\SimplePipeline.Tests.Filters.csproj">
       <Project>{a88bbd0c-0709-4a62-af43-9e8c7cec9e10}</Project>
       <Name>SimplePipeline.Tests.Filters</Name>
@@ -83,6 +77,12 @@
       <Project>{885f31ac-bb57-40c4-b33e-0ce124c4ed27}</Project>
       <Name>SimplePipeline</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\xunit.analyzers.0.7.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

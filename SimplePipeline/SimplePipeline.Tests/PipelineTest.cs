@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 using SimplePipeline.Tests.Filters;
 using Xunit;
 
-namespace SimplePipeline.Tests.X
+namespace SimplePipeline.Tests
 {
     public class PipelineTest
     {
