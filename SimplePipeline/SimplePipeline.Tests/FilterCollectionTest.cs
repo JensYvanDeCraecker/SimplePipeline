@@ -231,6 +231,8 @@ namespace SimplePipeline.Tests
                     },
                     typeof(String), typeof(IEnumerable<Char>), true
                 };
+                yield return new Object[] { new FilterCollection(), typeof(String), typeof(IEnumerable<Char>), true };
+                yield return new Object[] { new FilterCollection(), typeof(IEnumerable<Char>), typeof(String), false };
             }
         }
 
