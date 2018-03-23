@@ -58,6 +58,7 @@ namespace SimplePipeline
         /// <summary>
         ///     Gets the input type of the first filter in this sequence.
         /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
         public Type InputType
         {
             get
@@ -69,6 +70,7 @@ namespace SimplePipeline
         /// <summary>
         ///     Get the output type of the last filter in this sequence.
         /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
         public Type OutputType
         {
             get
@@ -77,10 +79,8 @@ namespace SimplePipeline
             }
         }
 
-        /// <summary>
-        ///     Returns an enumerator that iterates through the collection.
-        /// </summary>
-        /// <returns>An enumerator that can be used to iterate through the collection.</returns>
+       
+        /// <inheritdoc />
         public IEnumerator<FilterData> GetEnumerator()
         {
             return innerCollection.GetEnumerator();
@@ -91,9 +91,7 @@ namespace SimplePipeline
             return GetEnumerator();
         }
 
-        /// <summary>
-        ///     Gets the number of elements in the collection.
-        /// </summary>
+        /// <inheritdoc />
         public Int32 Count
         {
             get
@@ -123,6 +121,14 @@ namespace SimplePipeline
             Add(FilterData.Create(filter));
         }
 
+        /// <summary>
+        ///     Adds a fucntion to the end of the sequence.
+        /// </summary>
+        /// <typeparam name="TInput">The type of the function input.</typeparam>
+        /// <typeparam name="TOutput">The type of the function output.</typeparam>
+        /// <param name="func">The function to add to the end of the sequence.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="InvalidFilterException"></exception>
         public void Add<TInput, TOutput>(Func<TInput, TOutput> func)
         {
             if (func == null)
@@ -130,6 +136,14 @@ namespace SimplePipeline
             Add(func.ToFilter());
         }
 
+        /// <summary>
+        ///     Adds a pipeline to the end of the sequence.
+        /// </summary>
+        /// <typeparam name="TInput">The type of the pipeline input.</typeparam>
+        /// <typeparam name="TOutput">The type of the pipeline output.</typeparam>
+        /// <param name="pipeline">The pipeline to add to the end of the sequence.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="InvalidFilterException"></exception>
         public void Add<TInput, TOutput>(IPipeline<TInput, TOutput> pipeline)
         {
             if (pipeline == null)
@@ -138,9 +152,9 @@ namespace SimplePipeline
         }
 
         /// <summary>
-        ///     Adds filter information to the end of the sequence.
+        ///     Adds a non-generic filter to the end of the sequence.
         /// </summary>
-        /// <param name="filterData">The filter information to add to the end of the sequence.</param>
+        /// <param name="filterData">The non-generic filter to add to the end of the sequence.</param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="InvalidFilterException"></exception>
         public void Add(FilterData filterData)
