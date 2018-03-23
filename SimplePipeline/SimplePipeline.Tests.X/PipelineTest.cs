@@ -83,22 +83,33 @@ namespace SimplePipeline.Tests.X
         [AssertionMethod]
         private static void ProcessCreatePipelineSequenceTest<TPipelineInput, TPipelineOutput>(FilterCollection sequence, Boolean shouldSucceed)
         {
-            Pipeline<TPipelineInput, TPipelineOutput> CreatePipeline()
+            Pipeline<TPipelineInput, TPipelineOutput> CreatePipelineSequence()
             {
                 return new Pipeline<TPipelineInput, TPipelineOutput>(sequence);
             }
 
-            if (shouldSucceed)
+            Pipeline<TPipelineInput, TPipelineOutput> CreatePipelineEnumerable()
             {
-                Pipeline<TPipelineInput, TPipelineOutput> pipeline = CreatePipeline();
-                Assert.Equal(sequence.Count, pipeline.Count());
-                if (sequence.Count <= 0)
-                    return;
-                Assert.Equal(sequence.FirstFilter.Filter, pipeline.First());
-                Assert.Equal(sequence.LastFilter.Filter, pipeline.Last());
+                return new Pipeline<TPipelineInput, TPipelineOutput>(filterDatas: sequence);
             }
-            else
-                Assert.Throws<InvalidFilterCollectionException>(() => CreatePipeline());
+
+            void ValidatePipeline(Func<Pipeline<TPipelineInput, TPipelineOutput>> creator)
+            {
+                if (shouldSucceed)
+                {
+                    Pipeline<TPipelineInput, TPipelineOutput> pipeline = creator.Invoke();
+                    Assert.Equal(sequence.Count, pipeline.Count());
+                    if (sequence.Count <= 0)
+                        return;
+                    Assert.Equal(sequence.FirstFilter.Filter, pipeline.First());
+                    Assert.Equal(sequence.LastFilter.Filter, pipeline.Last());
+                }
+                else
+                    Assert.Throws<InvalidFilterCollectionException>(() => CreatePipelineSequence());
+            }
+
+            ValidatePipeline(CreatePipelineSequence);
+            ValidatePipeline(CreatePipelineEnumerable);
         }
 
         // ReSharper disable once MemberCanBePrivate.Global
