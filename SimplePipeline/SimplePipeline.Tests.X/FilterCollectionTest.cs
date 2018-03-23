@@ -220,6 +220,15 @@ namespace SimplePipeline.Tests.X
                         new EnumerableToArrayFilter<Char>(),
                         new CharEnumerableToStringFilter()
                     },
+                    typeof(IEnumerable<String>), typeof(String), false
+                };
+                yield return new Object[]
+                {
+                    new FilterCollection()
+                    {
+                        new EnumerableToArrayFilter<Char>(),
+                        new CharEnumerableToStringFilter()
+                    },
                     typeof(String), typeof(IEnumerable<Char>), true
                 };
             }
