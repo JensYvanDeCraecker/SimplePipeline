@@ -265,47 +265,9 @@ namespace SimplePipeline.Tests.X
             sequence.Add(data);
         }
 
-        [AssertionMethod]
-        private static void SequenceAdd(MethodInfo addMethod, FilterCollection sequence, Object item, Boolean shouldSucceed, Type inputType, Type outputType)
-        {
-            Int32 countBeforeAdd = sequence.Count;
-            InvalidFilterException invalidFilterException = null;
-            try
-            {
-                try
-                {
-                    addMethod.Invoke(null, new[] { sequence, item });
-                }
-                catch (TargetInvocationException e)
-                {
-                    // ReSharper disable once PossibleNullReferenceException
-                    throw e.InnerException;
-                }
-            }
-            catch (InvalidFilterException e)
-            {
-                invalidFilterException = e;
-            }
-            Int32 countAfterAdd = sequence.Count;
-            if (shouldSucceed) // The item should be added successfully
-            {
-                Assert.Null(invalidFilterException); // Because the item should be added successfully, there shouldn't be any exception.
-                Assert.Equal(countBeforeAdd + 1, countAfterAdd); // If the item is added successfully the count of the sequence should be incremented by 1.
-                if (countAfterAdd == 1) // The item that is added is the first in the sequence.
-                    Assert.True(sequence.FirstFilter == sequence.LastFilter); // The first item in the sequence should be equal to the last item in the sequence, since it's the first and only item in the sequence.
-                Assert.Equal(inputType, sequence.LastFilter.InputType);
-                Assert.Equal(outputType, sequence.LastFilter.OutputType);
-            }
-            else
-            {
-                Assert.NotNull(invalidFilterException);
-                Assert.Equal(countBeforeAdd, countAfterAdd);
-            }
-        }
-
         [Fact]
         [AssertionMethod]
-        public void SequenceAddFilterDataNull()
+        public void SequenceAddFilterDataNullTest()
         {
             FilterCollection sequence = new FilterCollection();
             Assert.Throws<ArgumentNullException>(() => sequence.Add(null)); // Null can't be added to a filter sequence.
@@ -313,7 +275,7 @@ namespace SimplePipeline.Tests.X
 
         [Fact]
         [AssertionMethod]
-        public void SequenceAddFilterNull()
+        public void SequenceAddFilterNullTest()
         {
             FilterCollection sequence = new FilterCollection();
             Assert.Throws<ArgumentNullException>(() => sequence.Add<Object, Object>(filter: null)); // Null can't be added to a filter sequence.
@@ -321,7 +283,7 @@ namespace SimplePipeline.Tests.X
 
         [Fact]
         [AssertionMethod]
-        public void SequenceAddFunctionNull()
+        public void SequenceAddFunctionNullTest()
         {
             FilterCollection sequence = new FilterCollection();
             Assert.Throws<ArgumentNullException>(() => sequence.Add<Object, Object>(func: null)); // Null can't be added to a filter sequence.
@@ -329,7 +291,7 @@ namespace SimplePipeline.Tests.X
 
         [Fact]
         [AssertionMethod]
-        public void SequenceAddPipelineNull()
+        public void SequenceAddPipelineNullTest()
         {
             FilterCollection sequence = new FilterCollection();
             Assert.Throws<ArgumentNullException>(() => sequence.Add<Object, Object>(pipeline: null)); // Null can't be added to a filter sequence.
@@ -337,7 +299,7 @@ namespace SimplePipeline.Tests.X
 
         [Fact]
         [AssertionMethod]
-        public void SequenceCanCreatePipelineParametersNull()
+        public void SequenceCanCreatePipelineParametersNullTest()
         {
             FilterCollection sequence = new FilterCollection();
             Assert.False(sequence.CanCreatePipeline(null, typeof(Object))); // Null in any of the parameters in the 'CanCreatePipeline' method should return false.
