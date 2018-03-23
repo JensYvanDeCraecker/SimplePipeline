@@ -43,19 +43,13 @@ namespace SimplePipeline
             return GetEnumerator();
         }
 
-        /// <summary>
-        ///     Gets the output of a processed input, if successful. If not, the default value is returned.
-        /// </summary>
+        /// <inheritdoc />
         public TOutput Output { get; private set; }
 
-        /// <summary>
-        ///     Gets the exception of a processed input, if unsuccessful. If successful, the default value is returned.
-        /// </summary>
+        /// <inheritdoc />
         public Exception Exception { get; private set; }
 
-        /// <summary>
-        ///     Gets the state of the pipeline.
-        /// </summary>
+        /// <inheritdoc />
         public Boolean IsBeginState
         {
             get
@@ -64,12 +58,7 @@ namespace SimplePipeline
             }
         }
 
-        /// <summary>
-        ///     Processes the input in a collection of filters and returns a boolean that determines if the processing was
-        ///     successful.
-        /// </summary>
-        /// <param name="input">The input to process in a collection of filters.</param>
-        /// <returns>True if the processing was successful. If not, false is returned.</returns>
+        /// <inheritdoc />
         public Boolean Execute(TInput input)
         {
             Reset();
@@ -85,9 +74,7 @@ namespace SimplePipeline
             }
         }
 
-        /// <summary>
-        ///     Resets the pipeline to a state that is similar to a pipeline that has not yet processed any inputs.
-        /// </summary>
+        /// <inheritdoc />
         public void Reset()
         {
             if (IsBeginState)
@@ -96,10 +83,7 @@ namespace SimplePipeline
             Output = default(TOutput);
         }
 
-        /// <summary>
-        ///     Returns an enumerator that iterates through the collection.
-        /// </summary>
-        /// <returns>An enumerator that can be used to iterate through the collection.</returns>
+        /// <inheritdoc />
         public IEnumerator<Object> GetEnumerator()
         {
             return filterDatas.Select(data => data.Filter).GetEnumerator();
