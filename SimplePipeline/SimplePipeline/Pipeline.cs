@@ -36,10 +36,7 @@ namespace SimplePipeline
         /// <param name="filterDatas">The filter collection to populate this pipeline with.</param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="InvalidFilterCollectionException"></exception>
-        public Pipeline(IEnumerable<FilterData> filterDatas) : this(new FilterCollection(filterDatas))
-        {
-
-        }
+        public Pipeline(IEnumerable<FilterData> filterDatas) : this(new FilterCollection(filterDatas)) { }
 
         IEnumerator IEnumerable.GetEnumerator()
         {

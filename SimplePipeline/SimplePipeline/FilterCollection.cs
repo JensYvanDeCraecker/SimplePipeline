@@ -15,15 +15,12 @@ namespace SimplePipeline
         private readonly LinkedList<FilterData> innerCollection = new LinkedList<FilterData>();
 
         /// <summary>
-        /// Creates a new <see cref="FilterCollection"/> instance.
+        ///     Creates a new <see cref="FilterCollection" /> instance.
         /// </summary>
-        public FilterCollection()
-        {
-
-        }
+        public FilterCollection() { }
 
         /// <summary>
-        /// Create a new <see cref="FilterCollection"/> instance.
+        ///     Create a new <see cref="FilterCollection" /> instance.
         /// </summary>
         /// <param name="filterDatas">The collection of data to add to this sequence.</param>
         /// <exception cref="ArgumentNullException"></exception>
@@ -40,13 +37,6 @@ namespace SimplePipeline
             {
                 throw new ArgumentException("", nameof(filterDatas), e);
             }
-
-        }
-
-        private void Load(IEnumerable<FilterData> filterDatas)
-        {
-            foreach (FilterData filterData in filterDatas)
-                Add(filterData);
         }
 
         public FilterData FirstFilter
@@ -110,6 +100,12 @@ namespace SimplePipeline
             {
                 return innerCollection.Count;
             }
+        }
+
+        private void Load(IEnumerable<FilterData> filterDatas)
+        {
+            foreach (FilterData filterData in filterDatas)
+                Add(filterData);
         }
 
         /// <summary>
