@@ -10,7 +10,7 @@ namespace SimplePipeline.Tests
 {
     public class PipelineTest
     {
-        private readonly MethodInfo processCreatePipelineSequenceTestDefinition = typeof(PipelineTest).GetMethod("ProcessCreatePipelineSequenceTest", BindingFlags.NonPublic | BindingFlags.Static);
+        private readonly MethodInfo processCreatePipelineTestDefinition = typeof(PipelineTest).GetMethod("ProcessCreatePipelineTest", BindingFlags.NonPublic | BindingFlags.Static);
         private readonly MethodInfo processExecutePipelineTestDefinition = typeof(PipelineTest).GetMethod("ProcessExecutePipelineTest", BindingFlags.NonPublic | BindingFlags.Static);
 
         // ReSharper disable once MemberCanBePrivate.Global
@@ -74,14 +74,14 @@ namespace SimplePipeline.Tests
         [Theory]
         [MemberData(nameof(CreatePipelineSequenceTestData))]
         [AssertionMethod]
-        public void CreatePipelineSequenceTest(FilterSequence sequence, Type pipelineInputType, Type pipelineOutputType, Boolean shouldSucceed)
+        public void CreatePipelineTest(FilterSequence sequence, Type pipelineInputType, Type pipelineOutputType, Boolean shouldSucceed)
         {
-            processCreatePipelineSequenceTestDefinition.MakeGenericMethod(pipelineInputType, pipelineOutputType).Invoke(null, new Object[] { sequence, shouldSucceed });
+            processCreatePipelineTestDefinition.MakeGenericMethod(pipelineInputType, pipelineOutputType).Invoke(null, new Object[] { sequence, shouldSucceed });
         }
 
         // ReSharper disable once UnusedMember.Local
         [AssertionMethod]
-        private static void ProcessCreatePipelineSequenceTest<TPipelineInput, TPipelineOutput>(FilterSequence sequence, Boolean shouldSucceed)
+        private static void ProcessCreatePipelineTest<TPipelineInput, TPipelineOutput>(FilterSequence sequence, Boolean shouldSucceed)
         {
             Pipeline<TPipelineInput, TPipelineOutput> CreatePipelineSequence()
             {
