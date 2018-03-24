@@ -64,7 +64,7 @@ namespace SimplePipeline
             Reset();
             try
             {
-                Output = (TOutput)filterDatas.Aggregate<FilterData, Object>(input, (value, filterData) => filterData.ExecuteFilter(value));
+                Output = (TOutput)this.Aggregate<FilterData, Object>(input, (value, filterData) => filterData.ExecuteFilter(value));
                 return true;
             }
             catch (Exception e)
@@ -84,9 +84,9 @@ namespace SimplePipeline
         }
 
         /// <inheritdoc />
-        public IEnumerator<Object> GetEnumerator()
+        public IEnumerator<FilterData> GetEnumerator()
         {
-            return filterDatas.Select(data => data.Filter).GetEnumerator();
+            return filterDatas.GetEnumerator();
         }
     }
 }

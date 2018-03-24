@@ -101,8 +101,8 @@ namespace SimplePipeline.Tests
                     Assert.Equal(sequence.Count, pipeline.Count());
                     if (sequence.Count <= 0)
                         return;
-                    Assert.Equal(sequence.FirstFilter.Filter, pipeline.First());
-                    Assert.Equal(sequence.LastFilter.Filter, pipeline.Last());
+                    Assert.Equal(sequence.FirstFilter, pipeline.First());
+                    Assert.Equal(sequence.LastFilter, pipeline.Last());
                 }
                 else
                     Assert.Throws<InvalidFilterCollectionException>(() => CreatePipelineSequence());

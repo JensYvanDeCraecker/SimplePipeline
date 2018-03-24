@@ -17,7 +17,7 @@ namespace SimplePipeline.Tests.Pipelines
             });
         }
 
-        public IEnumerator<Object> GetEnumerator()
+        public IEnumerator<FilterData> GetEnumerator()
         {
             return innerPipeline.GetEnumerator();
         }
