@@ -61,14 +61,14 @@ namespace SimplePipeline.Tests
         {
             filterDatas = filterDatas.ToList();
 
-            FilterCollection CreateSequence()
+            FilterSequence CreateSequence()
             {
-                return new FilterCollection(filterDatas);
+                return new FilterSequence(filterDatas);
             }
 
             if (shouldSucceed)
             {
-                FilterCollection sequence = CreateSequence();
+                FilterSequence sequence = CreateSequence();
                 Assert.Equal(filterDatas.First(), sequence.FirstFilter);
                 Assert.Equal(filterDatas.Last(), sequence.LastFilter);
                 Assert.Equal(filterDatas.Count(), sequence.Count);
@@ -113,7 +113,7 @@ namespace SimplePipeline.Tests
         [AssertionMethod]
         public void CreateSequenceTest(IEnumerable<Tuple<Object, ItemType, Boolean, Type, Type>> tuples)
         {
-            FilterCollection sequence = new FilterCollection();
+            FilterSequence sequence = new FilterSequence();
             foreach (Tuple<Object, ItemType, Boolean, Type, Type> tuple in tuples)
             {
                 Object item = tuple.Item1;
@@ -186,7 +186,7 @@ namespace SimplePipeline.Tests
             {
                 yield return new Object[]
                 {
-                    new FilterCollection()
+                    new FilterSequence()
                     {
                         new EnumerableToArrayFilter<Char>(),
                         new CharEnumerableToStringFilter(),
@@ -196,7 +196,7 @@ namespace SimplePipeline.Tests
                 };
                 yield return new Object[]
                 {
-                    new FilterCollection()
+                    new FilterSequence()
                     {
                         new EnumerableToArrayFilter<Char>(),
                         new CharEnumerableToStringFilter(),
@@ -206,7 +206,7 @@ namespace SimplePipeline.Tests
                 };
                 yield return new Object[]
                 {
-                    new FilterCollection()
+                    new FilterSequence()
                     {
                         new EnumerableToArrayFilter<Char>(),
                         new CharEnumerableToStringFilter()
@@ -215,7 +215,7 @@ namespace SimplePipeline.Tests
                 };
                 yield return new Object[]
                 {
-                    new FilterCollection()
+                    new FilterSequence()
                     {
                         new EnumerableToArrayFilter<Char>(),
                         new CharEnumerableToStringFilter()
@@ -224,22 +224,22 @@ namespace SimplePipeline.Tests
                 };
                 yield return new Object[]
                 {
-                    new FilterCollection()
+                    new FilterSequence()
                     {
                         new EnumerableToArrayFilter<Char>(),
                         new CharEnumerableToStringFilter()
                     },
                     typeof(String), typeof(IEnumerable<Char>), true
                 };
-                yield return new Object[] { new FilterCollection(), typeof(String), typeof(IEnumerable<Char>), true };
-                yield return new Object[] { new FilterCollection(), typeof(IEnumerable<Char>), typeof(String), false };
+                yield return new Object[] { new FilterSequence(), typeof(String), typeof(IEnumerable<Char>), true };
+                yield return new Object[] { new FilterSequence(), typeof(IEnumerable<Char>), typeof(String), false };
             }
         }
 
         [Theory]
         [MemberData(nameof(SequenceCanCreatePipelineTestData))]
         [AssertionMethod]
-        public void SequenceCanCreatePipelineTest(FilterCollection sequence, Type pipelineInputType, Type pipelineOutputType, Boolean canCreate)
+        public void SequenceCanCreatePipelineTest(FilterSequence sequence, Type pipelineInputType, Type pipelineOutputType, Boolean canCreate)
         {
             Assert.Equal(canCreate, sequence.CanCreatePipeline(pipelineInputType, pipelineOutputType));
         }
@@ -253,25 +253,25 @@ namespace SimplePipeline.Tests
         }
 
         // ReSharper disable once UnusedMember.Local
-        private static void SequenceAddFilter<TFilterInput, TFilterOutput>(FilterCollection sequence, IFilter<TFilterInput, TFilterOutput> filter)
+        private static void SequenceAddFilter<TFilterInput, TFilterOutput>(FilterSequence sequence, IFilter<TFilterInput, TFilterOutput> filter)
         {
             sequence.Add(filter);
         }
 
         // ReSharper disable once UnusedMember.Local
-        private static void SequenceAddPipeline<TPipelineInput, TPipelineOutput>(FilterCollection sequence, IPipeline<TPipelineInput, TPipelineOutput> pipeline)
+        private static void SequenceAddPipeline<TPipelineInput, TPipelineOutput>(FilterSequence sequence, IPipeline<TPipelineInput, TPipelineOutput> pipeline)
         {
             sequence.Add(pipeline);
         }
 
         // ReSharper disable once UnusedMember.Local
-        private static void SequenceAddFunction<TFunctionInput, TFunctionOutput>(FilterCollection sequence, Func<TFunctionInput, TFunctionOutput> func)
+        private static void SequenceAddFunction<TFunctionInput, TFunctionOutput>(FilterSequence sequence, Func<TFunctionInput, TFunctionOutput> func)
         {
             sequence.Add(func);
         }
 
         // ReSharper disable once UnusedMember.Local
-        private static void SequenceAddFilterData(FilterCollection sequence, FilterData data)
+        private static void SequenceAddFilterData(FilterSequence sequence, FilterData data)
         {
             sequence.Add(data);
         }
@@ -280,7 +280,7 @@ namespace SimplePipeline.Tests
         [AssertionMethod]
         public void SequenceAddFilterDataNullTest()
         {
-            FilterCollection sequence = new FilterCollection();
+            FilterSequence sequence = new FilterSequence();
             Assert.Throws<ArgumentNullException>(() => sequence.Add(null)); // Null can't be added to a filter sequence.
         }
 
@@ -288,7 +288,7 @@ namespace SimplePipeline.Tests
         [AssertionMethod]
         public void SequenceAddFilterNullTest()
         {
-            FilterCollection sequence = new FilterCollection();
+            FilterSequence sequence = new FilterSequence();
             Assert.Throws<ArgumentNullException>(() => sequence.Add<Object, Object>(filter: null)); // Null can't be added to a filter sequence.
         }
 
@@ -296,7 +296,7 @@ namespace SimplePipeline.Tests
         [AssertionMethod]
         public void SequenceAddFunctionNullTest()
         {
-            FilterCollection sequence = new FilterCollection();
+            FilterSequence sequence = new FilterSequence();
             Assert.Throws<ArgumentNullException>(() => sequence.Add<Object, Object>(func: null)); // Null can't be added to a filter sequence.
         }
 
@@ -304,7 +304,7 @@ namespace SimplePipeline.Tests
         [AssertionMethod]
         public void SequenceAddPipelineNullTest()
         {
-            FilterCollection sequence = new FilterCollection();
+            FilterSequence sequence = new FilterSequence();
             Assert.Throws<ArgumentNullException>(() => sequence.Add<Object, Object>(pipeline: null)); // Null can't be added to a filter sequence.
         }
 
@@ -312,7 +312,7 @@ namespace SimplePipeline.Tests
         [AssertionMethod]
         public void SequenceCanCreatePipelineParametersNullTest()
         {
-            FilterCollection sequence = new FilterCollection();
+            FilterSequence sequence = new FilterSequence();
             Assert.False(sequence.CanCreatePipeline(null, typeof(Object))); // Null in any of the parameters in the 'CanCreatePipeline' method should return false.
             Assert.False(sequence.CanCreatePipeline(typeof(Object), null)); // Null in any of the parameters in the 'CanCreatePipeline' method should return false.
             Assert.False(sequence.CanCreatePipeline(null, null)); // Null in any of the parameters in the 'CanCreatePipeline' method should return false.

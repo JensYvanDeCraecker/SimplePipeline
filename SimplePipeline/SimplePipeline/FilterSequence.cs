@@ -7,7 +7,7 @@ namespace SimplePipeline
     /// <summary>
     ///     Represents a sequence of filters that the output of previous filter matches the input of the following filter.
     /// </summary>
-    public sealed class FilterCollection : IReadOnlyCollection<FilterData>
+    public sealed class FilterSequence : IReadOnlyCollection<FilterData>
     {
         //private readonly Queue<FilterData> innerCollection = new Queue<FilterData>();
         //private FilterData first;
@@ -15,17 +15,17 @@ namespace SimplePipeline
         private readonly LinkedList<FilterData> innerCollection = new LinkedList<FilterData>();
 
         /// <summary>
-        ///     Creates a new <see cref="FilterCollection" /> instance.
+        ///     Creates a new <see cref="FilterSequence" /> instance.
         /// </summary>
-        public FilterCollection() { }
+        public FilterSequence() { }
 
         /// <summary>
-        ///     Create a new <see cref="FilterCollection" /> instance.
+        ///     Create a new <see cref="FilterSequence" /> instance.
         /// </summary>
         /// <param name="filterDatas">The collection of data to add to this sequence.</param>
         /// <exception cref="ArgumentNullException"></exception>
         // ReSharper disable once UnusedMember.Global
-        public FilterCollection(IEnumerable<FilterData> filterDatas)
+        public FilterSequence(IEnumerable<FilterData> filterDatas)
         {
             if (filterDatas == null)
                 throw new ArgumentNullException(nameof(filterDatas));

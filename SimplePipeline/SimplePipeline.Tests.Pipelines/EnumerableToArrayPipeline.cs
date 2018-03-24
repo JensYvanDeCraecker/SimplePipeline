@@ -11,7 +11,7 @@ namespace SimplePipeline.Tests.Pipelines
 
         public EnumerableToArrayPipeline()
         {
-            innerPipeline = new Pipeline<IEnumerable<T>, T[]>(new FilterCollection()
+            innerPipeline = new Pipeline<IEnumerable<T>, T[]>(new FilterSequence()
             {
                 new EnumerableToArrayFilter<T>()
             });

@@ -21,7 +21,7 @@ namespace SimplePipeline.Tests
             {
                 yield return new Object[]
                 {
-                    new FilterCollection()
+                    new FilterSequence()
                     {
                         new EnumerableToArrayFilter<Char>(),
                         new CharEnumerableToStringFilter(),
@@ -31,7 +31,7 @@ namespace SimplePipeline.Tests
                 };
                 yield return new Object[]
                 {
-                    new FilterCollection()
+                    new FilterSequence()
                     {
                         new EnumerableToArrayFilter<Char>(),
                         new CharEnumerableToStringFilter(),
@@ -41,7 +41,7 @@ namespace SimplePipeline.Tests
                 };
                 yield return new Object[]
                 {
-                    new FilterCollection()
+                    new FilterSequence()
                     {
                         new EnumerableToArrayFilter<Char>(),
                         new CharEnumerableToStringFilter()
@@ -50,7 +50,7 @@ namespace SimplePipeline.Tests
                 };
                 yield return new Object[]
                 {
-                    new FilterCollection()
+                    new FilterSequence()
                     {
                         new EnumerableToArrayFilter<Char>(),
                         new CharEnumerableToStringFilter()
@@ -59,29 +59,29 @@ namespace SimplePipeline.Tests
                 };
                 yield return new Object[]
                 {
-                    new FilterCollection()
+                    new FilterSequence()
                     {
                         new EnumerableToArrayFilter<Char>(),
                         new CharEnumerableToStringFilter()
                     },
                     typeof(IEnumerable<String>), typeof(String), false
                 };
-                yield return new Object[] { new FilterCollection(), typeof(String), typeof(IEnumerable<Char>), true };
-                yield return new Object[] { new FilterCollection(), typeof(IEnumerable<Char>), typeof(String), false };
+                yield return new Object[] { new FilterSequence(), typeof(String), typeof(IEnumerable<Char>), true };
+                yield return new Object[] { new FilterSequence(), typeof(IEnumerable<Char>), typeof(String), false };
             }
         }
 
         [Theory]
         [MemberData(nameof(CreatePipelineSequenceTestData))]
         [AssertionMethod]
-        public void CreatePipelineSequenceTest(FilterCollection sequence, Type pipelineInputType, Type pipelineOutputType, Boolean shouldSucceed)
+        public void CreatePipelineSequenceTest(FilterSequence sequence, Type pipelineInputType, Type pipelineOutputType, Boolean shouldSucceed)
         {
             processCreatePipelineSequenceTestDefinition.MakeGenericMethod(pipelineInputType, pipelineOutputType).Invoke(null, new Object[] { sequence, shouldSucceed });
         }
 
         // ReSharper disable once UnusedMember.Local
         [AssertionMethod]
-        private static void ProcessCreatePipelineSequenceTest<TPipelineInput, TPipelineOutput>(FilterCollection sequence, Boolean shouldSucceed)
+        private static void ProcessCreatePipelineSequenceTest<TPipelineInput, TPipelineOutput>(FilterSequence sequence, Boolean shouldSucceed)
         {
             Pipeline<TPipelineInput, TPipelineOutput> CreatePipelineSequence()
             {
@@ -120,7 +120,7 @@ namespace SimplePipeline.Tests
             {
                 yield return new Object[]
                 {
-                    new Pipeline<IEnumerable<Char>, Int32>(new FilterCollection()
+                    new Pipeline<IEnumerable<Char>, Int32>(new FilterSequence()
                     {
                         new EnumerableToArrayFilter<Char>(),
                         new CharEnumerableToStringFilter(),
@@ -130,7 +130,7 @@ namespace SimplePipeline.Tests
                 };
                 yield return new Object[]
                 {
-                    new Pipeline<IEnumerable<Char>, Int32>(new FilterCollection()
+                    new Pipeline<IEnumerable<Char>, Int32>(new FilterSequence()
                     {
                         new EnumerableToArrayFilter<Char>(),
                         new CharEnumerableToStringFilter(),
@@ -138,8 +138,8 @@ namespace SimplePipeline.Tests
                     }),
                     typeof(String), typeof(Int32), null, 0, typeof(ArgumentNullException), false
                 };
-                yield return new Object[] { new Pipeline<IEnumerable<Char>, IEnumerable<Char>>(new FilterCollection()), typeof(IEnumerable<Char>), typeof(IEnumerable<Char>), null, null, null, true };
-                yield return new Object[] { new Pipeline<IEnumerable<Char>, IEnumerable<Char>>(new FilterCollection()), typeof(IEnumerable<Char>), typeof(IEnumerable<Char>), "Pipeline", "Pipeline", null, true };
+                yield return new Object[] { new Pipeline<IEnumerable<Char>, IEnumerable<Char>>(new FilterSequence()), typeof(IEnumerable<Char>), typeof(IEnumerable<Char>), null, null, null, true };
+                yield return new Object[] { new Pipeline<IEnumerable<Char>, IEnumerable<Char>>(new FilterSequence()), typeof(IEnumerable<Char>), typeof(IEnumerable<Char>), "Pipeline", "Pipeline", null, true };
             }
         }
 
