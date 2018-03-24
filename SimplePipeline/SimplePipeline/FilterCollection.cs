@@ -79,7 +79,6 @@ namespace SimplePipeline
             }
         }
 
-       
         /// <inheritdoc />
         public IEnumerator<FilterData> GetEnumerator()
         {
