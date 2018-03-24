@@ -59,18 +59,20 @@ namespace SimplePipeline.Tests
         [AssertionMethod]
         public void CreateSequenceFilledTest(IEnumerable<FilterData> filters, Boolean shouldSucceed)
         {
-            filters = filters.ToList();
-
             FilterSequence CreateSequence()
             {
+                // ReSharper disable once PossibleMultipleEnumeration
                 return new FilterSequence(filters);
             }
 
             if (shouldSucceed)
             {
                 FilterSequence sequence = CreateSequence();
+                // ReSharper disable once PossibleMultipleEnumeration
                 Assert.Equal(filters.First(), sequence.FirstFilter);
+                // ReSharper disable once PossibleMultipleEnumeration
                 Assert.Equal(filters.Last(), sequence.LastFilter);
+                // ReSharper disable once PossibleMultipleEnumeration
                 Assert.Equal(filters.Count(), sequence.Count);
             }
             else
