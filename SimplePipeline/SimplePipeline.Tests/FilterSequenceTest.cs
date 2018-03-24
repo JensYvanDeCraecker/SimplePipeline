@@ -9,12 +9,12 @@ using Xunit;
 
 namespace SimplePipeline.Tests
 {
-    public class FilterCollectionTest
+    public class FilterSequenceTest
     {
-        private readonly MethodInfo sequenceAddFilterDefinition = typeof(FilterCollectionTest).GetMethod("SequenceAddFilter", BindingFlags.NonPublic | BindingFlags.Static);
-        private readonly MethodInfo sequenceAddPipelineDefinition = typeof(FilterCollectionTest).GetMethod("SequenceAddPipeline", BindingFlags.NonPublic | BindingFlags.Static);
-        private readonly MethodInfo sequenceAddFunctionDefinition = typeof(FilterCollectionTest).GetMethod("SequenceAddFunction", BindingFlags.NonPublic | BindingFlags.Static);
-        private readonly MethodInfo sequenceAddFilterData = typeof(FilterCollectionTest).GetMethod("SequenceAddFilterData", BindingFlags.NonPublic | BindingFlags.Static);
+        private readonly MethodInfo sequenceAddFilterDefinition = typeof(FilterSequenceTest).GetMethod("SequenceAddFilter", BindingFlags.NonPublic | BindingFlags.Static);
+        private readonly MethodInfo sequenceAddPipelineDefinition = typeof(FilterSequenceTest).GetMethod("SequenceAddPipeline", BindingFlags.NonPublic | BindingFlags.Static);
+        private readonly MethodInfo sequenceAddFunctionDefinition = typeof(FilterSequenceTest).GetMethod("SequenceAddFunction", BindingFlags.NonPublic | BindingFlags.Static);
+        private readonly MethodInfo sequenceAddFilterData = typeof(FilterSequenceTest).GetMethod("SequenceAddFilterData", BindingFlags.NonPublic | BindingFlags.Static);
 
         // ReSharper disable once MemberCanBePrivate.Global
         public static IEnumerable<Object[]> CreateSequenceFilledTestData

@@ -58,7 +58,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FilterCollectionTest.cs" />
+    <Compile Include="FilterSequenceTest.cs" />
     <Compile Include="FilterDataTest.cs" />
     <Compile Include="FilterTest.cs" />
     <Compile Include="PipelineTest.cs" />
