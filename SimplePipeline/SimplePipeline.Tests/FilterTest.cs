@@ -42,16 +42,16 @@ namespace SimplePipeline.Tests
         [Theory]
         [MemberData(nameof(FunctionToFilterTestData))]
         [AssertionMethod]
-        public void FunctionToFilterTest(Delegate function, Type functionInputType, Type functionOutputType)
+        public void FunctionToFilterTest(Delegate func, Type funcInputType, Type funcOutputType)
         {
-            processFunctionToFilterDefinition.MakeGenericMethod(functionInputType, functionOutputType).Invoke(null, new Object[] { function });
+            processFunctionToFilterDefinition.MakeGenericMethod(funcInputType, funcOutputType).Invoke(null, new Object[] { func });
         }
 
         // ReSharper disable once UnusedMember.Local
         [AssertionMethod]
-        private static void ProcessFunctionToFilterTest<TFunctionInput, TFunctionOutput>(Func<TFunctionInput, TFunctionOutput> function)
+        private static void ProcessFunctionToFilterTest<TFunctionInput, TFunctionOutput>(Func<TFunctionInput, TFunctionOutput> func)
         {
-            Assert.NotNull(function.ToFilter()); // Test if the 'ToFilter' method returns an instance.
+            Assert.NotNull(func.ToFilter()); // Test if the 'ToFilter' method returns an instance.
         }
 
         [Theory]

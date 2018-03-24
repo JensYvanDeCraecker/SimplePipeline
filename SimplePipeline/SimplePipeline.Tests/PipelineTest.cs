@@ -90,7 +90,7 @@ namespace SimplePipeline.Tests
 
             Pipeline<TPipelineInput, TPipelineOutput> CreatePipelineEnumerable()
             {
-                return new Pipeline<TPipelineInput, TPipelineOutput>(filterDatas: sequence);
+                return new Pipeline<TPipelineInput, TPipelineOutput>(filters: sequence);
             }
 
             void ValidatePipeline(Func<Pipeline<TPipelineInput, TPipelineOutput>> creator)
@@ -186,7 +186,7 @@ namespace SimplePipeline.Tests
         [AssertionMethod]
         public void CreatePipelineEnumerableNullTest()
         {
-            Assert.Throws<ArgumentNullException>(() => new Pipeline<Object, Object>(filterDatas: null));
+            Assert.Throws<ArgumentNullException>(() => new Pipeline<Object, Object>(filters: null));
         }
 
         [Fact]

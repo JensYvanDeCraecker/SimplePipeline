@@ -12,31 +12,31 @@ namespace SimplePipeline
     /// <typeparam name="TOutput">The type of the pipeline output.</typeparam>
     public class Pipeline<TInput, TOutput> : IPipeline<TInput, TOutput>
     {
-        private readonly IEnumerable<FilterData> filterDatas;
+        private readonly IEnumerable<FilterData> filters;
 
         /// <summary>
         ///     Creates a new <see cref="Pipeline{TInput,TOutput}" /> instance.
         /// </summary>
-        /// <param name="filterCollection">The filter sequence to populate this pipeline with.</param>
+        /// <param name="sequence">The filter sequence to populate this pipeline with.</param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="InvalidFilterCollectionException"></exception>
-        public Pipeline(FilterSequence filterCollection)
+        public Pipeline(FilterSequence sequence)
         {
-            if (filterCollection == null)
-                throw new ArgumentNullException(nameof(filterCollection));
-            if (!filterCollection.CanCreatePipeline(typeof(TInput), typeof(TOutput)))
+            if (sequence == null)
+                throw new ArgumentNullException(nameof(sequence));
+            if (!sequence.CanCreatePipeline(typeof(TInput), typeof(TOutput)))
                 throw new InvalidFilterCollectionException();
-            IEnumerable<FilterData> copyFilterDatas = filterCollection.ToList();
-            filterDatas = copyFilterDatas;
+            IEnumerable<FilterData> copyFilterDatas = sequence.ToList();
+            filters = copyFilterDatas;
         }
 
         /// <summary>
         ///     Creates a new <see cref="Pipeline{TInput,TOutput}" /> instance.
         /// </summary>
-        /// <param name="filterDatas">The filter collection to populate this pipeline with.</param>
+        /// <param name="filters">The filter collection to populate this pipeline with.</param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="InvalidFilterCollectionException"></exception>
-        public Pipeline(IEnumerable<FilterData> filterDatas) : this(new FilterSequence(filterDatas)) { }
+        public Pipeline(IEnumerable<FilterData> filters) : this(new FilterSequence(filters)) { }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
@@ -64,7 +64,7 @@ namespace SimplePipeline
             Reset();
             try
             {
-                Output = (TOutput)this.Aggregate<FilterData, Object>(input, (value, filterData) => filterData.ExecuteFilter(value));
+                Output = (TOutput)this.Aggregate<FilterData, Object>(input, (value, filter) => filter.ExecuteFilter(value));
                 return true;
             }
             catch (Exception e)
@@ -86,7 +86,7 @@ namespace SimplePipeline
         /// <inheritdoc />
         public IEnumerator<FilterData> GetEnumerator()
         {
-            return filterDatas.GetEnumerator();
+            return filters.GetEnumerator();
         }
     }
 }

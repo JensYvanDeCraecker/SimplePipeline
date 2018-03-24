@@ -57,21 +57,21 @@ namespace SimplePipeline.Tests
         [Theory]
         [MemberData(nameof(CreateSequenceFilledTestData))]
         [AssertionMethod]
-        public void CreateSequenceFilledTest(IEnumerable<FilterData> filterDatas, Boolean shouldSucceed)
+        public void CreateSequenceFilledTest(IEnumerable<FilterData> filters, Boolean shouldSucceed)
         {
-            filterDatas = filterDatas.ToList();
+            filters = filters.ToList();
 
             FilterSequence CreateSequence()
             {
-                return new FilterSequence(filterDatas);
+                return new FilterSequence(filters);
             }
 
             if (shouldSucceed)
             {
                 FilterSequence sequence = CreateSequence();
-                Assert.Equal(filterDatas.First(), sequence.FirstFilter);
-                Assert.Equal(filterDatas.Last(), sequence.LastFilter);
-                Assert.Equal(filterDatas.Count(), sequence.Count);
+                Assert.Equal(filters.First(), sequence.FirstFilter);
+                Assert.Equal(filters.Last(), sequence.LastFilter);
+                Assert.Equal(filters.Count(), sequence.Count);
             }
             else
                 Assert.Throws<ArgumentException>(() => CreateSequence());
@@ -271,9 +271,9 @@ namespace SimplePipeline.Tests
         }
 
         // ReSharper disable once UnusedMember.Local
-        private static void SequenceAddFilterData(FilterSequence sequence, FilterData data)
+        private static void SequenceAddFilterData(FilterSequence sequence, FilterData filter)
         {
-            sequence.Add(data);
+            sequence.Add(filter);
         }
 
         [Fact]

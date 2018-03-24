@@ -61,12 +61,12 @@ namespace SimplePipeline.Tests
         [Theory]
         [MemberData(nameof(FilterDataEqualityTestData))]
         [AssertionMethod]
-        public void FilterDataEqualityTest(FilterData firstData, FilterData secondData, Boolean expectedResult)
+        public void FilterDataEqualityTest(FilterData firstFilter, FilterData secondFilter, Boolean expectedResult)
         {
-            Assert.Equal(expectedResult, Equals(firstData, secondData)); // Test if the equality is equal to the expected result.
-            Assert.Equal(expectedResult, firstData == secondData); // Test if the equality is equal to the expected result.
-            Assert.Equal(!expectedResult, firstData != secondData); // Test if the equality is equal to the expected result.
-            Assert.Equal(expectedResult, firstData.GetHashCode() == secondData.GetHashCode()); // Test if the equality of the hash code is equal to the expected result.
+            Assert.Equal(expectedResult, Equals(firstFilter, secondFilter)); // Test if the equality is equal to the expected result.
+            Assert.Equal(expectedResult, firstFilter == secondFilter); // Test if the equality is equal to the expected result.
+            Assert.Equal(!expectedResult, firstFilter != secondFilter); // Test if the equality is equal to the expected result.
+            Assert.Equal(expectedResult, firstFilter.GetHashCode() == secondFilter.GetHashCode()); // Test if the equality of the hash code is equal to the expected result.
         }
 
         // ReSharper disable once UnusedMember.Local
@@ -83,12 +83,12 @@ namespace SimplePipeline.Tests
         [Theory]
         [MemberData(nameof(FilterDataExecuteFilterTestData))]
         [AssertionMethod]
-        public void FilterDataExecuteFilterTest(FilterData data, Boolean shouldSucceed, Object filterInput, Object expectedFilterOutput, Type expectedExceptionType)
+        public void FilterDataExecuteFilterTest(FilterData filter, Boolean shouldSucceed, Object filterInput, Object expectedFilterOutput, Type expectedExceptionType)
         {
             if (shouldSucceed)
-                Assert.Equal(expectedFilterOutput, data.ExecuteFilter(filterInput)); // Test if the output of the 'ExecuteFilter' method is equal to the expected output.
+                Assert.Equal(expectedFilterOutput, filter.ExecuteFilter(filterInput)); // Test if the output of the 'ExecuteFilter' method is equal to the expected output.
             else
-                Assert.Throws(expectedExceptionType, () => data.ExecuteFilter(filterInput)); // Test if the expected exception is thrown when the 'ExecuteFilter' method is expected to fail.
+                Assert.Throws(expectedExceptionType, () => filter.ExecuteFilter(filterInput)); // Test if the expected exception is thrown when the 'ExecuteFilter' method is expected to fail.
         }
 
         [Fact]

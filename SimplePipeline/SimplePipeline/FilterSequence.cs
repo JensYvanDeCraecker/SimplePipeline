@@ -22,20 +22,20 @@ namespace SimplePipeline
         /// <summary>
         ///     Create a new <see cref="FilterSequence" /> instance.
         /// </summary>
-        /// <param name="filterDatas">The collection of data to add to this sequence.</param>
+        /// <param name="filters">The collection of data to add to this sequence.</param>
         /// <exception cref="ArgumentNullException"></exception>
         // ReSharper disable once UnusedMember.Global
-        public FilterSequence(IEnumerable<FilterData> filterDatas)
+        public FilterSequence(IEnumerable<FilterData> filters)
         {
-            if (filterDatas == null)
-                throw new ArgumentNullException(nameof(filterDatas));
+            if (filters == null)
+                throw new ArgumentNullException(nameof(filters));
             try
             {
-                Load(filterDatas);
+                Load(filters);
             }
             catch (InvalidFilterException e)
             {
-                throw new ArgumentException("", nameof(filterDatas), e);
+                throw new ArgumentException("", nameof(filters), e);
             }
         }
 
@@ -99,9 +99,9 @@ namespace SimplePipeline
             }
         }
 
-        private void Load(IEnumerable<FilterData> filterDatas)
+        private void Load(IEnumerable<FilterData> filters)
         {
-            foreach (FilterData filterData in filterDatas)
+            foreach (FilterData filterData in filters)
                 Add(filterData);
         }
 
@@ -153,16 +153,16 @@ namespace SimplePipeline
         /// <summary>
         ///     Adds a non-generic filter to the end of the sequence.
         /// </summary>
-        /// <param name="filterData">The non-generic filter to add to the end of the sequence.</param>
+        /// <param name="filter">The non-generic filter to add to the end of the sequence.</param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="InvalidFilterException"></exception>
-        public void Add(FilterData filterData)
+        public void Add(FilterData filter)
         {
-            if (filterData == null)
-                throw new ArgumentNullException(nameof(filterData));
-            if (Count > 0 && !filterData.InputType.IsAssignableFrom(LastFilter.OutputType))
-                throw new InvalidFilterException(filterData.InputType, LastFilter.OutputType);
-            innerCollection.AddLast(filterData);
+            if (filter == null)
+                throw new ArgumentNullException(nameof(filter));
+            if (Count > 0 && !filter.InputType.IsAssignableFrom(LastFilter.OutputType))
+                throw new InvalidFilterException(filter.InputType, LastFilter.OutputType);
+            innerCollection.AddLast(filter);
         }
 
         /// <summary>
