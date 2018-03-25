@@ -1,0 +1,6 @@
+language: csharp
+dotnet: 2.0.0
+
+script:
+ - dotnet restore SimplePipeline/SimplePipeline/SimplePipeline.csproj 
+ - dotnet build SimplePipeline/SimplePipeline/SimplePipeline.csproj --configuration Release
