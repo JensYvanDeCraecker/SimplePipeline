@@ -9,9 +9,6 @@ namespace SimplePipeline
     /// </summary>
     public sealed class FilterSequence : IReadOnlyCollection<FilterData>
     {
-        //private readonly Queue<FilterData> innerCollection = new Queue<FilterData>();
-        //private FilterData first;
-        //private FilterData last;
         private readonly LinkedList<FilterData> innerCollection = new LinkedList<FilterData>();
 
         /// <summary>
