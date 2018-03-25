@@ -60,19 +60,17 @@
   <ItemGroup>
     <Compile Include="FilterSequenceTest.cs" />
     <Compile Include="FilterDataTest.cs" />
+    <Compile Include="Filters\CharEnumerableToStringFilter.cs" />
+    <Compile Include="Filters\EnumerableCountFilter.cs" />
+    <Compile Include="Filters\EnumerableToArrayFilter.cs" />
+    <Compile Include="Filters\ObjectToStringFilter.cs" />
+    <Compile Include="Filters\ParseIntegerFilter.cs" />
     <Compile Include="FilterTest.cs" />
+    <Compile Include="Pipelines\EnumerableToArrayPipeline.cs" />
     <Compile Include="PipelineTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SimplePipeline.Tests.Filters\SimplePipeline.Tests.Filters.csproj">
-      <Project>{a88bbd0c-0709-4a62-af43-9e8c7cec9e10}</Project>
-      <Name>SimplePipeline.Tests.Filters</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SimplePipeline.Tests.Pipelines\SimplePipeline.Tests.Pipelines.csproj">
-      <Project>{e7acab09-893d-4d76-8174-665af6f03afa}</Project>
-      <Name>SimplePipeline.Tests.Pipelines</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SimplePipeline\SimplePipeline.csproj">
       <Project>{885f31ac-bb57-40c4-b33e-0ce124c4ed27}</Project>
       <Name>SimplePipeline</Name>
