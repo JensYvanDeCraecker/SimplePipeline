@@ -9,5 +9,5 @@ script:
  - dotnet build SimplePipeline/SimplePipeline/SimplePipeline.csproj --configuration Release
  - msbuild SimplePipeline/SimplePipeline.sln /t:SimplePipeline_Tests /p:Configuration="Release" /p:Platform="Any CPU"
  - ls -l SimplePipeline/SimplePipeline.Tests/bin/Release
- - cp SimplePipeline\packages\xunit.extensibility.execution.2.3.1\lib\net452 SimplePipeline/SimplePipeline.Tests/bin/Release
+ - cp SimplePipeline/packages/xunit.extensibility.execution.2.3.1/lib/net452/xunit.execution.desktop.dll SimplePipeline/SimplePipeline.Tests/bin/Release
  - mono ./testrunner/xunit.runners.1.9.2/tools/xunit.console.clr4.exe SimplePipeline/SimplePipeline.Tests/bin/Release/SimplePipeline.Tests.dll
