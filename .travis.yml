@@ -3,10 +3,10 @@ solution: SimplePipeline/SimplePipeline.sln
 dotnet: 2.0.0
 install:
   - nuget restore SimplePipeline/SimplePipeline.sln
-  - nuget install xunit.runners -Version 2.0.0 -OutputDirectory testrunner
+  - nuget install xunit.runner.console -Version 2.3.1 -OutputDirectory testrunner
 script:
  - dotnet restore SimplePipeline/SimplePipeline/SimplePipeline.csproj 
  - dotnet build SimplePipeline/SimplePipeline/SimplePipeline.csproj --configuration Release
  - msbuild SimplePipeline/SimplePipeline.sln /t:SimplePipeline_Tests /p:Configuration="Release" /p:Platform="Any CPU"
  - ls -l SimplePipeline/SimplePipeline.Tests/bin/Release
- - mono ./testrunner/xunit.runners.*/tools/xunit.console.clr4.exe SimplePipeline/SimplePipeline.Tests/bin/Release/SimplePipeline.Tests.dll
+ - mono ./testrunner/xunit.runner.console.2.3.1/tools/xunit.console.exe SimplePipeline/SimplePipeline.Tests/bin/Release/SimplePipeline.Tests.dll
