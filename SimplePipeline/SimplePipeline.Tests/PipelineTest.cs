@@ -4,12 +4,14 @@ using System.Linq;
 using System.Reflection;
 using JetBrains.Annotations;
 using SimplePipeline.Tests.Filters;
+using SimplePipeline.Tests.Pipelines;
 using Xunit;
 
 namespace SimplePipeline.Tests
 {
     public class PipelineTest
     {
+        private readonly MethodInfo processPipelineToFilterDefinition = typeof(PipelineTest).GetMethod("ProcessPipelineToFilterTest", BindingFlags.NonPublic | BindingFlags.Static);
         private readonly MethodInfo processCreatePipelineTestDefinition = typeof(PipelineTest).GetMethod("ProcessCreatePipelineTest", BindingFlags.NonPublic | BindingFlags.Static);
         private readonly MethodInfo processExecutePipelineTestDefinition = typeof(PipelineTest).GetMethod("ProcessExecutePipelineTest", BindingFlags.NonPublic | BindingFlags.Static);
 
@@ -113,6 +115,34 @@ namespace SimplePipeline.Tests
         }
 
         // ReSharper disable once MemberCanBePrivate.Global
+        public static IEnumerable<Object[]> PipelineToFilterTestData
+        {
+            // ReSharper disable once UnusedMember.Global
+            get
+            {
+                yield return new Object[] { new EnumerableToArrayPipeline<Char>(), typeof(IEnumerable<Char>), typeof(Char[]) };
+                yield return new Object[] { new EnumerableToArrayPipeline<Char>(), typeof(IEnumerable<Char>), typeof(IEnumerable<Char>) };
+                yield return new Object[] { new EnumerableToArrayPipeline<Char>(), typeof(String), typeof(Char[]) };
+                yield return new Object[] { new EnumerableToArrayPipeline<Char>(), typeof(String), typeof(IEnumerable<Char>) };
+            }
+        }
+
+        [Theory]
+        [MemberData(nameof(PipelineToFilterTestData))]
+        [AssertionMethod]
+        public void PipelineToFilterTest(Object pipeline, Type pipelineInputType, Type pipelineOutputType)
+        {
+            processPipelineToFilterDefinition.MakeGenericMethod(pipelineInputType, pipelineOutputType).Invoke(null, new[] { pipeline });
+        }
+
+        // ReSharper disable once UnusedMember.Local
+        [AssertionMethod]
+        private static void ProcessPipelineToFilterTest<TPipelineInput, TPipelineOutput>(IPipeline<TPipelineInput, TPipelineOutput> pipeline)
+        {
+            Assert.NotNull(pipeline.ToFilter()); // Test if the 'ToFilter' method returns an instance.
+        }
+
+        // ReSharper disable once MemberCanBePrivate.Global
         public static IEnumerable<Object[]> ExecutePipelineTestData
         {
             // ReSharper disable once UnusedMember.Global
@@ -194,6 +224,13 @@ namespace SimplePipeline.Tests
         public void CreatePipelineSequenceNullTest()
         {
             Assert.Throws<ArgumentNullException>(() => new Pipeline<Object, Object>(null));
+        }
+
+        [Fact]
+        [AssertionMethod]
+        public void PipelineToFilterNullTest()
+        {
+            Assert.Throws<ArgumentNullException>(() => ((IPipeline<Object, Object>)null).ToFilter()); // Null can't be converted to a filter.
         }
     }
 }

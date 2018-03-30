@@ -5,6 +5,37 @@ using System.Linq;
 
 namespace SimplePipeline
 {
+    public static class Pipeline{
+        /// <summary>
+        ///     Converts a pipeline to a filter.
+        /// </summary>
+        /// <typeparam name="TInput">The type of the pipeline input.</typeparam>
+        /// <typeparam name="TOutput">The type of the pipeline output.</typeparam>
+        /// <param name="pipeline">The pipeline to convert to a filter.</param>
+        /// <returns>A newly constructed filter that is based on the provided pipeline.</returns>
+        public static IFilter<TInput, TOutput> ToFilter<TInput, TOutput>(this IPipeline<TInput, TOutput> pipeline)
+        {
+            if (pipeline == null)
+                throw new ArgumentNullException(nameof(pipeline));
+            return new PipelineFilter<TInput, TOutput>(pipeline);
+        }
+
+        private class PipelineFilter<TInput, TOutput> : IFilter<TInput, TOutput>
+        {
+            private readonly IPipeline<TInput, TOutput> pipeline;
+
+            public PipelineFilter(IPipeline<TInput, TOutput> pipeline)
+            {
+                this.pipeline = pipeline;
+            }
+
+            public TOutput Execute(TInput input)
+            {
+                return pipeline.Execute(input) ? pipeline.Output : throw pipeline.Exception;
+            }
+        }
+    }
+
     /// <summary>
     ///     Represents a concrete implementation of the <see cref="IPipeline{TInput,TOutput}" /> interface.
     /// </summary>
