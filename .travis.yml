@@ -5,4 +5,4 @@ dotnet: 2.0.0
 script:
  - dotnet restore SimplePipeline/SimplePipeline/SimplePipeline.csproj 
  - dotnet build SimplePipeline/SimplePipeline/SimplePipeline.csproj --configuration Release
- - msbuild SimplePipeline/SimplePipeline.sln /t:SimplePipeline.Tests /p:Configuration="Release" /p:Platform="x86" /p:BuildProjectReferences=false
+ - msbuild SimplePipeline/SimplePipeline.sln /t:SimplePipeline.Tests /p:Configuration="Release" /p:Platform="Any CPU" /p:BuildProjectReferences=false
