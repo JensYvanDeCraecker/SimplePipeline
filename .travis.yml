@@ -1,8 +1,11 @@
 language: csharp
 solution: SimplePipeline/SimplePipeline.sln
 dotnet: 2.0.0
-
+install:
+  - nuget restore SimplePipeline/SimplePipeline.sln
+  - nuget install xunit.runners -Version 1.9.2 -OutputDirectory testrunner
 script:
  - dotnet restore SimplePipeline/SimplePipeline/SimplePipeline.csproj 
  - dotnet build SimplePipeline/SimplePipeline/SimplePipeline.csproj --configuration Release
  - msbuild SimplePipeline/SimplePipeline.sln /t:SimplePipeline_Tests /p:Configuration="Release" /p:Platform="Any CPU" /p:BuildProjectReferences=false
+ - mono ./testrunner/xunit.runners.1.9.2/tools/xunit.console.clr4.exe SimplePipeline/SimplePipeline.Tests/bin/Release/SimplePipeline.Tests.dll
