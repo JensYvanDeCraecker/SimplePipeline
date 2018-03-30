@@ -65,7 +65,7 @@
     <Compile Include="Filters\EnumerableToArrayFilter.cs" />
     <Compile Include="Filters\ObjectToStringFilter.cs" />
     <Compile Include="Filters\ParseIntegerFilter.cs" />
-    <Compile Include="FilterTest.cs" />
+    <Compile Include="FunctionTest.cs" />
     <Compile Include="Pipelines\EnumerableToArrayPipeline.cs" />
     <Compile Include="PipelineTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
