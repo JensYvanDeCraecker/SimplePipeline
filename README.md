@@ -1,5 +1,6 @@
 # SimplePipeline
 [![Build Status](https://travis-ci.org/JensYvanDeCraecker/SimplePipeline.svg?branch=master)](https://travis-ci.org/JensYvanDeCraecker/SimplePipeline)
+[![Build status](https://ci.appveyor.com/api/projects/status/075htx0xlbjaraue?svg=true)](https://ci.appveyor.com/project/JensYvanDeCraecker/simplepipeline)
 
 SimplePipeline is an easy to use pipeline system. Our code uses custom interfaces making it highly extensible.
 
