@@ -7,5 +7,5 @@ install:
 script:
  - dotnet restore SimplePipeline/SimplePipeline/SimplePipeline.csproj 
  - dotnet build SimplePipeline/SimplePipeline/SimplePipeline.csproj --configuration Release
- - msbuild SimplePipeline/SimplePipeline.sln /t:SimplePipeline_Tests /p:Configuration="Release" /p:Platform="Any CPU" /p:BuildProjectReferences=false
+ - msbuild SimplePipeline/SimplePipeline.sln /t:SimplePipeline_Tests /p:Configuration="Release" /p:Platform="Any CPU"
  - mono ./testrunner/xunit.runners.1.9.2/tools/xunit.console.clr4.exe SimplePipeline/SimplePipeline.Tests/bin/Release/SimplePipeline.Tests.dll
