@@ -5,7 +5,7 @@ namespace SimplePipeline
     /// <summary>
     ///     Provides extension methods for the <see cref="IFilter{TInput,TOutput}" /> interface.
     /// </summary>
-    public static class Filter
+    public static class Function
     {
         /// <summary>
         ///     Converts a function to a filter.
@@ -20,20 +20,6 @@ namespace SimplePipeline
             if (func == null)
                 throw new ArgumentNullException(nameof(func));
             return new FuncFilter<TInput, TOutput>(func);
-        }
-
-        /// <summary>
-        ///     Converts a pipeline to a filter.
-        /// </summary>
-        /// <typeparam name="TInput">The type of the pipeline input.</typeparam>
-        /// <typeparam name="TOutput">The type of the pipeline output.</typeparam>
-        /// <param name="pipeline">The pipeline to convert to a filter.</param>
-        /// <returns>A newly constructed filter that is based on the provided pipeline.</returns>
-        public static IFilter<TInput, TOutput> ToFilter<TInput, TOutput>(this IPipeline<TInput, TOutput> pipeline)
-        {
-            if (pipeline == null)
-                throw new ArgumentNullException(nameof(pipeline));
-            return ToFilter<TInput, TOutput>(input => pipeline.Execute(input) ? pipeline.Output : throw pipeline.Exception);
         }
 
         private class FuncFilter<TInput, TOutput> : IFilter<TInput, TOutput>
