@@ -8,7 +8,7 @@ namespace SimplePipeline
     /// </summary>
     public sealed class FilterData : IEquatable<FilterData>
     {
-        private readonly MethodInfo executeFilter;
+        private readonly MethodInfo innerExecuteFilter;
 
         private FilterData(Object filter, Type inputType, Type outputType)
         {
@@ -16,7 +16,7 @@ namespace SimplePipeline
             InputType = inputType;
             OutputType = outputType;
             FilterType = typeof(IFilter<,>).MakeGenericType(inputType, outputType);
-            executeFilter = FilterType.GetMethod("Execute");
+            innerExecuteFilter = typeof(FilterData).GetMethod(nameof(InnerExecuteFilter), BindingFlags.NonPublic | BindingFlags.Static).MakeGenericMethod(InputType, OutputType);
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace SimplePipeline
         {
             try
             {
-                return executeFilter.Invoke(Filter, new[] { input });
+                return innerExecuteFilter.Invoke(null, new[] { Filter, input });
             }
             catch (TargetInvocationException e)
             {
@@ -118,6 +118,11 @@ namespace SimplePipeline
         public static Boolean operator !=(FilterData first, FilterData second)
         {
             return !(first == second);
+        }
+
+        private static TOutput InnerExecuteFilter<TInput, TOutput>(IFilter<TInput, TOutput> filter, TInput input)
+        {
+            return filter.Execute(input);
         }
     }
 }
