@@ -9,7 +9,7 @@ namespace SimplePipeline.Tests
 {
     public class FunctionTest
     {
-        private readonly MethodInfo processFunctionToFilterDefinition = typeof(FunctionTest).GetMethod("ProcessFunctionToFilterTest", BindingFlags.NonPublic | BindingFlags.Static);
+        private readonly MethodInfo processFunctionToFilterDefinition = typeof(FunctionTest).GetMethod(nameof(ProcessFunctionToFilterTest), BindingFlags.NonPublic | BindingFlags.Static);
 
         // ReSharper disable once MemberCanBePrivate.Global
         public static IEnumerable<Object[]> FunctionToFilterTestData

@@ -11,10 +11,10 @@ namespace SimplePipeline.Tests
 {
     public class FilterSequenceTest
     {
-        private readonly MethodInfo sequenceAddFilterDefinition = typeof(FilterSequenceTest).GetMethod("SequenceAddFilter", BindingFlags.NonPublic | BindingFlags.Static);
-        private readonly MethodInfo sequenceAddPipelineDefinition = typeof(FilterSequenceTest).GetMethod("SequenceAddPipeline", BindingFlags.NonPublic | BindingFlags.Static);
-        private readonly MethodInfo sequenceAddFunctionDefinition = typeof(FilterSequenceTest).GetMethod("SequenceAddFunction", BindingFlags.NonPublic | BindingFlags.Static);
-        private readonly MethodInfo sequenceAddFilterData = typeof(FilterSequenceTest).GetMethod("SequenceAddFilterData", BindingFlags.NonPublic | BindingFlags.Static);
+        private readonly MethodInfo sequenceAddFilterDefinition = typeof(FilterSequenceTest).GetMethod(nameof(SequenceAddFilter), BindingFlags.NonPublic | BindingFlags.Static);
+        private readonly MethodInfo sequenceAddPipelineDefinition = typeof(FilterSequenceTest).GetMethod(nameof(SequenceAddPipeline), BindingFlags.NonPublic | BindingFlags.Static);
+        private readonly MethodInfo sequenceAddFunctionDefinition = typeof(FilterSequenceTest).GetMethod(nameof(SequenceAddFunction), BindingFlags.NonPublic | BindingFlags.Static);
+        private readonly MethodInfo sequenceAddFilterDataDefinition = typeof(FilterSequenceTest).GetMethod(nameof(SequenceAddFilterData), BindingFlags.NonPublic | BindingFlags.Static);
 
         // ReSharper disable once MemberCanBePrivate.Global
         public static IEnumerable<Object[]> CreateSequenceFilledTestData
@@ -165,7 +165,7 @@ namespace SimplePipeline.Tests
                 switch (itemType)
                 {
                     case ItemType.FilterData:
-                        SequenceAdd(sequenceAddFilterData);
+                        SequenceAdd(sequenceAddFilterDataDefinition);
                         break;
                     case ItemType.Filter:
                         SequenceAdd(sequenceAddFilterDefinition.MakeGenericMethod(inputType, outputType));

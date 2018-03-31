@@ -11,9 +11,9 @@ namespace SimplePipeline.Tests
 {
     public class PipelineTest
     {
-        private readonly MethodInfo processPipelineToFilterDefinition = typeof(PipelineTest).GetMethod("ProcessPipelineToFilterTest", BindingFlags.NonPublic | BindingFlags.Static);
-        private readonly MethodInfo processCreatePipelineTestDefinition = typeof(PipelineTest).GetMethod("ProcessCreatePipelineTest", BindingFlags.NonPublic | BindingFlags.Static);
-        private readonly MethodInfo processExecutePipelineTestDefinition = typeof(PipelineTest).GetMethod("ProcessExecutePipelineTest", BindingFlags.NonPublic | BindingFlags.Static);
+        private readonly MethodInfo processPipelineToFilterTestDefinition = typeof(PipelineTest).GetMethod(nameof(ProcessPipelineToFilterTest), BindingFlags.NonPublic | BindingFlags.Static);
+        private readonly MethodInfo processCreatePipelineTestDefinition = typeof(PipelineTest).GetMethod(nameof(ProcessCreatePipelineTest), BindingFlags.NonPublic | BindingFlags.Static);
+        private readonly MethodInfo processExecutePipelineTestDefinition = typeof(PipelineTest).GetMethod(nameof(ProcessExecutePipelineTest), BindingFlags.NonPublic | BindingFlags.Static);
 
         // ReSharper disable once MemberCanBePrivate.Global
         public static IEnumerable<Object[]> CreatePipelineSequenceTestData
@@ -132,7 +132,7 @@ namespace SimplePipeline.Tests
         [AssertionMethod]
         public void PipelineToFilterTest(Object pipeline, Type pipelineInputType, Type pipelineOutputType)
         {
-            processPipelineToFilterDefinition.MakeGenericMethod(pipelineInputType, pipelineOutputType).Invoke(null, new[] { pipeline });
+            processPipelineToFilterTestDefinition.MakeGenericMethod(pipelineInputType, pipelineOutputType).Invoke(null, new[] { pipeline });
         }
 
         // ReSharper disable once UnusedMember.Local
