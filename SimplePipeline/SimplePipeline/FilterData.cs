@@ -15,7 +15,6 @@ namespace SimplePipeline
             Filter = filter;
             InputType = inputType;
             OutputType = outputType;
-            FilterType = typeof(IFilter<,>).MakeGenericType(inputType, outputType);
             innerExecuteFilter = typeof(FilterData).GetMethod(nameof(InnerExecuteFilter), BindingFlags.NonPublic | BindingFlags.Static).MakeGenericMethod(InputType, OutputType);
         }
 
@@ -33,11 +32,6 @@ namespace SimplePipeline
         ///     Gets the output type of the filter.
         /// </summary>
         public Type OutputType { get; }
-
-        /// <summary>
-        ///     Returns the <see cref="IFilter{TInput,TOutput}" /> type of the filter instance.
-        /// </summary>
-        public Type FilterType { get; }
 
         /// <summary>
         ///     Checks if the provided data is equal to this data.

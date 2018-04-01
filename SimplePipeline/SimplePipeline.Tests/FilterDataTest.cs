@@ -74,7 +74,6 @@ namespace SimplePipeline.Tests
         private static void ProcessCreateFilterDataTest<TFilterInput, TFilterOutput>(IFilter<TFilterInput, TFilterOutput> filter)
         {
             FilterData data = FilterData.Create(filter);
-            Assert.Equal(typeof(IFilter<TFilterInput, TFilterOutput>), data.FilterType); // Test if the 'FilterType' property is equal to the type of the filter interface with the generic arguments.
             Assert.Equal(typeof(TFilterInput), data.InputType); // Test if the 'InputType' property is equal to the input type of the filter.
             Assert.Equal(typeof(TFilterOutput), data.OutputType); // Test if the 'OutputType' property is equal to the output type of the filter.
             Assert.Same(filter, data.Filter); // Test if the 'Filter' property is the same as the filter.
