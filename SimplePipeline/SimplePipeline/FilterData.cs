@@ -8,14 +8,14 @@ namespace SimplePipeline
     /// </summary>
     public sealed class FilterData : IEquatable<FilterData>, IFilter<Object, Object>
     {
-        private readonly MethodInfo innerExecuteFilter;
+        private readonly MethodInfo executeFilter;
 
         private FilterData(Object filter, Type inputType, Type outputType)
         {
             Filter = filter;
             InputType = inputType;
             OutputType = outputType;
-            innerExecuteFilter = typeof(FilterData).GetMethod(nameof(ExecuteFilter), BindingFlags.NonPublic | BindingFlags.Static).MakeGenericMethod(InputType, OutputType);
+            executeFilter = typeof(FilterData).GetMethod(nameof(ExecuteFilter), BindingFlags.NonPublic | BindingFlags.Static).MakeGenericMethod(InputType, OutputType);
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace SimplePipeline
         {
             try
             {
-                return innerExecuteFilter.Invoke(null, new[] { Filter, input });
+                return executeFilter.Invoke(null, new[] { Filter, input });
             }
             catch (TargetInvocationException e)
             {
