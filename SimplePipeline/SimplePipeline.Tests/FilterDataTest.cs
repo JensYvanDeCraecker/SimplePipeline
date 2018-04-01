@@ -76,7 +76,7 @@ namespace SimplePipeline.Tests
             FilterData data = FilterData.Create(filter);
             Assert.Equal(typeof(TFilterInput), data.InputType); // Test if the 'InputType' property is equal to the input type of the filter.
             Assert.Equal(typeof(TFilterOutput), data.OutputType); // Test if the 'OutputType' property is equal to the output type of the filter.
-            Assert.Same(filter, data.Filter); // Test if the 'Filter' property is the same as the filter.
+            Assert.Same(filter, data.GetGenericFilter<TFilterInput, TFilterOutput>()); // Test if the 'Filter' property is the same as the filter.
         }
 
         [Theory]

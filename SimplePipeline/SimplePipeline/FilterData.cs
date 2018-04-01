@@ -9,19 +9,15 @@ namespace SimplePipeline
     public sealed class FilterData : IEquatable<FilterData>, IFilter<Object, Object>
     {
         private readonly MethodInfo executeFilter;
+        private readonly Object genericFilter;
 
-        private FilterData(Object filter, Type inputType, Type outputType)
+        private FilterData(Object genericFilter, Type inputType, Type outputType)
         {
-            Filter = filter;
+            this.genericFilter = genericFilter;
             InputType = inputType;
             OutputType = outputType;
             executeFilter = typeof(FilterData).GetMethod(nameof(ExecuteFilter), BindingFlags.NonPublic | BindingFlags.Static).MakeGenericMethod(InputType, OutputType);
         }
-
-        /// <summary>
-        ///     Gets the filter instance.
-        /// </summary>
-        public Object Filter { get; }
 
         /// <summary>
         ///     Gets the input type of the filter.
@@ -44,7 +40,29 @@ namespace SimplePipeline
                 return false;
             if (ReferenceEquals(this, other))
                 return true;
-            return Equals(Filter, other.Filter) && InputType == other.InputType && OutputType == other.OutputType;
+            return Equals(genericFilter, other.genericFilter) && InputType == other.InputType && OutputType == other.OutputType;
+        }
+
+        public IFilter<TInput, TOutput> GetGenericFilter<TInput, TOutput>()
+        {
+            return genericFilter is IFilter<TInput, TOutput> filter ? filter : throw new ArgumentException();
+        }
+
+        /// <summary>
+        ///     Executes the filter of this non-generic filter.
+        /// </summary>
+        /// <param name="input">The input for the filter to process.</param>
+        /// <returns>The processed output of the filter.</returns>
+        public Object Execute(Object input)
+        {
+            try
+            {
+                return executeFilter.Invoke(null, new[] { genericFilter, input });
+            }
+            catch (TargetInvocationException e)
+            {
+                throw e.InnerException;
+            }
         }
 
         /// <summary>
@@ -80,27 +98,10 @@ namespace SimplePipeline
         {
             unchecked
             {
-                Int32 hashCode = Filter.GetHashCode();
+                Int32 hashCode = genericFilter.GetHashCode();
                 hashCode = (hashCode * 397) ^ InputType.GetHashCode();
                 hashCode = (hashCode * 397) ^ OutputType.GetHashCode();
                 return hashCode;
-            }
-        }
-
-        /// <summary>
-        ///     Executes the filter of this non-generic filter.
-        /// </summary>
-        /// <param name="input">The input for the filter to process.</param>
-        /// <returns>The processed output of the filter.</returns>
-        public Object Execute(Object input)
-        {
-            try
-            {
-                return executeFilter.Invoke(null, new[] { Filter, input });
-            }
-            catch (TargetInvocationException e)
-            {
-                throw e.InnerException;
             }
         }
 
