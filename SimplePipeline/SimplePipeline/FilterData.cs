@@ -43,11 +43,6 @@ namespace SimplePipeline
             return Equals(genericFilter, other.genericFilter) && InputType == other.InputType && OutputType == other.OutputType;
         }
 
-        public IFilter<TInput, TOutput> GetGenericFilter<TInput, TOutput>()
-        {
-            return genericFilter is IFilter<TInput, TOutput> filter ? filter : throw new ArgumentException();
-        }
-
         /// <summary>
         ///     Executes the filter of this non-generic filter.
         /// </summary>
@@ -63,6 +58,11 @@ namespace SimplePipeline
             {
                 throw e.InnerException;
             }
+        }
+
+        public IFilter<TInput, TOutput> GetGenericFilter<TInput, TOutput>()
+        {
+            return genericFilter is IFilter<TInput, TOutput> filter ? filter : throw new ArgumentException();
         }
 
         /// <summary>
