@@ -6,7 +6,7 @@ namespace SimplePipeline
     /// <summary>
     ///     Represents a filter in a non-generic environment.
     /// </summary>
-    public sealed class FilterData : IEquatable<FilterData>
+    public sealed class FilterData : IEquatable<FilterData>, IFilter<Object, Object>
     {
         private readonly MethodInfo innerExecuteFilter;
 
@@ -15,7 +15,7 @@ namespace SimplePipeline
             Filter = filter;
             InputType = inputType;
             OutputType = outputType;
-            innerExecuteFilter = typeof(FilterData).GetMethod(nameof(InnerExecuteFilter), BindingFlags.NonPublic | BindingFlags.Static).MakeGenericMethod(InputType, OutputType);
+            innerExecuteFilter = typeof(FilterData).GetMethod(nameof(ExecuteFilter), BindingFlags.NonPublic | BindingFlags.Static).MakeGenericMethod(InputType, OutputType);
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace SimplePipeline
         /// </summary>
         /// <param name="input">The input for the filter to process.</param>
         /// <returns>The processed output of the filter.</returns>
-        public Object ExecuteFilter(Object input)
+        public Object Execute(Object input)
         {
             try
             {
@@ -114,7 +114,7 @@ namespace SimplePipeline
             return !(first == second);
         }
 
-        private static TOutput InnerExecuteFilter<TInput, TOutput>(IFilter<TInput, TOutput> filter, TInput input)
+        private static TOutput ExecuteFilter<TInput, TOutput>(IFilter<TInput, TOutput> filter, TInput input)
         {
             return filter.Execute(input);
         }
