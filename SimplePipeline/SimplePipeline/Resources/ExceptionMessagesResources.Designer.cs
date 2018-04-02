@@ -61,6 +61,15 @@ namespace SimplePipeline.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The provided input or output type do not match those of the underlying filter..
+        /// </summary>
+        internal static string GetGenericFilterExceptionMessage {
+            get {
+                return ResourceManager.GetString("GetGenericFilterExceptionMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The provided FilterCollection cannot be used for this pipeline..
         /// </summary>
         internal static string InvalidFilterCollectionExceptionMessage {
