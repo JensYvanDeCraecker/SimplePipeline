@@ -85,9 +85,9 @@ namespace SimplePipeline.Tests
         public void FilterDataExecuteFilterTest(FilterData filter, Boolean shouldSucceed, Object filterInput, Object expectedFilterOutput, Type expectedExceptionType)
         {
             if (shouldSucceed)
-                Assert.Equal(expectedFilterOutput, filter.Execute(filterInput)); // Test if the output of the 'ExecuteFilter' method is equal to the expected output.
+                Assert.Equal(expectedFilterOutput, filter.Execute(filterInput)); // Test if the output of the 'Execute' method is equal to the expected output.
             else
-                Assert.Throws(expectedExceptionType, () => filter.Execute(filterInput)); // Test if the expected exception is thrown when the 'ExecuteFilter' method is expected to fail.
+                Assert.Throws(expectedExceptionType, () => filter.Execute(filterInput)); // Test if the expected exception is thrown when the 'Execute' method is expected to fail.
         }
 
         [Fact]
