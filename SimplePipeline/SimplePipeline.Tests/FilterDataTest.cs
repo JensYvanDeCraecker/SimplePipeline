@@ -10,6 +10,7 @@ namespace SimplePipeline.Tests
     public class FilterDataTest
     {
         private readonly MethodInfo processCreateFilterDataDefinition = typeof(FilterDataTest).GetMethod(nameof(ProcessCreateFilterDataTest), BindingFlags.NonPublic | BindingFlags.Static);
+        private readonly MethodInfo processGetGenericFilterTestDefinition = typeof(FilterDataTest).GetMethod(nameof(ProcessGetGenericFilterTest), BindingFlags.NonPublic | BindingFlags.Static);
 
         // ReSharper disable once MemberCanBePrivate.Global
         public static IEnumerable<Object[]> CreateFilterDataTestData
@@ -50,6 +51,22 @@ namespace SimplePipeline.Tests
             }
         }
 
+        // ReSharper disable once MemberCanBePrivate.Global
+        public static IEnumerable<Object[]> GetGenericFilterTestData
+        {
+            // ReSharper disable once UnusedMember.Global
+            get
+            {
+                yield return new Object[] { FilterData.Create(new CharEnumerableToStringFilter()), typeof(IEnumerable<Char>), typeof(String), true };
+                yield return new Object[] { FilterData.Create(new CharEnumerableToStringFilter()), typeof(String), typeof(String), true };
+                yield return new Object[] { FilterData.Create(new CharEnumerableToStringFilter()), typeof(IEnumerable<Char>), typeof(IEnumerable<Char>), true };
+                yield return new Object[] { FilterData.Create(new CharEnumerableToStringFilter()), typeof(String), typeof(IEnumerable<Char>), true };
+                yield return new Object[] { FilterData.Create(new CharEnumerableToStringFilter()), typeof(IEnumerable<Char>), typeof(IEnumerable<String>), false };
+                yield return new Object[] { FilterData.Create(new CharEnumerableToStringFilter()), typeof(IEnumerable<String>), typeof(String), false };
+                yield return new Object[] { FilterData.Create(new CharEnumerableToStringFilter()), typeof(IEnumerable<String>), typeof(IEnumerable<String>), false };
+            }
+        }
+
         [Theory]
         [MemberData(nameof(CreateFilterDataTestData))]
         [AssertionMethod]
@@ -69,7 +86,6 @@ namespace SimplePipeline.Tests
             Assert.Equal(expectedResult, firstFilter.GetHashCode() == secondFilter.GetHashCode()); // Test if the equality of the hash code is equal to the expected result.
         }
 
-        // ReSharper disable once UnusedMember.Local
         [AssertionMethod]
         private static void ProcessCreateFilterDataTest<TFilterInput, TFilterOutput>(IFilter<TFilterInput, TFilterOutput> filter)
         {
@@ -88,6 +104,28 @@ namespace SimplePipeline.Tests
                 Assert.Equal(expectedFilterOutput, filter.Execute(filterInput)); // Test if the output of the 'Execute' method is equal to the expected output.
             else
                 Assert.Throws(expectedExceptionType, () => filter.Execute(filterInput)); // Test if the expected exception is thrown when the 'Execute' method is expected to fail.
+        }
+
+        [Theory]
+        [MemberData(nameof(GetGenericFilterTestData))]
+        [AssertionMethod]
+        public void GetGenericFilterTest(FilterData filter, Type filterInputType, Type filterOutputType, Boolean shouldSucceed)
+        {
+            processGetGenericFilterTestDefinition.MakeGenericMethod(filterInputType, filterOutputType).Invoke(null, new Object[] { filter, shouldSucceed });
+        }
+
+        [AssertionMethod]
+        private static void ProcessGetGenericFilterTest<TFilterInput, TFilterOutput>(FilterData filter, Boolean shouldSucceed)
+        {
+            void GetGenericFilter()
+            {
+                filter.GetGenericFilter<TFilterInput, TFilterOutput>();
+            }
+
+            if (shouldSucceed)
+                GetGenericFilter();
+            else
+                Assert.Throws<ArgumentException>(() => GetGenericFilter());
         }
 
         [Fact]
