@@ -186,30 +186,20 @@ namespace SimplePipeline.Tests
         private static void ProcessExecutePipelineTest<TPipelineInput, TPipelineOutput>(IPipeline<TPipelineInput, TPipelineOutput> pipeline, TPipelineInput pipelineInput, TPipelineOutput expectedPipelineOutput, Type expectedPipelineExceptionType, Boolean shouldSucceed)
         {
             Assert.Equal(shouldSucceed, pipeline.Execute(pipelineInput));
+            Assert.False(pipeline.IsBeginState);
             if (shouldSucceed)
-            {
-                Assert.Null(pipeline.Exception);
-                if (pipeline.IsBeginState)
-                    Assert.Equal(default(TPipelineOutput), pipeline.Output);
-                else
-                    Assert.NotEqual(default(TPipelineOutput), pipeline.Output);
+            {                
                 Assert.Equal(expectedPipelineOutput, pipeline.Output);
+                Assert.Throws<InvalidOperationException>(() => pipeline.Exception);
             }
             else
             {
-                Assert.False(pipeline.IsBeginState);
-                Assert.Equal(default(TPipelineOutput), pipeline.Output);
-                Assert.NotNull(pipeline.Exception);
                 Assert.IsType(expectedPipelineExceptionType, pipeline.Exception);
-                pipeline.Reset();
-                Assert.True(pipeline.IsBeginState);
+                Assert.Throws<InvalidOperationException>(() => pipeline.Output);
             }
-            if (pipeline.IsBeginState)
-                return;
             pipeline.Reset();
-            Assert.True(pipeline.IsBeginState);
-            Assert.Equal(default(TPipelineOutput), pipeline.Output);
-            Assert.Null(pipeline.Exception);
+            Assert.Throws<InvalidOperationException>(() => pipeline.Exception);
+            Assert.Throws<InvalidOperationException>(() => pipeline.Output);
         }
 
         [Fact]

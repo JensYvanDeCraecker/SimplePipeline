@@ -5,7 +5,8 @@ using System.Linq;
 
 namespace SimplePipeline
 {
-    public static class Pipeline{
+    public static class Pipeline
+    {
         /// <summary>
         ///     Converts a pipeline to a filter.
         /// </summary>
@@ -44,6 +45,8 @@ namespace SimplePipeline
     public class Pipeline<TInput, TOutput> : IPipeline<TInput, TOutput>
     {
         private readonly IEnumerable<FilterData> filters;
+        private ExceptionResult exceptionResult;
+        private OutputResult outputResult;
 
         /// <summary>
         ///     Creates a new <see cref="Pipeline{TInput,TOutput}" /> instance.
@@ -75,17 +78,33 @@ namespace SimplePipeline
         }
 
         /// <inheritdoc />
-        public TOutput Output { get; private set; }
+        public TOutput Output
+        {
+            get
+            {
+                if (outputResult != null)
+                    return outputResult.Output;
+                throw new InvalidOperationException();
+            }
+        }
 
         /// <inheritdoc />
-        public Exception Exception { get; private set; }
+        public Exception Exception
+        {
+            get
+            {
+                if (exceptionResult != null)
+                    return exceptionResult.Exception;
+                throw new InvalidOperationException();
+            }
+        }
 
         /// <inheritdoc />
         public Boolean IsBeginState
         {
             get
             {
-                return Equals(Output, default(TOutput)) && Equals(Exception, default(Exception));
+                return outputResult == null && exceptionResult == null;
             }
         }
 
@@ -95,12 +114,13 @@ namespace SimplePipeline
             Reset();
             try
             {
-                Output = (TOutput)this.Aggregate<FilterData, Object>(input, (value, filter) => filter.Execute(value));
+                outputResult = new OutputResult((TOutput)this.Aggregate<FilterData, Object>(input, (value, filter) => filter.Execute(value)));
+                ;
                 return true;
             }
             catch (Exception e)
             {
-                Exception = e;
+                exceptionResult = new ExceptionResult(e);
                 return false;
             }
         }
@@ -110,14 +130,34 @@ namespace SimplePipeline
         {
             if (IsBeginState)
                 return;
-            Exception = default(Exception);
-            Output = default(TOutput);
+            outputResult = null;
+            exceptionResult = null;
         }
 
         /// <inheritdoc />
         public IEnumerator<FilterData> GetEnumerator()
         {
             return filters.GetEnumerator();
+        }
+
+        private class OutputResult
+        {
+            public OutputResult(TOutput output)
+            {
+                Output = output;
+            }
+
+            public TOutput Output { get; }
+        }
+
+        private class ExceptionResult
+        {
+            public ExceptionResult(Exception exception)
+            {
+                Exception = exception;
+            }
+
+            public Exception Exception { get; }
         }
     }
 }

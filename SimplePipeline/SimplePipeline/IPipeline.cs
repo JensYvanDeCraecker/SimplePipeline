@@ -11,13 +11,17 @@ namespace SimplePipeline
     public interface IPipeline<in TInput, out TOutput> : IEnumerable<FilterData>
     {
         /// <summary>
-        ///     Gets the output of a processed input, if successful. If not, the default value is returned.
+        ///     Gets the output of a processed input, if successful. If unsuccessful, an <see cref="InvalidOperationException" />
+        ///     is thrown.
         /// </summary>
+        /// <exception cref="InvalidOperationException"></exception>
         TOutput Output { get; }
 
         /// <summary>
-        ///     Gets the exception of a processed input, if unsuccessful. If successful, the default value is returned.
+        ///     Gets the exception of a processed input, if unsuccessful. If successful, an
+        ///     <see cref="InvalidOperationException" /> is thrown.
         /// </summary>
+        /// <exception cref="InvalidOperationException"></exception>
         Exception Exception { get; }
 
         /// <summary>
@@ -26,7 +30,7 @@ namespace SimplePipeline
         Boolean IsBeginState { get; }
 
         /// <summary>
-        ///     Processes the input in a collection of filters and returns a boolean that determines if the processing was
+        ///     Processes the input in a sequence of filters and returns a boolean that determines if the processing was
         ///     successful.
         /// </summary>
         /// <param name="input">The input to process in a collection of filters.</param>
