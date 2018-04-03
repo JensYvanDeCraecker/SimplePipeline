@@ -63,7 +63,7 @@ namespace SimplePipeline
 
         public IFilter<TInput, TOutput> GetGenericFilter<TInput, TOutput>()
         {
-            return genericFilter is IFilter<TInput, TOutput> filter ? filter : throw new ArgumentException(message: ExceptionMessagesResources.GetGenericFilterExceptionMessage, paramName: nameof(TInput) + " or " + nameof(TOutput));
+            return genericFilter is IFilter<TInput, TOutput> filter ? filter : throw new ArgumentException(ExceptionMessagesResources.GetGenericFilterExceptionMessage, nameof(TInput) + " or " + nameof(TOutput));
         }
 
         /// <summary>
