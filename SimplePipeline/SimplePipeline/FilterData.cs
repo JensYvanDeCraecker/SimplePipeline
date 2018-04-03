@@ -1,28 +1,24 @@
 ﻿using System;
 using System.Reflection;
+using SimplePipeline.Resources;
 
 namespace SimplePipeline
 {
     /// <summary>
     ///     Represents a filter in a non-generic environment.
     /// </summary>
-    public sealed class FilterData : IEquatable<FilterData>
+    public sealed class FilterData : IEquatable<FilterData>, IFilter<Object, Object>
     {
-        private readonly MethodInfo innerExecuteFilter;
+        private readonly MethodInfo executeFilter;
+        private readonly Object genericFilter;
 
-        private FilterData(Object filter, Type inputType, Type outputType)
+        private FilterData(Object genericFilter, Type inputType, Type outputType)
         {
-            Filter = filter;
+            this.genericFilter = genericFilter;
             InputType = inputType;
             OutputType = outputType;
-            FilterType = typeof(IFilter<,>).MakeGenericType(inputType, outputType);
-            innerExecuteFilter = typeof(FilterData).GetMethod(nameof(InnerExecuteFilter), BindingFlags.NonPublic | BindingFlags.Static).MakeGenericMethod(InputType, OutputType);
+            executeFilter = typeof(FilterData).GetMethod(nameof(ExecuteFilter), BindingFlags.NonPublic | BindingFlags.Static).MakeGenericMethod(InputType, OutputType);
         }
-
-        /// <summary>
-        ///     Gets the filter instance.
-        /// </summary>
-        public Object Filter { get; }
 
         /// <summary>
         ///     Gets the input type of the filter.
@@ -35,11 +31,6 @@ namespace SimplePipeline
         public Type OutputType { get; }
 
         /// <summary>
-        ///     Returns the <see cref="IFilter{TInput,TOutput}" /> type of the filter instance.
-        /// </summary>
-        public Type FilterType { get; }
-
-        /// <summary>
         ///     Checks if the provided data is equal to this data.
         /// </summary>
         /// <param name="other">The data to check for equality.</param>
@@ -50,7 +41,29 @@ namespace SimplePipeline
                 return false;
             if (ReferenceEquals(this, other))
                 return true;
-            return Equals(Filter, other.Filter) && InputType == other.InputType && OutputType == other.OutputType;
+            return Equals(genericFilter, other.genericFilter) && InputType == other.InputType && OutputType == other.OutputType;
+        }
+
+        /// <summary>
+        ///     Executes the filter of this non-generic filter.
+        /// </summary>
+        /// <param name="input">The input for the filter to process.</param>
+        /// <returns>The processed output of the filter.</returns>
+        public Object Execute(Object input)
+        {
+            try
+            {
+                return executeFilter.Invoke(null, new[] { genericFilter, input });
+            }
+            catch (TargetInvocationException e)
+            {
+                throw e.InnerException;
+            }
+        }
+
+        public IFilter<TInput, TOutput> GetGenericFilter<TInput, TOutput>()
+        {
+            return genericFilter is IFilter<TInput, TOutput> filter ? filter : throw new ArgumentException(ExceptionMessagesResources.GetGenericFilterExceptionMessage, nameof(TInput) + " or " + nameof(TOutput));
         }
 
         /// <summary>
@@ -86,27 +99,10 @@ namespace SimplePipeline
         {
             unchecked
             {
-                Int32 hashCode = Filter.GetHashCode();
+                Int32 hashCode = genericFilter.GetHashCode();
                 hashCode = (hashCode * 397) ^ InputType.GetHashCode();
                 hashCode = (hashCode * 397) ^ OutputType.GetHashCode();
                 return hashCode;
-            }
-        }
-
-        /// <summary>
-        ///     Executes the filter of this non-generic filter.
-        /// </summary>
-        /// <param name="input">The input for the filter to process.</param>
-        /// <returns>The processed output of the filter.</returns>
-        public Object ExecuteFilter(Object input)
-        {
-            try
-            {
-                return innerExecuteFilter.Invoke(null, new[] { Filter, input });
-            }
-            catch (TargetInvocationException e)
-            {
-                throw e.InnerException;
             }
         }
 
@@ -120,7 +116,7 @@ namespace SimplePipeline
             return !(first == second);
         }
 
-        private static TOutput InnerExecuteFilter<TInput, TOutput>(IFilter<TInput, TOutput> filter, TInput input)
+        private static TOutput ExecuteFilter<TInput, TOutput>(IFilter<TInput, TOutput> filter, TInput input)
         {
             return filter.Execute(input);
         }
