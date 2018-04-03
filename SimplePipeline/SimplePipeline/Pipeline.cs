@@ -118,7 +118,6 @@ namespace SimplePipeline
             try
             {
                 outputResult = new OutputResult((TOutput)this.Aggregate<FilterData, Object>(input, (value, filter) => filter.Execute(value)));
-                ;
                 return true;
             }
             catch (Exception e)
