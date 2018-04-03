@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace SimplePipeline
 {
+    /// <summary>
+    ///     Provides extension methods for the <see cref="IPipeline{TInput,TOutput}" /> interface.
+    /// </summary>
     public static class Pipeline
     {
         /// <summary>
