@@ -11,7 +11,7 @@ namespace SimplePipeline.Tests
 {
     public class PipelineTest
     {
-        private readonly MethodInfo processCreatePipelineEnumerableTestDefinition = typeof(PipelineTest).GetMethod(nameof(ProcessCreatePipelineSequenceTest), BindingFlags.NonPublic | BindingFlags.Static);
+        private readonly MethodInfo processCreatePipelineEnumerableTestDefinition = typeof(PipelineTest).GetMethod(nameof(ProcessCreatePipelineEnumerableTest), BindingFlags.NonPublic | BindingFlags.Static);
         private readonly MethodInfo processCreatePipelineSequenceTestDefinition = typeof(PipelineTest).GetMethod(nameof(ProcessCreatePipelineSequenceTest), BindingFlags.NonPublic | BindingFlags.Static);
         private readonly MethodInfo processExecutePipelineTestDefinition = typeof(PipelineTest).GetMethod(nameof(ProcessExecutePipelineTest), BindingFlags.NonPublic | BindingFlags.Static);
         private readonly MethodInfo processPipelineToFilterTestDefinition = typeof(PipelineTest).GetMethod(nameof(ProcessPipelineToFilterTest), BindingFlags.NonPublic | BindingFlags.Static);
@@ -283,7 +283,7 @@ namespace SimplePipeline.Tests
                 Assert.Equal(filters.First(), pipeline.First());
 
                 // ReSharper disable once PossibleMultipleEnumeration
-                Assert.Equal(filters.First(), pipeline.Last());
+                Assert.Equal(filters.Last(), pipeline.Last());
             }
             else
                 Assert.Throws<InvalidFilterCollectionException>(() => CreatePipelineEnumerable());
