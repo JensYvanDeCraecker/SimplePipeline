@@ -48,8 +48,8 @@ namespace SimplePipeline
     public class Pipeline<TInput, TOutput> : IPipeline<TInput, TOutput>
     {
         private readonly IEnumerable<FilterData> filters;
-        private ExceptionResult exceptionResult;
-        private OutputResult outputResult;
+        private Tuple<Exception> exceptionResult;
+        private Tuple<TOutput> outputResult;
 
         /// <summary>
         ///     Creates a new <see cref="Pipeline{TInput,TOutput}" /> instance.
@@ -86,7 +86,7 @@ namespace SimplePipeline
             get
             {
                 if (outputResult != null)
-                    return outputResult.Output;
+                    return outputResult.Item1;
                 throw new InvalidOperationException();
             }
         }
@@ -97,7 +97,7 @@ namespace SimplePipeline
             get
             {
                 if (exceptionResult != null)
-                    return exceptionResult.Exception;
+                    return exceptionResult.Item1;
                 throw new InvalidOperationException();
             }
         }
@@ -117,12 +117,12 @@ namespace SimplePipeline
             Reset();
             try
             {
-                outputResult = new OutputResult((TOutput)this.Aggregate<FilterData, Object>(input, (value, filter) => filter.Execute(value)));
+                outputResult = Tuple.Create((TOutput)this.Aggregate<FilterData, Object>(input, (value, filter) => filter.Execute(value)));
                 return true;
             }
             catch (Exception e)
             {
-                exceptionResult = new ExceptionResult(e);
+                exceptionResult = Tuple.Create(e);
                 return false;
             }
         }
@@ -140,26 +140,6 @@ namespace SimplePipeline
         public IEnumerator<FilterData> GetEnumerator()
         {
             return filters.GetEnumerator();
-        }
-
-        private class OutputResult
-        {
-            public OutputResult(TOutput output)
-            {
-                Output = output;
-            }
-
-            public TOutput Output { get; }
-        }
-
-        private class ExceptionResult
-        {
-            public ExceptionResult(Exception exception)
-            {
-                Exception = exception;
-            }
-
-            public Exception Exception { get; }
         }
     }
 }
