@@ -24,22 +24,12 @@ namespace SimplePipeline.Tests
             {
                 yield return new Object[]
                 {
-                    new Pipeline<IEnumerable<Char>, Int32>(new FilterSequence()
-                    {
-                        new EnumerableToArrayFilter<Char>(),
-                        new CharEnumerableToStringFilter(),
-                        new EnumerableCountFilter<Char>()
-                    }),
+                    new CountElementsPipeline<Char>(),
                     typeof(String), typeof(Int32), "Pipeline", 8, null, true
                 };
                 yield return new Object[]
                 {
-                    new Pipeline<IEnumerable<Char>, Int32>(new FilterSequence()
-                    {
-                        new EnumerableToArrayFilter<Char>(),
-                        new CharEnumerableToStringFilter(),
-                        new EnumerableCountFilter<Char>()
-                    }),
+                    new CountElementsPipeline<Char>(),
                     typeof(String), typeof(Int32), null, 0, typeof(ArgumentNullException), false
                 };
                 yield return new Object[] { new Pipeline<IEnumerable<Char>, IEnumerable<Char>>(new FilterSequence()), typeof(IEnumerable<Char>), typeof(IEnumerable<Char>), null, null, null, true };
@@ -55,22 +45,12 @@ namespace SimplePipeline.Tests
             {
                 yield return new Object[]
                 {
-                    new Pipeline<IEnumerable<Char>, Int32>(new FilterSequence()
-                    {
-                        new EnumerableToArrayFilter<Char>(),
-                        new CharEnumerableToStringFilter(),
-                        new EnumerableCountFilter<Char>()
-                    }),
+                    new CountElementsPipeline<Char>(),
                     typeof(String), typeof(Int32), "Pipeline", 8, null, true
                 };
                 yield return new Object[]
                 {
-                    new Pipeline<IEnumerable<Char>, Int32>(new FilterSequence()
-                    {
-                        new EnumerableToArrayFilter<Char>(),
-                        new CharEnumerableToStringFilter(),
-                        new EnumerableCountFilter<Char>()
-                    }),
+                    new CountElementsPipeline<Char>(),
                     typeof(String), typeof(Int32), null, 0, typeof(ArgumentNullException), false
                 };
                 yield return new Object[] { new Pipeline<IEnumerable<Char>, IEnumerable<Char>>(new FilterSequence()), typeof(IEnumerable<Char>), typeof(IEnumerable<Char>), null, null, null, true };
