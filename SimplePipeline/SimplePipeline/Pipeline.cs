@@ -35,7 +35,15 @@ namespace SimplePipeline
 
             public TOutput Execute(TInput input)
             {
-                return pipeline.Execute(input) ? pipeline.Output : throw pipeline.Exception;
+                try
+                {
+                    return pipeline.Execute(input) ? pipeline.Output : throw pipeline.Exception;
+                }
+                finally
+                {
+                    pipeline.Reset();
+                }
+
             }
         }
     }

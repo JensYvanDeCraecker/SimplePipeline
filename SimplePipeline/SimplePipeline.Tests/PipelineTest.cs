@@ -22,10 +22,28 @@ namespace SimplePipeline.Tests
             // ReSharper disable once UnusedMember.Global
             get
             {
-                yield return new Object[] { new EnumerableToArrayPipeline<Char>(), typeof(IEnumerable<Char>), typeof(Char[]) };
-                yield return new Object[] { new EnumerableToArrayPipeline<Char>(), typeof(IEnumerable<Char>), typeof(IEnumerable<Char>) };
-                yield return new Object[] { new EnumerableToArrayPipeline<Char>(), typeof(String), typeof(Char[]) };
-                yield return new Object[] { new EnumerableToArrayPipeline<Char>(), typeof(String), typeof(IEnumerable<Char>) };
+                yield return new Object[]
+                {
+                    new Pipeline<IEnumerable<Char>, Int32>(new FilterSequence()
+                    {
+                        new EnumerableToArrayFilter<Char>(),
+                        new CharEnumerableToStringFilter(),
+                        new EnumerableCountFilter<Char>()
+                    }),
+                    typeof(String), typeof(Int32), "Pipeline", 8, null, true
+                };
+                yield return new Object[]
+                {
+                    new Pipeline<IEnumerable<Char>, Int32>(new FilterSequence()
+                    {
+                        new EnumerableToArrayFilter<Char>(),
+                        new CharEnumerableToStringFilter(),
+                        new EnumerableCountFilter<Char>()
+                    }),
+                    typeof(String), typeof(Int32), null, 0, typeof(ArgumentNullException), false
+                };
+                yield return new Object[] { new Pipeline<IEnumerable<Char>, IEnumerable<Char>>(new FilterSequence()), typeof(IEnumerable<Char>), typeof(IEnumerable<Char>), null, null, null, true };
+                yield return new Object[] { new Pipeline<IEnumerable<Char>, IEnumerable<Char>>(new FilterSequence()), typeof(IEnumerable<Char>), typeof(IEnumerable<Char>), "Pipeline", "Pipeline", null, true };
             }
         }
 
@@ -179,16 +197,23 @@ namespace SimplePipeline.Tests
         [Theory]
         [MemberData(nameof(PipelineToFilterTestData))]
         [AssertionMethod]
-        public void PipelineToFilterTest(Object pipeline, Type pipelineInputType, Type pipelineOutputType)
+        public void PipelineToFilterTest(Object pipeline, Type pipelineInputType, Type pipelineOutputType, Object pipelineInput, Object expectedPipelineOutput, Type expectedPipelineExceptionType, Boolean shouldSucceed)
         {
-            processPipelineToFilterTestDefinition.MakeGenericMethod(pipelineInputType, pipelineOutputType).Invoke(null, new[] { pipeline });
+            processPipelineToFilterTestDefinition.MakeGenericMethod(pipelineInputType, pipelineOutputType).Invoke(null, new[] { pipeline, pipelineInput, expectedPipelineOutput, expectedPipelineExceptionType, shouldSucceed });
         }
 
         // ReSharper disable once UnusedMember.Local
         [AssertionMethod]
-        private static void ProcessPipelineToFilterTest<TPipelineInput, TPipelineOutput>(IPipeline<TPipelineInput, TPipelineOutput> pipeline)
+        private static void ProcessPipelineToFilterTest<TPipelineInput, TPipelineOutput>(IPipeline<TPipelineInput, TPipelineOutput> pipeline, TPipelineInput pipelineInput, TPipelineOutput expectedPipelineOutput, Type expectedPipelineExceptionType, Boolean shouldSucceed)
         {
-            Assert.NotNull(pipeline.ToFilter()); // Test if the 'ToFilter' method returns an instance.
+            IFilter<TPipelineInput, TPipelineOutput> filter = pipeline.ToFilter();
+            if (shouldSucceed)
+                Assert.Equal(expectedPipelineOutput, filter.Execute(pipelineInput));
+            else
+                Assert.Throws(expectedPipelineExceptionType, () => filter.Execute(pipelineInput));
+            Assert.True(pipeline.IsBeginState);
+            Assert.Throws<InvalidOperationException>(() => pipeline.Exception);
+            Assert.Throws<InvalidOperationException>(() => pipeline.Output);
         }
 
         [Theory]
