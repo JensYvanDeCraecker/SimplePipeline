@@ -24,6 +24,65 @@ namespace SimplePipeline
             return new PipelineFilter<TInput, TOutput>(pipeline);
         }
 
+        public static IPipeline<T, T> Empty<T>()
+        {
+            return new EmptyPipeline<T>();
+        }
+
+        private class EmptyPipeline<T> : IPipeline<T, T>
+        {
+            private Tuple<T> outputResult;
+
+            public IEnumerator<FilterData> GetEnumerator()
+            {
+                yield break;
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
+            }
+
+            public T Output
+            {
+                get
+                {
+                    if (outputResult != null)
+                        return outputResult.Item1;
+                    throw new InvalidOperationException();
+                }
+            }
+
+            public Exception Exception
+            {
+                get
+                {
+                    throw new InvalidOperationException();
+                }
+            }
+
+            public Boolean IsBeginState
+            {
+                get
+                {
+                    return outputResult == null;
+                }
+            }
+
+            public Boolean Execute(T input)
+            {
+                outputResult = Tuple.Create(input);
+                return true;
+            }
+
+            public void Reset()
+            {
+                if (IsBeginState)
+                    return;
+                outputResult = null;
+            }
+        }
+
         private class PipelineFilter<TInput, TOutput> : IFilter<TInput, TOutput>
         {
             private readonly IPipeline<TInput, TOutput> pipeline;
@@ -43,7 +102,6 @@ namespace SimplePipeline
                 {
                     pipeline.Reset();
                 }
-
             }
         }
     }

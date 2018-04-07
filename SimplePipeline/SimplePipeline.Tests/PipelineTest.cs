@@ -32,8 +32,8 @@ namespace SimplePipeline.Tests
                     new CountElementsPipeline<Char>(),
                     typeof(String), typeof(Int32), null, 0, typeof(ArgumentNullException), false
                 };
-                yield return new Object[] { new Pipeline<IEnumerable<Char>, IEnumerable<Char>>(new FilterSequence()), typeof(IEnumerable<Char>), typeof(IEnumerable<Char>), null, null, null, true };
-                yield return new Object[] { new Pipeline<IEnumerable<Char>, IEnumerable<Char>>(new FilterSequence()), typeof(IEnumerable<Char>), typeof(IEnumerable<Char>), "Pipeline", "Pipeline", null, true };
+                yield return new Object[] { Pipeline.Empty<IEnumerable<Char>>(), typeof(IEnumerable<Char>), typeof(IEnumerable<Char>), null, null, null, true };
+                yield return new Object[] { Pipeline.Empty<IEnumerable<Char>>(), typeof(IEnumerable<Char>), typeof(IEnumerable<Char>), "Pipeline", "Pipeline", null, true };
             }
         }
 
@@ -53,8 +53,8 @@ namespace SimplePipeline.Tests
                     new CountElementsPipeline<Char>(),
                     typeof(String), typeof(Int32), null, 0, typeof(ArgumentNullException), false
                 };
-                yield return new Object[] { new Pipeline<IEnumerable<Char>, IEnumerable<Char>>(new FilterSequence()), typeof(IEnumerable<Char>), typeof(IEnumerable<Char>), null, null, null, true };
-                yield return new Object[] { new Pipeline<IEnumerable<Char>, IEnumerable<Char>>(new FilterSequence()), typeof(IEnumerable<Char>), typeof(IEnumerable<Char>), "Pipeline", "Pipeline", null, true };
+                yield return new Object[] { Pipeline.Empty<IEnumerable<Char>>(), typeof(IEnumerable<Char>), typeof(IEnumerable<Char>), null, null, null, true };
+                yield return new Object[] { Pipeline.Empty<IEnumerable<Char>>(), typeof(IEnumerable<Char>), typeof(IEnumerable<Char>), "Pipeline", "Pipeline", null, true };
             }
         }
 
