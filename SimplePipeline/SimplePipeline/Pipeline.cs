@@ -5,7 +5,11 @@ using System.Linq;
 
 namespace SimplePipeline
 {
-    public static class Pipeline{
+    /// <summary>
+    ///     Provides extension methods for the <see cref="IPipeline{TInput,TOutput}" /> interface.
+    /// </summary>
+    public static class Pipeline
+    {
         /// <summary>
         ///     Converts a pipeline to a filter.
         /// </summary>
@@ -20,6 +24,65 @@ namespace SimplePipeline
             return new PipelineFilter<TInput, TOutput>(pipeline);
         }
 
+        public static IPipeline<T, T> Empty<T>()
+        {
+            return new EmptyPipeline<T>();
+        }
+
+        private class EmptyPipeline<T> : IPipeline<T, T>
+        {
+            private Tuple<T> outputResult;
+
+            public IEnumerator<FilterData> GetEnumerator()
+            {
+                yield break;
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
+            }
+
+            public T Output
+            {
+                get
+                {
+                    if (outputResult != null)
+                        return outputResult.Item1;
+                    throw new InvalidOperationException();
+                }
+            }
+
+            public Exception Exception
+            {
+                get
+                {
+                    throw new InvalidOperationException();
+                }
+            }
+
+            public Boolean IsBeginState
+            {
+                get
+                {
+                    return outputResult == null;
+                }
+            }
+
+            public Boolean Execute(T input)
+            {
+                outputResult = Tuple.Create(input);
+                return true;
+            }
+
+            public void Reset()
+            {
+                if (IsBeginState)
+                    return;
+                outputResult = null;
+            }
+        }
+
         private class PipelineFilter<TInput, TOutput> : IFilter<TInput, TOutput>
         {
             private readonly IPipeline<TInput, TOutput> pipeline;
@@ -31,7 +94,14 @@ namespace SimplePipeline
 
             public TOutput Execute(TInput input)
             {
-                return pipeline.Execute(input) ? pipeline.Output : throw pipeline.Exception;
+                try
+                {
+                    return pipeline.Execute(input) ? pipeline.Output : throw pipeline.Exception;
+                }
+                finally
+                {
+                    pipeline.Reset();
+                }
             }
         }
     }
@@ -44,21 +114,35 @@ namespace SimplePipeline
     public class Pipeline<TInput, TOutput> : IPipeline<TInput, TOutput>
     {
         private readonly IEnumerable<FilterData> filters;
+        private Tuple<Exception> exceptionResult;
+        private Tuple<TOutput> outputResult;
 
         /// <summary>
         ///     Creates a new <see cref="Pipeline{TInput,TOutput}" /> instance.
         /// </summary>
         /// <param name="sequence">The filter sequence to populate this pipeline with.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="InvalidFilterCollectionException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="EmptyPipelineException"></exception>
         public Pipeline(FilterSequence sequence)
         {
             if (sequence == null)
                 throw new ArgumentNullException(nameof(sequence));
-            if (!sequence.CanCreatePipeline(typeof(TInput), typeof(TOutput)))
-                throw new InvalidFilterCollectionException();
-            IEnumerable<FilterData> copyFilterDatas = sequence.ToList();
-            filters = copyFilterDatas;
+            Type pipelineInputType = typeof(TInput);
+            Type pipelineOutputType = typeof(TOutput);
+            if (sequence.Any())
+            {
+                if (!sequence.InputType.IsAssignableFrom(pipelineInputType))
+                    throw new ArgumentException($"The input type of the sequence ({sequence.InputType}) is not assignable from the pipeline input type ({pipelineInputType}).", nameof(sequence));
+                if (!pipelineOutputType.IsAssignableFrom(sequence.OutputType))
+                    throw new ArgumentException($"The pipeline output type ({pipelineOutputType}) is not assignable from the sequence output type ({sequence.OutputType}).", nameof(sequence));
+            }
+            else
+            {
+                if (!pipelineOutputType.IsAssignableFrom(pipelineInputType))
+                    throw new EmptyPipelineException($"The provided sequence is empty but the output type ({pipelineOutputType}) is not assignable from the input type ({pipelineInputType}).", pipelineInputType, pipelineOutputType);
+            }
+            filters = sequence.ToList();
         }
 
         /// <summary>
@@ -66,7 +150,8 @@ namespace SimplePipeline
         /// </summary>
         /// <param name="filters">The filter collection to populate this pipeline with.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="InvalidFilterCollectionException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="EmptyPipelineException"></exception>
         public Pipeline(IEnumerable<FilterData> filters) : this(new FilterSequence(filters)) { }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -75,17 +160,33 @@ namespace SimplePipeline
         }
 
         /// <inheritdoc />
-        public TOutput Output { get; private set; }
+        public TOutput Output
+        {
+            get
+            {
+                if (outputResult != null)
+                    return outputResult.Item1;
+                throw new InvalidOperationException("This pipeline hasn't processed an input or the previous execution was a failure.");
+            }
+        }
 
         /// <inheritdoc />
-        public Exception Exception { get; private set; }
+        public Exception Exception
+        {
+            get
+            {
+                if (exceptionResult != null)
+                    return exceptionResult.Item1;
+                throw new InvalidOperationException("This pipeline hasn't processed an input or the previous execution was a success.");
+            }
+        }
 
         /// <inheritdoc />
         public Boolean IsBeginState
         {
             get
             {
-                return Equals(Output, default(TOutput)) && Equals(Exception, default(Exception));
+                return outputResult == null && exceptionResult == null;
             }
         }
 
@@ -95,12 +196,12 @@ namespace SimplePipeline
             Reset();
             try
             {
-                Output = (TOutput)this.Aggregate<FilterData, Object>(input, (value, filter) => filter.Execute(value));
+                outputResult = Tuple.Create((TOutput)this.Aggregate<FilterData, Object>(input, (value, filter) => filter.Execute(value)));
                 return true;
             }
             catch (Exception e)
             {
-                Exception = e;
+                exceptionResult = Tuple.Create(e);
                 return false;
             }
         }
@@ -110,8 +211,8 @@ namespace SimplePipeline
         {
             if (IsBeginState)
                 return;
-            Exception = default(Exception);
-            Output = default(TOutput);
+            outputResult = null;
+            exceptionResult = null;
         }
 
         /// <inheritdoc />

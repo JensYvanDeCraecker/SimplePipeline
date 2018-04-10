@@ -11,9 +11,36 @@ namespace SimplePipeline.Tests
 {
     public class PipelineTest
     {
-        private readonly MethodInfo processPipelineToFilterTestDefinition = typeof(PipelineTest).GetMethod(nameof(ProcessPipelineToFilterTest), BindingFlags.NonPublic | BindingFlags.Static);
-        private readonly MethodInfo processCreatePipelineTestDefinition = typeof(PipelineTest).GetMethod(nameof(ProcessCreatePipelineTest), BindingFlags.NonPublic | BindingFlags.Static);
+        private readonly MethodInfo processCreatePipelineEnumerableTestDefinition = typeof(PipelineTest).GetMethod(nameof(ProcessCreatePipelineEnumerableTest), BindingFlags.NonPublic | BindingFlags.Static);
+        private readonly MethodInfo processCreatePipelineSequenceTestDefinition = typeof(PipelineTest).GetMethod(nameof(ProcessCreatePipelineSequenceTest), BindingFlags.NonPublic | BindingFlags.Static);
         private readonly MethodInfo processExecutePipelineTestDefinition = typeof(PipelineTest).GetMethod(nameof(ProcessExecutePipelineTest), BindingFlags.NonPublic | BindingFlags.Static);
+        private readonly MethodInfo processPipelineToFilterTestDefinition = typeof(PipelineTest).GetMethod(nameof(ProcessPipelineToFilterTest), BindingFlags.NonPublic | BindingFlags.Static);
+
+        // ReSharper disable once MemberCanBePrivate.Global
+        public static IEnumerable<Object[]> PipelineToFilterTestData
+        {
+            // ReSharper disable once UnusedMember.Global
+            get
+            {
+                yield return new Object[] { new CountElementsPipeline<Char>(), typeof(String), typeof(Int32), "Pipeline", 8, null, true };
+                yield return new Object[] { new CountElementsPipeline<Char>(), typeof(String), typeof(Int32), null, 0, typeof(ArgumentNullException), false };
+                yield return new Object[] { Pipeline.Empty<IEnumerable<Char>>(), typeof(IEnumerable<Char>), typeof(IEnumerable<Char>), null, null, null, true };
+                yield return new Object[] { Pipeline.Empty<IEnumerable<Char>>(), typeof(IEnumerable<Char>), typeof(IEnumerable<Char>), "Pipeline", "Pipeline", null, true };
+            }
+        }
+
+        // ReSharper disable once MemberCanBePrivate.Global
+        public static IEnumerable<Object[]> ExecutePipelineTestData
+        {
+            // ReSharper disable once UnusedMember.Global
+            get
+            {
+                yield return new Object[] { new CountElementsPipeline<Char>(), typeof(String), typeof(Int32), "Pipeline", 8, null, true };
+                yield return new Object[] { new CountElementsPipeline<Char>(), typeof(String), typeof(Int32), null, 0, typeof(ArgumentNullException), false };
+                yield return new Object[] { Pipeline.Empty<IEnumerable<Char>>(), typeof(IEnumerable<Char>), typeof(IEnumerable<Char>), null, null, null, true };
+                yield return new Object[] { Pipeline.Empty<IEnumerable<Char>>(), typeof(IEnumerable<Char>), typeof(IEnumerable<Char>), "Pipeline", "Pipeline", null, true };
+            }
+        }
 
         // ReSharper disable once MemberCanBePrivate.Global
         public static IEnumerable<Object[]> CreatePipelineSequenceTestData
@@ -73,104 +100,83 @@ namespace SimplePipeline.Tests
             }
         }
 
-        [Theory]
-        [MemberData(nameof(CreatePipelineSequenceTestData))]
-        [AssertionMethod]
-        public void CreatePipelineTest(FilterSequence sequence, Type pipelineInputType, Type pipelineOutputType, Boolean shouldSucceed)
-        {
-            processCreatePipelineTestDefinition.MakeGenericMethod(pipelineInputType, pipelineOutputType).Invoke(null, new Object[] { sequence, shouldSucceed });
-        }
-
-        // ReSharper disable once UnusedMember.Local
-        [AssertionMethod]
-        private static void ProcessCreatePipelineTest<TPipelineInput, TPipelineOutput>(FilterSequence sequence, Boolean shouldSucceed)
-        {
-            Pipeline<TPipelineInput, TPipelineOutput> CreatePipelineSequence()
-            {
-                return new Pipeline<TPipelineInput, TPipelineOutput>(sequence);
-            }
-
-            Pipeline<TPipelineInput, TPipelineOutput> CreatePipelineEnumerable()
-            {
-                return new Pipeline<TPipelineInput, TPipelineOutput>(filters: sequence);
-            }
-
-            void ValidatePipeline(Func<Pipeline<TPipelineInput, TPipelineOutput>> creator)
-            {
-                if (shouldSucceed)
-                {
-                    Pipeline<TPipelineInput, TPipelineOutput> pipeline = creator.Invoke();
-                    Assert.Equal(sequence.Count, pipeline.Count());
-                    if (sequence.Count <= 0)
-                        return;
-                    Assert.Equal(sequence.FirstFilter, pipeline.First());
-                    Assert.Equal(sequence.LastFilter, pipeline.Last());
-                }
-                else
-                    Assert.Throws<InvalidFilterCollectionException>(() => CreatePipelineSequence());
-            }
-
-            ValidatePipeline(CreatePipelineSequence);
-            ValidatePipeline(CreatePipelineEnumerable);
-        }
-
         // ReSharper disable once MemberCanBePrivate.Global
-        public static IEnumerable<Object[]> PipelineToFilterTestData
+        public static IEnumerable<Object[]> CreatePipelineEnumerableTestData
         {
             // ReSharper disable once UnusedMember.Global
             get
             {
-                yield return new Object[] { new EnumerableToArrayPipeline<Char>(), typeof(IEnumerable<Char>), typeof(Char[]) };
-                yield return new Object[] { new EnumerableToArrayPipeline<Char>(), typeof(IEnumerable<Char>), typeof(IEnumerable<Char>) };
-                yield return new Object[] { new EnumerableToArrayPipeline<Char>(), typeof(String), typeof(Char[]) };
-                yield return new Object[] { new EnumerableToArrayPipeline<Char>(), typeof(String), typeof(IEnumerable<Char>) };
+                yield return new Object[]
+                {
+                    new List<FilterData>()
+                    {
+                        FilterData.Create(new EnumerableToArrayFilter<Char>()),
+                        FilterData.Create(new CharEnumerableToStringFilter()),
+                        FilterData.Create(new EnumerableCountFilter<Char>())
+                    },
+                    typeof(String), typeof(Int32), true
+                };
+                yield return new Object[]
+                {
+                    new List<FilterData>()
+                    {
+                        FilterData.Create(new EnumerableToArrayFilter<Char>()),
+                        FilterData.Create(new CharEnumerableToStringFilter()),
+                        FilterData.Create(new EnumerableCountFilter<Char>())
+                    },
+                    typeof(String), typeof(Object), true
+                };
+                yield return new Object[]
+                {
+                    new List<FilterData>()
+                    {
+                        FilterData.Create(new EnumerableToArrayFilter<Char>()),
+                        FilterData.Create(new CharEnumerableToStringFilter())
+                    },
+                    typeof(IEnumerable<Char>), typeof(String), true
+                };
+                yield return new Object[]
+                {
+                    new List<FilterData>()
+                    {
+                        FilterData.Create(new EnumerableToArrayFilter<Char>()),
+                        FilterData.Create(new CharEnumerableToStringFilter())
+                    },
+                    typeof(String), typeof(IEnumerable<Char>), true
+                };
+                yield return new Object[]
+                {
+                    new List<FilterData>()
+                    {
+                        FilterData.Create(new EnumerableToArrayFilter<Char>()),
+                        FilterData.Create(new CharEnumerableToStringFilter())
+                    },
+                    typeof(IEnumerable<String>), typeof(String), false
+                };
+                yield return new Object[] { new FilterSequence(), typeof(String), typeof(IEnumerable<Char>), true };
+                yield return new Object[] { new FilterSequence(), typeof(IEnumerable<Char>), typeof(String), false };
             }
         }
 
         [Theory]
         [MemberData(nameof(PipelineToFilterTestData))]
         [AssertionMethod]
-        public void PipelineToFilterTest(Object pipeline, Type pipelineInputType, Type pipelineOutputType)
+        public void PipelineToFilterTest(Object pipeline, Type pipelineInputType, Type pipelineOutputType, Object pipelineInput, Object expectedPipelineOutput, Type expectedPipelineExceptionType, Boolean shouldSucceed)
         {
-            processPipelineToFilterTestDefinition.MakeGenericMethod(pipelineInputType, pipelineOutputType).Invoke(null, new[] { pipeline });
+            processPipelineToFilterTestDefinition.MakeGenericMethod(pipelineInputType, pipelineOutputType).Invoke(null, new[] { pipeline, pipelineInput, expectedPipelineOutput, expectedPipelineExceptionType, shouldSucceed });
         }
 
-        // ReSharper disable once UnusedMember.Local
         [AssertionMethod]
-        private static void ProcessPipelineToFilterTest<TPipelineInput, TPipelineOutput>(IPipeline<TPipelineInput, TPipelineOutput> pipeline)
+        private static void ProcessPipelineToFilterTest<TPipelineInput, TPipelineOutput>(IPipeline<TPipelineInput, TPipelineOutput> pipeline, TPipelineInput pipelineInput, TPipelineOutput expectedPipelineOutput, Type expectedPipelineExceptionType, Boolean shouldSucceed)
         {
-            Assert.NotNull(pipeline.ToFilter()); // Test if the 'ToFilter' method returns an instance.
-        }
-
-        // ReSharper disable once MemberCanBePrivate.Global
-        public static IEnumerable<Object[]> ExecutePipelineTestData
-        {
-            // ReSharper disable once UnusedMember.Global
-            get
-            {
-                yield return new Object[]
-                {
-                    new Pipeline<IEnumerable<Char>, Int32>(new FilterSequence()
-                    {
-                        new EnumerableToArrayFilter<Char>(),
-                        new CharEnumerableToStringFilter(),
-                        new EnumerableCountFilter<Char>()
-                    }),
-                    typeof(String), typeof(Int32), "Pipeline", 8, null, true
-                };
-                yield return new Object[]
-                {
-                    new Pipeline<IEnumerable<Char>, Int32>(new FilterSequence()
-                    {
-                        new EnumerableToArrayFilter<Char>(),
-                        new CharEnumerableToStringFilter(),
-                        new EnumerableCountFilter<Char>()
-                    }),
-                    typeof(String), typeof(Int32), null, 0, typeof(ArgumentNullException), false
-                };
-                yield return new Object[] { new Pipeline<IEnumerable<Char>, IEnumerable<Char>>(new FilterSequence()), typeof(IEnumerable<Char>), typeof(IEnumerable<Char>), null, null, null, true };
-                yield return new Object[] { new Pipeline<IEnumerable<Char>, IEnumerable<Char>>(new FilterSequence()), typeof(IEnumerable<Char>), typeof(IEnumerable<Char>), "Pipeline", "Pipeline", null, true };
-            }
+            IFilter<TPipelineInput, TPipelineOutput> filter = pipeline.ToFilter();
+            if (shouldSucceed)
+                Assert.Equal(expectedPipelineOutput, filter.Execute(pipelineInput));
+            else
+                Assert.Throws(expectedPipelineExceptionType, () => filter.Execute(pipelineInput));
+            Assert.True(pipeline.IsBeginState);
+            Assert.Throws<InvalidOperationException>(() => pipeline.Exception);
+            Assert.Throws<InvalidOperationException>(() => pipeline.Output);
         }
 
         [Theory]
@@ -181,35 +187,111 @@ namespace SimplePipeline.Tests
             processExecutePipelineTestDefinition.MakeGenericMethod(pipelineInputType, pipelineOutputType).Invoke(null, new[] { pipeline, pipelineInput, expectedPipelineOutput, expectedPipelineExceptionType, shouldSucceed });
         }
 
-        // ReSharper disable once UnusedMember.Local
         [AssertionMethod]
         private static void ProcessExecutePipelineTest<TPipelineInput, TPipelineOutput>(IPipeline<TPipelineInput, TPipelineOutput> pipeline, TPipelineInput pipelineInput, TPipelineOutput expectedPipelineOutput, Type expectedPipelineExceptionType, Boolean shouldSucceed)
         {
             Assert.Equal(shouldSucceed, pipeline.Execute(pipelineInput));
+            Assert.False(pipeline.IsBeginState);
             if (shouldSucceed)
             {
-                Assert.Null(pipeline.Exception);
-                if (pipeline.IsBeginState)
-                    Assert.Equal(default(TPipelineOutput), pipeline.Output);
-                else
-                    Assert.NotEqual(default(TPipelineOutput), pipeline.Output);
                 Assert.Equal(expectedPipelineOutput, pipeline.Output);
+                Assert.Throws<InvalidOperationException>(() => pipeline.Exception);
             }
             else
             {
-                Assert.False(pipeline.IsBeginState);
-                Assert.Equal(default(TPipelineOutput), pipeline.Output);
-                Assert.NotNull(pipeline.Exception);
                 Assert.IsType(expectedPipelineExceptionType, pipeline.Exception);
-                pipeline.Reset();
-                Assert.True(pipeline.IsBeginState);
+                Assert.Throws<InvalidOperationException>(() => pipeline.Output);
             }
-            if (pipeline.IsBeginState)
-                return;
             pipeline.Reset();
-            Assert.True(pipeline.IsBeginState);
-            Assert.Equal(default(TPipelineOutput), pipeline.Output);
-            Assert.Null(pipeline.Exception);
+            Assert.Throws<InvalidOperationException>(() => pipeline.Exception);
+            Assert.Throws<InvalidOperationException>(() => pipeline.Output);
+        }
+
+        [Theory]
+        [MemberData(nameof(CreatePipelineSequenceTestData))]
+        [AssertionMethod]
+        public void CreatePipelineSequenceTest(FilterSequence sequence, Type pipelineInputType, Type pipelineOutputType, Boolean shouldSucceed)
+        {
+            processCreatePipelineSequenceTestDefinition.MakeGenericMethod(pipelineInputType, pipelineOutputType).Invoke(null, new Object[] { sequence, shouldSucceed });
+        }
+
+        [AssertionMethod]
+        private static void ProcessCreatePipelineSequenceTest<TPipelineInput, TPipelineOutput>(FilterSequence sequence, Boolean shouldSucceed)
+        {
+            Pipeline<TPipelineInput, TPipelineOutput> CreatePipelineSequence()
+            {
+                return new Pipeline<TPipelineInput, TPipelineOutput>(sequence);
+            }
+
+            if (shouldSucceed)
+            {
+                Pipeline<TPipelineInput, TPipelineOutput> pipeline = CreatePipelineSequence();
+                Assert.Equal(sequence.Count, pipeline.Count());
+                if (!sequence.Any())
+                    return;
+                Assert.Equal(sequence.FirstFilter, pipeline.First());
+                Assert.Equal(sequence.LastFilter, pipeline.Last());
+            }
+            else             
+            {
+                if (sequence.Any())
+                    Assert.Throws<ArgumentException>(() => CreatePipelineSequence());
+                else
+                {
+                    EmptyPipelineException exception = Assert.Throws<EmptyPipelineException>(() => CreatePipelineSequence());
+                    Assert.Equal(typeof(TPipelineInput), exception.PipelineInputType);
+                    Assert.Equal(typeof(TPipelineOutput), exception.PipelineOutputType);
+                }
+            }
+        }
+
+        [Theory]
+        [MemberData(nameof(CreatePipelineEnumerableTestData))]
+        [AssertionMethod]
+        public void CreatePipelineEnumerableTest(IEnumerable<FilterData> filters, Type pipelineInputType, Type pipelineOutputType, Boolean shouldSucceed)
+        {
+            processCreatePipelineEnumerableTestDefinition.MakeGenericMethod(pipelineInputType, pipelineOutputType).Invoke(null, new Object[] { filters, shouldSucceed });
+        }
+
+        [AssertionMethod]
+        private static void ProcessCreatePipelineEnumerableTest<TPipelineInput, TPipelineOutput>(IEnumerable<FilterData> filters, Boolean shouldSucceed)
+        {
+            Pipeline<TPipelineInput, TPipelineOutput> CreatePipelineEnumerable()
+            {
+                // ReSharper disable once PossibleMultipleEnumeration
+                return new Pipeline<TPipelineInput, TPipelineOutput>(filters);
+            }
+
+            if (shouldSucceed)
+            {
+                Pipeline<TPipelineInput, TPipelineOutput> pipeline = CreatePipelineEnumerable();
+
+                // ReSharper disable once PossibleMultipleEnumeration
+                Assert.Equal(filters.Count(), pipeline.Count());
+
+                // ReSharper disable once PossibleMultipleEnumeration
+                if (!filters.Any())
+                    return;
+
+                // ReSharper disable once PossibleMultipleEnumeration
+                Assert.Equal(filters.First(), pipeline.First());
+
+                // ReSharper disable once PossibleMultipleEnumeration
+                Assert.Equal(filters.Last(), pipeline.Last());
+            }
+            else
+            {
+                // ReSharper disable once PossibleMultipleEnumeration
+                if (filters.Any())
+                    Assert.Throws<ArgumentException>(() => CreatePipelineEnumerable());
+                else
+                {
+                    EmptyPipelineException exception = Assert.Throws<EmptyPipelineException>(() => CreatePipelineEnumerable());
+                    Assert.Equal(typeof(TPipelineInput), exception.PipelineInputType);
+                    Assert.Equal(typeof(TPipelineOutput), exception.PipelineOutputType);
+                }
+
+            }
         }
 
         [Fact]
