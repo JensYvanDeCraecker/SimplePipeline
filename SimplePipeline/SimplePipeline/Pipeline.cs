@@ -122,15 +122,27 @@ namespace SimplePipeline
         /// </summary>
         /// <param name="sequence">The filter sequence to populate this pipeline with.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="InvalidFilterCollectionException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="EmptyPipelineException"></exception>
         public Pipeline(FilterSequence sequence)
         {
             if (sequence == null)
                 throw new ArgumentNullException(nameof(sequence));
-            if (!sequence.CanCreatePipeline(typeof(TInput), typeof(TOutput)))
-                throw new InvalidFilterCollectionException();
-            IEnumerable<FilterData> copyFilterDatas = sequence.ToList();
-            filters = copyFilterDatas;
+            Type pipelineInputType = typeof(TInput);
+            Type pipelineOutputType = typeof(TOutput);
+            if (sequence.Any())
+            {
+                if (!sequence.InputType.IsAssignableFrom(pipelineInputType))
+                    throw new ArgumentException($"The input type of the sequence ({sequence.InputType}) is not assignable from the pipeline input type ({pipelineInputType}).", nameof(sequence));
+                if (!pipelineOutputType.IsAssignableFrom(sequence.OutputType))
+                    throw new ArgumentException($"The pipeline output type ({pipelineOutputType}) is not assignable from the sequence output type ({sequence.OutputType}).", nameof(sequence));
+            }
+            else
+            {
+                if (!pipelineOutputType.IsAssignableFrom(pipelineInputType))
+                    throw new EmptyPipelineException($"The provided sequence is empty but the output type ({pipelineOutputType}) is not assignable from the input type ({pipelineInputType}).", pipelineInputType, pipelineOutputType);
+            }
+            filters = sequence.ToList();
         }
 
         /// <summary>
@@ -138,7 +150,8 @@ namespace SimplePipeline
         /// </summary>
         /// <param name="filters">The filter collection to populate this pipeline with.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="InvalidFilterCollectionException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="EmptyPipelineException"></exception>
         public Pipeline(IEnumerable<FilterData> filters) : this(new FilterSequence(filters)) { }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -153,7 +166,7 @@ namespace SimplePipeline
             {
                 if (outputResult != null)
                     return outputResult.Item1;
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("This pipeline hasn't processed an input or the previous execution was a failure.");
             }
         }
 
@@ -164,7 +177,7 @@ namespace SimplePipeline
             {
                 if (exceptionResult != null)
                     return exceptionResult.Item1;
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("This pipeline hasn't processed an input or the previous execution was a success.");
             }
         }
 
